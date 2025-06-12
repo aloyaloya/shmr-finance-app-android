@@ -1,6 +1,7 @@
 package com.example.shmr_finance_app_android.data.model
 
 import com.example.shmr_finance_app_android.data.model.domain.Expense
+import com.example.shmr_finance_app_android.data.model.domain.Income
 
 val mockExpenses = listOf(
     Expense(
@@ -60,4 +61,19 @@ val mockExpenses = listOf(
         currency = "₽",
         emoji = "💊"
     ),
+)
+
+val mockIncomes = listOf(
+    Income(
+        id = "1",
+        title = "Зарплата",
+        amount = 500000,
+        currency = "₽"
+    ),
+    Income(
+        id = "2",
+        title = "Подработка",
+        amount = 100000,
+        currency = "₽"
+    )
 )
