@@ -5,4 +5,9 @@
     <string name="balance_screen_title">Мой счет</string>
     <string name="categories_screen_title">Мои статьи</string>
     <string name="settings_screen_title">Настройки</string>
+    <string name="expense_screen_label">Расходы</string>
+    <string name="income_screen_label">Доходы</string>
+    <string name="balance_screen_label">Счет</string>
+    <string name="categories_screen_label">Статьи</string>
+    <string name="settings_screen_label">Настройки</string>
 </resources>
