@@ -1,5 +1,6 @@
 package com.example.shmr_finance_app_android.data.model
 
+import com.example.shmr_finance_app_android.data.model.domain.Balance
 import com.example.shmr_finance_app_android.data.model.domain.Expense
 import com.example.shmr_finance_app_android.data.model.domain.Income
 
@@ -76,4 +77,10 @@ val mockIncomes = listOf(
         amount = 100000,
         currency = "₽"
     )
+)
+
+val mockBalance = Balance(
+    name = "Мой Счет",
+    balance = "-670 000",
+    currency = "₽"
 )
