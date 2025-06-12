@@ -10,4 +10,5 @@
     <string name="balance_screen_label">Счет</string>
     <string name="categories_screen_label">Статьи</string>
     <string name="settings_screen_label">Настройки</string>
+    <string name="trail_icon_description">Открыть</string>
 </resources>
