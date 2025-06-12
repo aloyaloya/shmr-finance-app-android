@@ -29,6 +29,13 @@ import com.example.shmr_finance_app_android.data.model.ui.ListItem
 import com.example.shmr_finance_app_android.data.model.ui.MainContent
 import com.example.shmr_finance_app_android.data.model.ui.TrailContent
 
+/**
+ * Карточка элемента списка с ведущим, основным и завершающим контентом.
+ *
+ * @param item Данные для отображения
+ * @param trailIcon Иконка в trailing-контенте (опционально)
+ * @param onClick Обработчик клика
+ */
 @Composable
 fun ListItemCard(
     modifier: Modifier = Modifier,
