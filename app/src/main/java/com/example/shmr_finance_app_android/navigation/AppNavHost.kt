@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.shmr_finance_app_android.ui.screens.expenses_screen.ExpensesScreen
 import com.example.shmr_finance_app_android.ui.viewmodels.TopBarViewModel
 
 @Composable
@@ -19,7 +20,7 @@ fun AppNavHost(
         startDestination = RootScreen.Expenses.route
     ) {
         composable(route = RootScreen.Expenses.route) {
-            // Экран Расходы
+            ExpensesScreen(topBarViewModel)
         }
         composable(route = RootScreen.Income.route) {
             // Экран Доходы

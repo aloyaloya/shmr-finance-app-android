@@ -11,4 +11,8 @@
     <string name="categories_screen_label">Статьи</string>
     <string name="settings_screen_label">Настройки</string>
     <string name="trail_icon_description">Открыть</string>
+    <string name="history_description">История расходов</string>
+    <string name="total_amount">Всего</string>
+    <string name="retry">Повторить</string>
+    <string name="no_expenses_found">У вас нет расходов</string>
 </resources>

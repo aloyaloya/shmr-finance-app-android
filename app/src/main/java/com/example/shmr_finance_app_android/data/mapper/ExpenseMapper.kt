@@ -19,11 +19,11 @@ fun Expense.toListItem(): ListItem {
     )
 }
 
-private fun createLeadContent(payment: Expense): LeadContent {
-    return if (payment.emoji != null) {
-        LeadContent(text = payment.emoji)
+private fun createLeadContent(expense: Expense): LeadContent {
+    return if (expense.emoji != null) {
+        LeadContent(text = expense.emoji)
     } else {
-        val generatedText = generateTextFromTitle(payment.title)
+        val generatedText = generateTextFromTitle(expense.title)
         LeadContent(text = generatedText)
     }
 }
