@@ -1,6 +1,7 @@
 package com.example.shmr_finance_app_android.data.model
 
 import com.example.shmr_finance_app_android.data.model.domain.Balance
+import com.example.shmr_finance_app_android.data.model.domain.Category
 import com.example.shmr_finance_app_android.data.model.domain.Expense
 import com.example.shmr_finance_app_android.data.model.domain.Income
 
@@ -83,4 +84,46 @@ val mockBalance = Balance(
     name = "Мой Счет",
     balance = "-670 000",
     currency = "₽"
+)
+
+val mockCategories = listOf(
+    Category(
+        id = "0",
+        title = "Аренда квартиры",
+        emoji = "🏡"
+    ),
+    Category(
+        id = "1",
+        title = "Одежда",
+        emoji = "👗"
+    ),
+    Category(
+        id = "2",
+        title = "На собачку",
+        emoji = "🐶"
+    ),
+    Category(
+        id = "3",
+        title = "На собачку",
+        emoji = "🐶"
+    ),
+    Category(
+        id = "4",
+        title = "Ремонт квартиры"
+    ),
+    Category(
+        id = "5",
+        title = "Продукты",
+        emoji = "🍭"
+    ),
+    Category(
+        id = "6",
+        title = "Спортзал",
+        emoji = "🏋️‍♂️"
+    ),
+    Category(
+        id = "7",
+        title = "Медицина",
+        emoji = "💊"
+    )
 )
