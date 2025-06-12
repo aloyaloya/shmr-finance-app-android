@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">shmr-finance-app-android</string>
+    <string name="expense_screen_title">Расходы сегодня</string>
+    <string name="income_screen_title">Доходы сегодня</string>
+    <string name="balance_screen_title">Мой счет</string>
+    <string name="categories_screen_title">Мои статьи</string>
+    <string name="settings_screen_title">Настройки</string>
 </resources>
