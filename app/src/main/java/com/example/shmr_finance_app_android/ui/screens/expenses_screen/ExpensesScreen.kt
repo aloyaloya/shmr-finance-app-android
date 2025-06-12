@@ -39,7 +39,7 @@ fun ExpensesScreen(
     val state by viewModel.screenState.collectAsState()
 
     val title = stringResource(R.string.expense_screen_title)
-    val description = stringResource(R.string.history_description)
+    val description = stringResource(R.string.expenses_history_description)
     LaunchedEffect(Unit) {
         topBarViewModel.update(
             TopBarState(

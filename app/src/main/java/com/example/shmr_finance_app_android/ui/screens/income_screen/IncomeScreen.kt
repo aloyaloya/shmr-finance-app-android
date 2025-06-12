@@ -39,7 +39,7 @@ fun IncomeScreen(
     val state by viewModel.screenState.collectAsState()
 
     val title = stringResource(R.string.income_screen_title)
-    val description = stringResource(R.string.history_description)
+    val description = stringResource(R.string.incomes_history_description)
     LaunchedEffect(Unit) {
         topBarViewModel.update(
             TopBarState(

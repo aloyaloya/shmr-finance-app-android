@@ -11,11 +11,12 @@
     <string name="categories_screen_label">Статьи</string>
     <string name="settings_screen_label">Настройки</string>
     <string name="trail_icon_description">Открыть</string>
-    <string name="history_description">История расходов</string>
+    <string name="expenses_history_description">История расходов</string>
     <string name="total_amount">Всего</string>
     <string name="retry">Повторить</string>
     <string name="no_expenses_found">У вас нет расходов</string>
     <string name="no_income_found">У вас нет доходов</string>
+    <string name="incomes_history_description">История доходов</string>
     <string name="balance_edit_description">Изменить счет</string>
     <string name="balance">Баланс</string>
     <string name="currency">Валюта</string>
