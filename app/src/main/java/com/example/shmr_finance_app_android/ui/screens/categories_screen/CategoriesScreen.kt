@@ -14,7 +14,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -29,23 +28,13 @@ import com.example.shmr_finance_app_android.ui.components.ListItemCard
 import com.example.shmr_finance_app_android.ui.screens.categories_screen.components.SearchTextField
 import com.example.shmr_finance_app_android.ui.viewmodels.CategoriesScreenState
 import com.example.shmr_finance_app_android.ui.viewmodels.CategoriesScreenViewModel
-import com.example.shmr_finance_app_android.ui.viewmodels.TopBarState
-import com.example.shmr_finance_app_android.ui.viewmodels.TopBarViewModel
 
 @Composable
 fun CategoriesScreen(
-    topBarViewModel: TopBarViewModel,
     viewModel: CategoriesScreenViewModel = viewModel() // пока не дошли до DI - вью модель здесь
 ) {
     val state by viewModel.screenState.collectAsState()
     val searchRequest by viewModel.searchRequest.collectAsState()
-
-    val title = stringResource(R.string.categories_screen_title)
-    LaunchedEffect(Unit) {
-        topBarViewModel.update(
-            TopBarState(title = title)
-        )
-    }
 
     Column(Modifier.fillMaxSize()) {
         SearchTextField(

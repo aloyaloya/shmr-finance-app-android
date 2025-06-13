@@ -10,12 +10,10 @@ import com.example.shmr_finance_app_android.ui.screens.categories_screen.Categor
 import com.example.shmr_finance_app_android.ui.screens.expenses_screen.ExpensesScreen
 import com.example.shmr_finance_app_android.ui.screens.income_screen.IncomeScreen
 import com.example.shmr_finance_app_android.ui.screens.settings_screen.SettingsScreen
-import com.example.shmr_finance_app_android.ui.viewmodels.TopBarViewModel
 
 @Composable
 fun AppNavHost(
     modifier: Modifier = Modifier,
-    topBarViewModel: TopBarViewModel,
     navController: NavHostController
 ) {
     NavHost(
@@ -24,19 +22,19 @@ fun AppNavHost(
         startDestination = RootScreen.Expenses.route
     ) {
         composable(route = RootScreen.Expenses.route) {
-            ExpensesScreen(topBarViewModel)
+            ExpensesScreen()
         }
         composable(route = RootScreen.Income.route) {
-            IncomeScreen(topBarViewModel)
+            IncomeScreen()
         }
         composable(route = RootScreen.Balance.route) {
-            BalanceScreen(topBarViewModel)
+            BalanceScreen()
         }
         composable(route = RootScreen.Categories.route) {
-            CategoriesScreen(topBarViewModel)
+            CategoriesScreen()
         }
         composable(route = RootScreen.Settings.route) {
-            SettingsScreen(topBarViewModel)
+            SettingsScreen()
         }
     }
 }

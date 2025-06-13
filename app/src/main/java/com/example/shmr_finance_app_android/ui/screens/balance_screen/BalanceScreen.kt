@@ -12,7 +12,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -26,28 +25,12 @@ import com.example.shmr_finance_app_android.ui.screens.balance_screen.components
 import com.example.shmr_finance_app_android.ui.screens.balance_screen.components.BalanceCurrencyCard
 import com.example.shmr_finance_app_android.ui.viewmodels.BalanceScreenState
 import com.example.shmr_finance_app_android.ui.viewmodels.BalanceScreenViewModel
-import com.example.shmr_finance_app_android.ui.viewmodels.TopBarState
-import com.example.shmr_finance_app_android.ui.viewmodels.TopBarViewModel
 
 @Composable
 fun BalanceScreen(
-    topBarViewModel: TopBarViewModel,
     viewModel: BalanceScreenViewModel = viewModel() // пока не дошли до DI - вью модель здесь
 ) {
     val state by viewModel.screenState.collectAsState()
-
-    val title = stringResource(R.string.balance_screen_title)
-    val description = stringResource(R.string.balance_edit_description)
-    LaunchedEffect(Unit) {
-        topBarViewModel.update(
-            TopBarState(
-                title = title,
-                actionIcon = R.drawable.ic_edit,
-                actionDescription = description,
-                onActionClick = { } // Переход на экран редактирования счета
-            )
-        )
-    }
 
     when (state) {
         is BalanceScreenState.Loading -> BalanceLoadingState()

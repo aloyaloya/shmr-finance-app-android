@@ -13,7 +13,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -28,28 +27,12 @@ import com.example.shmr_finance_app_android.ui.components.ListItemCard
 import com.example.shmr_finance_app_android.ui.components.TotalAmountCard
 import com.example.shmr_finance_app_android.ui.viewmodels.IncomeScreenState
 import com.example.shmr_finance_app_android.ui.viewmodels.IncomeScreenViewModel
-import com.example.shmr_finance_app_android.ui.viewmodels.TopBarState
-import com.example.shmr_finance_app_android.ui.viewmodels.TopBarViewModel
 
 @Composable
 fun IncomeScreen(
-    topBarViewModel: TopBarViewModel,
     viewModel: IncomeScreenViewModel = viewModel() // пока не дошли до DI - вью модель здесь
 ) {
     val state by viewModel.screenState.collectAsState()
-
-    val title = stringResource(R.string.income_screen_title)
-    val description = stringResource(R.string.incomes_history_description)
-    LaunchedEffect(Unit) {
-        topBarViewModel.update(
-            TopBarState(
-                title = title,
-                actionIcon = R.drawable.ic_history,
-                actionDescription = description,
-                onActionClick = { } // Переход на экран Моя история
-            )
-        )
-    }
 
     when (state) {
         is IncomeScreenState.Loading -> IncomeLoadingState()
