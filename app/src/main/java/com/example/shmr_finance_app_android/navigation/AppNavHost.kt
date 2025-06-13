@@ -9,6 +9,7 @@ import com.example.shmr_finance_app_android.ui.screens.balance_screen.BalanceScr
 import com.example.shmr_finance_app_android.ui.screens.categories_screen.CategoriesScreen
 import com.example.shmr_finance_app_android.ui.screens.expenses_screen.ExpensesScreen
 import com.example.shmr_finance_app_android.ui.screens.income_screen.IncomeScreen
+import com.example.shmr_finance_app_android.ui.screens.settings_screen.SettingsScreen
 import com.example.shmr_finance_app_android.ui.viewmodels.TopBarViewModel
 
 @Composable
@@ -35,7 +36,7 @@ fun AppNavHost(
             CategoriesScreen(topBarViewModel)
         }
         composable(route = RootScreen.Settings.route) {
-            // Экран Настройки
+            SettingsScreen(topBarViewModel)
         }
     }
 }

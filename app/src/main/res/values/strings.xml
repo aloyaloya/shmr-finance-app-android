@@ -23,4 +23,5 @@
     <string name="no_categories_found">У вас нет статей расходов</string>
     <string name="categories_search_placeholder">Найти статью</string>
     <string name="categories_search_description">Поиск статьи</string>
+    <string name="dark_theme_option">Темная тема</string>
 </resources>
