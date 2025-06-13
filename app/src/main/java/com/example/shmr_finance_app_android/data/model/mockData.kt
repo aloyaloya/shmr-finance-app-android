@@ -4,6 +4,7 @@ import com.example.shmr_finance_app_android.data.model.domain.Balance
 import com.example.shmr_finance_app_android.data.model.domain.Category
 import com.example.shmr_finance_app_android.data.model.domain.Expense
 import com.example.shmr_finance_app_android.data.model.domain.Income
+import com.example.shmr_finance_app_android.data.model.domain.Option
 
 val mockExpenses = listOf(
     Expense(
@@ -126,4 +127,14 @@ val mockCategories = listOf(
         title = "Медицина",
         emoji = "💊"
     )
+)
+
+val mockSettings = listOf(
+    Option(title = "Основной цвет"),
+    Option(title = "Звуки"),
+    Option(title = "Хаптики"),
+    Option(title = "Код пароль"),
+    Option(title = "Синхронизация"),
+    Option(title = "Язык"),
+    Option(title = "О программе")
 )
