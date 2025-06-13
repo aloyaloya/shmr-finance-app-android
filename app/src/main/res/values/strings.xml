@@ -1,3 +1,30 @@
 <resources>
     <string name="app_name">shmr-finance-app-android</string>
+    <string name="expense_screen_title">Расходы сегодня</string>
+    <string name="income_screen_title">Доходы сегодня</string>
+    <string name="balance_screen_title">Мой счет</string>
+    <string name="categories_screen_title">Мои статьи</string>
+    <string name="settings_screen_title">Настройки</string>
+    <string name="expense_screen_label">Расходы</string>
+    <string name="income_screen_label">Доходы</string>
+    <string name="balance_screen_label">Счет</string>
+    <string name="categories_screen_label">Статьи</string>
+    <string name="settings_screen_label">Настройки</string>
+    <string name="trail_icon_description">Открыть</string>
+    <string name="expenses_history_description">История расходов</string>
+    <string name="total_amount">Всего</string>
+    <string name="retry">Повторить</string>
+    <string name="no_expenses_found">У вас нет расходов</string>
+    <string name="no_income_found">У вас нет доходов</string>
+    <string name="incomes_history_description">История доходов</string>
+    <string name="balance_edit_description">Изменить счет</string>
+    <string name="balance">Баланс</string>
+    <string name="currency">Валюта</string>
+    <string name="no_categories_found">У вас нет статей расходов</string>
+    <string name="categories_search_placeholder">Найти статью</string>
+    <string name="categories_search_description">Поиск статьи</string>
+    <string name="dark_theme_option">Темная тема</string>
+    <string name="add_expense_description">Добавить расход</string>
+    <string name="add_income_description">Добавить доход</string>
+    <string name="back_description">Назад</string>
 </resources>
