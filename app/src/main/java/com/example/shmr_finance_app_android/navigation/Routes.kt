@@ -12,7 +12,9 @@ sealed class RootScreen(
     val showBackButton: Boolean = false,
     @DrawableRes val actionIcon: Int? = null,
     @StringRes val actionDescription: Int? = null,
-    val onActionRoute: String? = null
+    val onActionRoute: String? = null,
+    val onFloatingActionRoute: String? = null,
+    @StringRes val floatingActionDescription: Int? = null
 ) {
     object Expenses : RootScreen(
         route = "payments_screen",
@@ -21,7 +23,9 @@ sealed class RootScreen(
         title = R.string.expense_screen_title,
         actionIcon = R.drawable.ic_history,
         actionDescription = R.string.expenses_history_description,
-        onActionRoute = ""
+        onActionRoute = "",
+        onFloatingActionRoute = "",
+        floatingActionDescription = R.string.add_expense_description
     )
 
     object Income : RootScreen(
@@ -31,7 +35,9 @@ sealed class RootScreen(
         title = R.string.income_screen_title,
         actionIcon = R.drawable.ic_history,
         actionDescription = R.string.incomes_history_description,
-        onActionRoute = ""
+        onActionRoute = "",
+        onFloatingActionRoute = "",
+        floatingActionDescription = R.string.add_income_description
     )
 
     object Balance : RootScreen(

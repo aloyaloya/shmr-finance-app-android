@@ -14,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.shmr_finance_app_android.navigation.AppNavHost
 import com.example.shmr_finance_app_android.navigation.RootScreen
 import com.example.shmr_finance_app_android.ui.navigation.BottomNavigationBar
+import com.example.shmr_finance_app_android.ui.navigation.CustomFloatingActionButton
 import com.example.shmr_finance_app_android.ui.navigation.CustomTopBar
 import com.example.shmr_finance_app_android.ui.viewmodels.TopBarViewModel
 
@@ -25,9 +26,10 @@ fun MainScreen() {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination?.route
+    val currentScreen = RootScreen.fromRoute(currentDestination)
 
     LaunchedEffect(currentDestination) {
-        RootScreen.fromRoute(currentDestination)?.let { screen ->
+        currentScreen?.let { screen ->
             topBarViewModel.updateStateForScreen(screen)
         }
     }
@@ -58,6 +60,16 @@ fun MainScreen() {
                 },
                 screens = RootScreen.screens
             )
+        },
+        floatingActionButton = {
+            currentScreen?.onFloatingActionRoute?.let { route ->
+                CustomFloatingActionButton(
+                    onClick = {
+//                        navController.navigate(route) // Дальнейшие экраны еще не делали
+                    },
+                    description = currentScreen.floatingActionDescription
+                )
+            }
         }
     ) { innerPadding ->
         AppNavHost(

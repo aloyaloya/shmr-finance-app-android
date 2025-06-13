@@ -1,0 +1,31 @@
+package com.example.shmr_finance_app_android.ui.navigation
+
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+
+@Composable
+fun CustomFloatingActionButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+    description: Int?
+) {
+    FloatingActionButton(
+        modifier = modifier,
+        onClick = onClick,
+        contentColor = MaterialTheme.colorScheme.surface,
+        containerColor = MaterialTheme.colorScheme.tertiary,
+        shape = CircleShape
+    ) {
+        Icon(
+            imageVector = Icons.Default.Add,
+            contentDescription = description?.let { stringResource(it) }
+        )
+    }
+}
