@@ -11,16 +11,20 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import com.example.shmr_finance_app_android.ui.viewmodels.TopBarState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomTopBar(
     state: TopBarState,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onActionRoute: (String) -> Unit
 ) {
     CenterAlignedTopAppBar(
-        title = { Text(state.title) },
+        title = {
+            Text(text = stringResource(state.title))
+        },
         navigationIcon = {
             if (state.showBackButton) {
                 IconButton(onClick = onBack) {
@@ -32,12 +36,14 @@ fun CustomTopBar(
             }
         },
         actions = {
-            state.actionIcon?.let { icon ->
-                IconButton(onClick = { state.onActionClick?.invoke() }) {
-                    Icon(
-                        painter = painterResource(icon),
-                        contentDescription = state.actionDescription
-                    )
+            state.onActionRoute?.let {
+                IconButton(onClick = { onActionRoute(state.onActionRoute) }) {
+                    state.actionIcon?.let {
+                        Icon(
+                            painter = painterResource(state.actionIcon),
+                            contentDescription = state.actionDescription?.let { stringResource(it) }
+                        )
+                    }
                 }
             }
         },

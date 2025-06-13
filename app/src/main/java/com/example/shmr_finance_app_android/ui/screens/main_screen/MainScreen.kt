@@ -3,6 +3,7 @@ package com.example.shmr_finance_app_android.ui.screens.main_screen
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -25,12 +26,21 @@ fun MainScreen() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination?.route
 
+    LaunchedEffect(currentDestination) {
+        RootScreen.fromRoute(currentDestination)?.let { screen ->
+            topBarViewModel.updateStateForScreen(screen)
+        }
+    }
+
     Scaffold(
         topBar = {
             CustomTopBar(
                 state = topBarState,
                 onBack = {
                     navController.popBackStack()
+                },
+                onActionRoute = {
+//                    navController.navigate(it) // Дальнейшие экраны еще не делали
                 }
             )
         },
@@ -52,7 +62,6 @@ fun MainScreen() {
     ) { innerPadding ->
         AppNavHost(
             modifier = Modifier.padding(innerPadding),
-            topBarViewModel = topBarViewModel,
             navController = navController
         )
     }
