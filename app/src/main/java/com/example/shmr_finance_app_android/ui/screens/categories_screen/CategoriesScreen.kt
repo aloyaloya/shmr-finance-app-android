@@ -62,9 +62,9 @@ private fun CategoriesSuccessState(
     categories: List<Category>
 ) {
     LazyColumn {
-        items(categories) { expense ->
+        items(categories, key = { category -> category.id }) { category ->
             ListItemCard(
-                item = expense.toListItem(),
+                item = category.toListItem(),
                 onClick = { } // Переход на экран Мои расходы
             )
         }

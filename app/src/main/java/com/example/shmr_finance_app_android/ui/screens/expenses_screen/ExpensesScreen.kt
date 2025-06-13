@@ -54,7 +54,7 @@ private fun ExpensesSuccessState(
     Column(Modifier.fillMaxSize()) {
         TotalAmountCard(totalAmount = "436 558 ₽")
         LazyColumn {
-            items(expenses) { expense ->
+            items(expenses, key = { expense -> expense.id }) { expense ->
                 ListItemCard(
                     item = expense.toListItem(),
                     trailIcon = R.drawable.ic_arrow_right,
