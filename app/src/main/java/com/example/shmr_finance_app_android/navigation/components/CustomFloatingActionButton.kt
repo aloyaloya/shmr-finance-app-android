@@ -1,4 +1,4 @@
-package com.example.shmr_finance_app_android.ui.navigation
+package com.example.shmr_finance_app_android.navigation.components
 
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons

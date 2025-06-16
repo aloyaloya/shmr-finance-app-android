@@ -1,4 +1,4 @@
-package com.example.shmr_finance_app_android.ui.viewmodels
+package com.example.shmr_finance_app_android.ui.screens.expenses_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
