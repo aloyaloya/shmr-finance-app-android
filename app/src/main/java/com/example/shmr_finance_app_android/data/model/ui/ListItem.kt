@@ -3,13 +3,13 @@ package com.example.shmr_finance_app_android.data.model.ui
 import androidx.compose.ui.graphics.Color
 
 data class ListItem(
-    val lead: LeadContent?,
+    val lead: LeadContent? = null,
     val content: MainContent,
-    val trail: TrailContent?
+    val trail: TrailContent? = null
 )
 
 data class LeadContent(
-    val text: String? = null,
+    val text: String,
     val color: Color? = null
 )
 
