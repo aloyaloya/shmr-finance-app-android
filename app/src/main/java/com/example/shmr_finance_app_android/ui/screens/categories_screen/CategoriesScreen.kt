@@ -1,5 +1,6 @@
 package com.example.shmr_finance_app_android.ui.screens.categories_screen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,9 +21,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.shmr_finance_app_android.R
-import com.example.shmr_finance_app_android.data.mapper.toListItem
 import com.example.shmr_finance_app_android.data.model.domain.Category
 import com.example.shmr_finance_app_android.ui.components.ListItemCard
 import com.example.shmr_finance_app_android.ui.screens.categories_screen.components.SearchTextField
@@ -64,8 +65,10 @@ private fun CategoriesSuccessState(
     LazyColumn {
         items(categories, key = { category -> category.id }) { category ->
             ListItemCard(
-                item = category.toListItem(),
-                onClick = { } // Переход на экран Мои расходы
+                modifier = Modifier
+                    .clickable { } // Переход на экран Мои расходы
+                    .height(70.dp),
+                item = category.toListItem()
             )
         }
     }

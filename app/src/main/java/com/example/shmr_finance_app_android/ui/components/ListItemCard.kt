@@ -1,12 +1,10 @@
 package com.example.shmr_finance_app_android.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -22,7 +20,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.data.model.ui.LeadContent
 import com.example.shmr_finance_app_android.data.model.ui.ListItem
@@ -34,20 +31,17 @@ import com.example.shmr_finance_app_android.data.model.ui.TrailContent
  *
  * @param item Данные для отображения
  * @param trailIcon Иконка в trailing-контенте (опционально)
- * @param onClick Обработчик клика
  */
 @Composable
 fun ListItemCard(
     modifier: Modifier = Modifier,
     item: ListItem,
-    trailIcon: Int? = null,
-    onClick: () -> Unit
+    trailIcon: Int? = null
 ) {
     Row(
-        modifier = modifier
-            .clickable { onClick() }
-            .height(70.dp)
-            .padding(horizontal = dimensionResource(R.dimen.medium_padding)),
+        modifier = modifier.padding(
+            horizontal = dimensionResource(R.dimen.medium_padding)
+        ),
         horizontalArrangement = Arrangement.spacedBy(
             dimensionResource(R.dimen.medium_spacer)
         ),
@@ -63,9 +57,16 @@ fun ListItemCard(
         )
 
         item.trail?.let { trail ->
-            TrailItemContent(
-                trail = trail,
-                icon = trailIcon
+            TrailItemContent(trail = trail)
+        }
+
+        trailIcon?.let {
+            Icon(
+                modifier = Modifier
+                    .width(dimensionResource(R.dimen.large_icon_size))
+                    .align(Alignment.CenterVertically),
+                painter = painterResource(trailIcon),
+                contentDescription = stringResource(R.string.trail_icon_description)
             )
         }
     }
@@ -76,30 +77,13 @@ fun ListItemCard(
 @Composable
 private fun TrailItemContent(
     modifier: Modifier = Modifier,
-    trail: TrailContent,
-    icon: Int?
+    trail: TrailContent
 ) {
-    Row(
+    Text(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(
-            dimensionResource(R.dimen.medium_spacer)
-        )
-    ) {
-        Text(
-            text = trail.text,
-            style = MaterialTheme.typography.bodyLarge
-        )
-
-        icon?.let {
-            Icon(
-                modifier = Modifier
-                    .width(dimensionResource(R.dimen.medium_icon_size))
-                    .align(Alignment.CenterVertically),
-                painter = painterResource(icon),
-                contentDescription = stringResource(R.string.trail_icon_description)
-            )
-        }
-    }
+        text = trail.text,
+        style = MaterialTheme.typography.bodyLarge
+    )
 }
 
 @Composable
@@ -144,11 +128,9 @@ private fun LeadItemContent(
             ),
         contentAlignment = Alignment.Center
     ) {
-        lead.text?.let {
-            Text(
-                text = it,
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
+        Text(
+            text = lead.text,
+            style = MaterialTheme.typography.bodyMedium
+        )
     }
 }

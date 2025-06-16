@@ -1,5 +1,6 @@
 package com.example.shmr_finance_app_android.ui.screens.income_screen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,9 +20,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.shmr_finance_app_android.R
-import com.example.shmr_finance_app_android.data.mapper.toListItem
 import com.example.shmr_finance_app_android.data.model.domain.Income
 import com.example.shmr_finance_app_android.ui.components.ListItemCard
 import com.example.shmr_finance_app_android.ui.components.TotalAmountCard
@@ -56,9 +57,11 @@ private fun IncomeSuccessState(
         LazyColumn {
             items(incomes, key = { income -> income.id }) { income ->
                 ListItemCard(
+                    modifier = Modifier
+                        .clickable { } // Переход пока не понятно куда
+                        .height(70.dp),
                     item = income.toListItem(),
-                    trailIcon = R.drawable.ic_arrow_right,
-                    onClick = { } // Переход пока не понятно куда
+                    trailIcon = R.drawable.ic_arrow_right
                 )
             }
         }
