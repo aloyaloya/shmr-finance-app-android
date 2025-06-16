@@ -1,4 +1,4 @@
-package com.example.shmr_finance_app_android.ui.navigation
+package com.example.shmr_finance_app_android.navigation.components
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -14,32 +14,31 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.example.shmr_finance_app_android.R
-import com.example.shmr_finance_app_android.navigation.RootScreen
+import com.example.shmr_finance_app_android.navigation.routes.BottomBarItem
 
 @Composable
 fun BottomNavigationBar(
     currentDestination: String?,
     onNavigate: (String) -> Unit,
-    screens: List<RootScreen>
+    items: List<BottomBarItem>
 ) {
-
     NavigationBar {
-        screens.forEach { screen ->
+        items.forEach { item ->
             NavigationBarItem(
-                selected = currentDestination == screen.route,
+                selected = currentDestination == item.route.path,
                 label = {
-                    Text(text = stringResource(id = screen.label))
+                    Text(text = stringResource(id = item.labelResId))
                 },
                 icon = {
                     Icon(
                         modifier = Modifier
                             .padding(all = dimensionResource(R.dimen.extra_small_padding))
                             .size(dimensionResource(R.dimen.medium_icon_size)),
-                        painter = painterResource(screen.icon),
-                        contentDescription = stringResource(screen.label)
+                        painter = painterResource(item.iconResId),
+                        contentDescription = stringResource(item.labelResId)
                     )
                 },
-                onClick = { onNavigate(screen.route) },
+                onClick = { onNavigate(item.route.path) },
                 colors = NavigationBarItemDefaults.colors(
                     indicatorColor = MaterialTheme.colorScheme.onTertiaryContainer,
                     selectedIconColor = MaterialTheme.colorScheme.tertiary,
