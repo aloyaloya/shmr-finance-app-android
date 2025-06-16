@@ -26,5 +26,6 @@
     <string name="dark_theme_option">Темная тема</string>
     <string name="add_expense_description">Добавить расход</string>
     <string name="add_income_description">Добавить доход</string>
+    <string name="add_balance_description">Добавить счет</string>
     <string name="back_description">Назад</string>
 </resources>

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -16,16 +17,30 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.data.model.ui.ListItem
 import com.example.shmr_finance_app_android.data.model.ui.MainContent
+import com.example.shmr_finance_app_android.navigation.config.ScreenConfig
+import com.example.shmr_finance_app_android.navigation.config.TopBarConfig
+import com.example.shmr_finance_app_android.navigation.routes.Route
 import com.example.shmr_finance_app_android.ui.components.ListItemCard
 import com.example.shmr_finance_app_android.ui.screens.settings_screen.components.ThemeSwitcherOptionCard
-import com.example.shmr_finance_app_android.ui.viewmodels.SettingsScreenViewModel
 
 @Composable
 fun SettingsScreen(
-    viewModel: SettingsScreenViewModel = viewModel()  // пока не дошли до DI - вью модель здесь
+    viewModel: SettingsScreenViewModel = viewModel(),  // пока не дошли до DI - вью модель здесь
+    updateConfigState: (ScreenConfig) -> Unit
 ) {
     val darkThemeStatus by viewModel.darkThemeStatus.collectAsState()
     val optionsItems = viewModel.optionsItems
+
+    LaunchedEffect(updateConfigState) {
+        updateConfigState(
+            ScreenConfig(
+                route = Route.Root.Settings.path,
+                topBarConfig = TopBarConfig(
+                    titleResId = R.string.settings_screen_title
+                )
+            )
+        )
+    }
 
     Column(Modifier.fillMaxSize()) {
         LazyColumn {

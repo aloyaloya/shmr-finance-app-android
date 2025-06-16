@@ -12,6 +12,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -21,16 +22,40 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.data.model.domain.Balance
+import com.example.shmr_finance_app_android.navigation.config.FloatingActionConfig
+import com.example.shmr_finance_app_android.navigation.config.ScreenConfig
+import com.example.shmr_finance_app_android.navigation.config.TopBarAction
+import com.example.shmr_finance_app_android.navigation.config.TopBarConfig
+import com.example.shmr_finance_app_android.navigation.routes.Route
 import com.example.shmr_finance_app_android.ui.screens.balance_screen.components.BalanceAmountCard
 import com.example.shmr_finance_app_android.ui.screens.balance_screen.components.BalanceCurrencyCard
-import com.example.shmr_finance_app_android.ui.viewmodels.BalanceScreenState
-import com.example.shmr_finance_app_android.ui.viewmodels.BalanceScreenViewModel
 
 @Composable
 fun BalanceScreen(
-    viewModel: BalanceScreenViewModel = viewModel() // пока не дошли до DI - вью модель здесь
+    viewModel: BalanceScreenViewModel = viewModel(), // пока не дошли до DI - вью модель здесь
+    updateConfigState: (ScreenConfig) -> Unit
 ) {
     val state by viewModel.screenState.collectAsState()
+
+    LaunchedEffect(updateConfigState) {
+        updateConfigState(
+            ScreenConfig(
+                route = Route.Root.Balance.path,
+                topBarConfig = TopBarConfig(
+                    titleResId = R.string.balance_screen_title,
+                    action = TopBarAction(
+                        iconResId = R.drawable.ic_edit,
+                        descriptionResId = R.string.balance_edit_description,
+                        actionRoute = Route.Root.Balance
+                    )
+                ),
+                floatingActionConfig = FloatingActionConfig(
+                    descriptionResId = R.string.add_balance_description,
+                    actionRoute = Route.Root.Balance
+                )
+            )
+        )
+    }
 
     when (state) {
         is BalanceScreenState.Loading -> BalanceLoadingState()

@@ -1,4 +1,4 @@
-package com.example.shmr_finance_app_android.ui.navigation
+package com.example.shmr_finance_app_android.navigation.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -12,21 +12,22 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import com.example.shmr_finance_app_android.ui.viewmodels.TopBarState
+import com.example.shmr_finance_app_android.navigation.config.TopBarConfig
+import com.example.shmr_finance_app_android.navigation.routes.Route
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomTopBar(
-    state: TopBarState,
+    config: TopBarConfig,
     onBack: () -> Unit,
-    onActionRoute: (String) -> Unit
+    onActionRoute: (Route) -> Unit
 ) {
     CenterAlignedTopAppBar(
         title = {
-            Text(text = stringResource(state.title))
+            Text(text = stringResource(config.titleResId))
         },
         navigationIcon = {
-            if (state.showBackButton) {
+            if (config.showBackButton) {
                 IconButton(onClick = onBack) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -36,14 +37,14 @@ fun CustomTopBar(
             }
         },
         actions = {
-            state.onActionRoute?.let {
-                IconButton(onClick = { onActionRoute(state.onActionRoute) }) {
-                    state.actionIcon?.let {
-                        Icon(
-                            painter = painterResource(state.actionIcon),
-                            contentDescription = state.actionDescription?.let { stringResource(it) }
-                        )
-                    }
+            config.action?.let { action ->
+                IconButton(
+                    onClick = { onActionRoute(action.actionRoute) }
+                ) {
+                    Icon(
+                        painter = painterResource(action.iconResId),
+                        contentDescription = stringResource(action.descriptionResId)
+                    )
                 }
             }
         },
