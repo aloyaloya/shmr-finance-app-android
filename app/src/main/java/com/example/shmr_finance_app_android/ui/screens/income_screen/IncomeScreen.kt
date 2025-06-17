@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.data.model.domain.Income
 import com.example.shmr_finance_app_android.data.model.ui.ListItem
@@ -38,7 +38,7 @@ import com.example.shmr_finance_app_android.ui.components.ListItemCard
 
 @Composable
 fun IncomeScreen(
-    viewModel: IncomeScreenViewModel = viewModel(), // пока не дошли до DI - вью модель здесь
+    viewModel: IncomeScreenViewModel = hiltViewModel(),
     updateConfigState: (ScreenConfig) -> Unit
 ) {
     val state by viewModel.screenState.collectAsState()

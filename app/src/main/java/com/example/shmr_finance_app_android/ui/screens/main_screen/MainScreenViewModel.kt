@@ -7,10 +7,13 @@ import com.example.shmr_finance_app_android.navigation.config.ScreenConfig
 import com.example.shmr_finance_app_android.navigation.config.TopBarAction
 import com.example.shmr_finance_app_android.navigation.config.TopBarConfig
 import com.example.shmr_finance_app_android.navigation.routes.Route
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import javax.inject.Inject
 
-class MainScreenViewModel : ViewModel() {
+@HiltViewModel
+class MainScreenViewModel @Inject constructor() : ViewModel() {
     private val _configState = MutableStateFlow(
         ScreenConfig(
             route = Route.Root.Expenses.path,

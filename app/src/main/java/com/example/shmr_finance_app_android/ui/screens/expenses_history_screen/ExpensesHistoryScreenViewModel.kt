@@ -3,12 +3,13 @@ package com.example.shmr_finance_app_android.ui.screens.expenses_history_screen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shmr_finance_app_android.data.model.domain.Expense
-import com.example.shmr_finance_app_android.data.model.mockExpenses
 import com.example.shmr_finance_app_android.data.model.mockHistoryExpenses
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 sealed interface ExpensesHistoryScreenState {
     object Loading : ExpensesHistoryScreenState
@@ -22,7 +23,8 @@ sealed interface ExpensesHistoryScreenState {
     ) : ExpensesHistoryScreenState
 }
 
-class ExpensesHistoryScreenViewModel : ViewModel() {
+@HiltViewModel
+class ExpensesHistoryScreenViewModel @Inject constructor() : ViewModel() {
     private val _screenState = MutableStateFlow<ExpensesHistoryScreenState>(
         ExpensesHistoryScreenState.Loading
     )

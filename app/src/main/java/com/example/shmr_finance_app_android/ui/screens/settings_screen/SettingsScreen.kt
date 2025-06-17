@@ -13,7 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.data.model.ui.ListItem
 import com.example.shmr_finance_app_android.data.model.ui.MainContent
@@ -25,7 +25,7 @@ import com.example.shmr_finance_app_android.ui.screens.settings_screen.component
 
 @Composable
 fun SettingsScreen(
-    viewModel: SettingsScreenViewModel = viewModel(),  // пока не дошли до DI - вью модель здесь
+    viewModel: SettingsScreenViewModel = hiltViewModel(),
     updateConfigState: (ScreenConfig) -> Unit
 ) {
     val darkThemeStatus by viewModel.darkThemeStatus.collectAsState()

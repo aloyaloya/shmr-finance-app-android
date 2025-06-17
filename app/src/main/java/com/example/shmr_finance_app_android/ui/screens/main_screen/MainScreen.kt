@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -18,7 +18,7 @@ import com.example.shmr_finance_app_android.navigation.routes.BottomBarItem
 
 @Composable
 fun MainScreen() {
-    val viewModel: MainScreenViewModel = viewModel()
+    val viewModel: MainScreenViewModel = hiltViewModel()
     val configState by viewModel.configState.collectAsState()
 
     val navController = rememberNavController()

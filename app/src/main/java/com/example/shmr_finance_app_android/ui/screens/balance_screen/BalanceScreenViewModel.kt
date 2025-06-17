@@ -4,10 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shmr_finance_app_android.data.model.domain.Balance
 import com.example.shmr_finance_app_android.data.model.mockBalance
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 sealed interface BalanceScreenState {
     object Loading : BalanceScreenState
@@ -15,7 +17,8 @@ sealed interface BalanceScreenState {
     data class Success(val balance: Balance) : BalanceScreenState
 }
 
-class BalanceScreenViewModel : ViewModel() {
+@HiltViewModel
+class BalanceScreenViewModel @Inject constructor() : ViewModel() {
     private val _screenState = MutableStateFlow<BalanceScreenState>(BalanceScreenState.Loading)
     val screenState: StateFlow<BalanceScreenState> = _screenState.asStateFlow()
 

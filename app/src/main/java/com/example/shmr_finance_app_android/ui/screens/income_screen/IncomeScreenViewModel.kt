@@ -4,10 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shmr_finance_app_android.data.model.domain.Income
 import com.example.shmr_finance_app_android.data.model.mockIncomes
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 sealed interface IncomeScreenState {
     object Loading : IncomeScreenState
@@ -18,7 +20,8 @@ sealed interface IncomeScreenState {
     ) : IncomeScreenState
 }
 
-class IncomeScreenViewModel : ViewModel() {
+@HiltViewModel
+class IncomeScreenViewModel @Inject constructor() : ViewModel() {
     private val _screenState = MutableStateFlow<IncomeScreenState>(IncomeScreenState.Loading)
     val screenState: StateFlow<IncomeScreenState> = _screenState.asStateFlow()
 

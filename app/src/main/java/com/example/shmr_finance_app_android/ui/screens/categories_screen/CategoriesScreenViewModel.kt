@@ -4,10 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shmr_finance_app_android.data.model.domain.Category
 import com.example.shmr_finance_app_android.data.model.mockCategories
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 sealed interface CategoriesScreenState {
     object Loading : CategoriesScreenState
@@ -16,7 +18,8 @@ sealed interface CategoriesScreenState {
     data class Success(val categories: List<Category>) : CategoriesScreenState
 }
 
-class CategoriesScreenViewModel : ViewModel() {
+@HiltViewModel
+class CategoriesScreenViewModel @Inject constructor() : ViewModel() {
     private val _screenState = MutableStateFlow<CategoriesScreenState>(CategoriesScreenState.Loading)
     val screenState: StateFlow<CategoriesScreenState> = _screenState.asStateFlow()
 
