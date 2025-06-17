@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.data.model.ui.LeadContent
@@ -31,14 +32,16 @@ import com.example.shmr_finance_app_android.data.model.ui.TrailContent
  *
  * @param item Данные для отображения
  * @param trailIcon Иконка в trailing-контенте (опционально)
- * @param noDivider Отображается ли HorizontalDivider (по умолчанию да)
+ * @param showDivider Отображается ли HorizontalDivider (по умолчанию да)
+ * @param subtitleStyle Стиль subtitle текст в main-контенте
  */
 @Composable
 fun ListItemCard(
     modifier: Modifier = Modifier,
     item: ListItem,
     trailIcon: Int? = null,
-    noDivider: Boolean = false
+    showDivider: Boolean = true,
+    subtitleStyle: TextStyle = MaterialTheme.typography.bodyMedium
 ) {
     Row(
         modifier = modifier.padding(
@@ -55,7 +58,8 @@ fun ListItemCard(
 
         MainItemContent(
             modifier = Modifier.weight(1f),
-            content = item.content
+            content = item.content,
+            subtitleStyle = subtitleStyle
         )
 
         item.trail?.let { trail ->
@@ -73,7 +77,7 @@ fun ListItemCard(
         }
     }
 
-    if(!noDivider) {
+    if(showDivider) {
         HorizontalDivider()
     }
 }
@@ -93,7 +97,8 @@ private fun TrailItemContent(
 @Composable
 private fun MainItemContent(
     modifier: Modifier = Modifier,
-    content: MainContent
+    content: MainContent,
+    subtitleStyle: TextStyle
 ) {
     Column(
         modifier = modifier,
@@ -109,7 +114,7 @@ private fun MainItemContent(
         content.subtitle?.let {
             Text(
                 text = it,
-                style = MaterialTheme.typography.bodyMedium,
+                style = subtitleStyle,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis

@@ -101,7 +101,7 @@ private fun BalanceSuccessState(
                 trail = TrailContent(text = balance.currency)
             ),
             trailIcon = R.drawable.ic_arrow_right,
-            noDivider = true
+            showDivider = false
         )
     }
 }

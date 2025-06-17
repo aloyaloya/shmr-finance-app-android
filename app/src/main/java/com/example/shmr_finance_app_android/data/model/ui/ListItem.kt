@@ -19,5 +19,6 @@ data class MainContent(
 )
 
 data class TrailContent(
-    val text: String
+    val text: String,
+    val subtext: String? = null
 )
