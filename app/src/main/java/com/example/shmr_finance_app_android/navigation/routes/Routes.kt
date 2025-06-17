@@ -6,11 +6,15 @@ import com.example.shmr_finance_app_android.R
 
 sealed class Route(val path: String) {
     sealed class Root(path: String) : Route(path) {
-        data object Expenses :  Root(path = "expenses_screen")
+        data object Expenses : Root(path = "expenses_screen")
         data object Income : Root(path = "income_screen")
         data object Balance : Root(path = "balance_screen")
         data object Categories : Root(path = "categories_screen")
         data object Settings : Root(path = "settings_screen")
+    }
+
+    sealed class ExpensesSubScreens(path: String) : Route(path) {
+        data object ExpensesHistory : ExpensesSubScreens(path = "expenses_history_screen")
     }
 }
 

@@ -19,7 +19,7 @@ class MainScreenViewModel : ViewModel() {
                 action = TopBarAction(
                     iconResId = R.drawable.ic_history,
                     descriptionResId = R.string.expenses_history_description,
-                    actionRoute = Route.Root.Expenses
+                    actionRoute = Route.ExpensesSubScreens.ExpensesHistory
                 )
             ),
             floatingActionConfig = FloatingActionConfig(

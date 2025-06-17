@@ -39,7 +39,7 @@ import com.example.shmr_finance_app_android.ui.components.ListItemCard
 @Composable
 fun ExpensesScreen(
     viewModel: ExpensesScreenViewModel = viewModel(), // пока не дошли до DI - вью модель здесь
-    updateConfigState: (ScreenConfig) -> Unit
+    updateConfigState: (ScreenConfig) -> Unit,
 ) {
     val state by viewModel.screenState.collectAsState()
 
@@ -52,7 +52,7 @@ fun ExpensesScreen(
                     action = TopBarAction(
                         iconResId = R.drawable.ic_history,
                         descriptionResId = R.string.expenses_history_description,
-                        actionRoute = Route.Root.Expenses
+                        actionRoute = Route.ExpensesSubScreens.ExpensesHistory
                     )
                 ),
                 floatingActionConfig = FloatingActionConfig(

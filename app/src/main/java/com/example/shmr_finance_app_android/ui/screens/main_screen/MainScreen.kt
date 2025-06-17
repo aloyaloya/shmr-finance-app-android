@@ -29,10 +29,16 @@ fun MainScreen() {
         topBar = {
             CustomTopBar(
                 config = configState.topBarConfig,
-                onBack = {
-                    navController.popBackStack()
-                },
-                onActionRoute = {}  // Дальнейшие экраны еще не делали
+                onBack = { navController.popBackStack() },
+                onActionRoute = {
+                    navController.navigate(it) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
             )
         },
         bottomBar = {

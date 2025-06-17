@@ -20,7 +20,7 @@ import com.example.shmr_finance_app_android.navigation.routes.Route
 fun CustomTopBar(
     config: TopBarConfig,
     onBack: () -> Unit,
-    onActionRoute: (Route) -> Unit
+    onActionRoute: (String) -> Unit
 ) {
     CenterAlignedTopAppBar(
         title = {
@@ -39,7 +39,7 @@ fun CustomTopBar(
         actions = {
             config.action?.let { action ->
                 IconButton(
-                    onClick = { onActionRoute(action.actionRoute) }
+                    onClick = { onActionRoute(action.actionRoute.path) }
                 ) {
                     Icon(
                         painter = painterResource(action.iconResId),
