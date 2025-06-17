@@ -5,6 +5,7 @@
     <string name="balance_screen_title">Мой счет</string>
     <string name="categories_screen_title">Мои статьи</string>
     <string name="settings_screen_title">Настройки</string>
+    <string name="expenses_history_screen_title">Моя история</string>
     <string name="expense_screen_label">Расходы</string>
     <string name="income_screen_label">Доходы</string>
     <string name="balance_screen_label">Счет</string>
@@ -28,4 +29,8 @@
     <string name="add_income_description">Добавить доход</string>
     <string name="add_balance_description">Добавить счет</string>
     <string name="back_description">Назад</string>
+    <string name="expenses_analysis_description">Анализ расходов</string>
+    <string name="period_start">Начало</string>
+    <string name="period_end">Конец</string>
+    <string name="summary">Сумма</string>
 </resources>

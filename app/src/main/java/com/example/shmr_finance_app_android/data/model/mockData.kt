@@ -24,7 +24,7 @@ val mockExpenses = listOf(
     Expense(
         id = "2",
         title = "На собачку",
-        author = "Джек",
+        subtitle = "Джек",
         amount = 100000,
         currency = "₽",
         emoji = "🐶"
@@ -32,7 +32,7 @@ val mockExpenses = listOf(
     Expense(
         id = "3",
         title = "На собачку",
-        author = "Энни",
+        subtitle = "Энни",
         amount = 100000,
         currency = "₽",
         emoji = "🐶"
@@ -63,6 +63,44 @@ val mockExpenses = listOf(
         amount = 100000,
         currency = "₽",
         emoji = "💊"
+    ),
+)
+
+val mockHistoryExpenses = listOf(
+    Expense(
+        id = "8",
+        title = "Ремонт квартиры",
+        subtitle = "Ремонт - фурнитура для дверей",
+        amount = 100000,
+        currency = "₽"
+    ),
+    Expense(
+        id = "9",
+        title = "На собачку",
+        amount = 100000,
+        currency = "₽",
+        emoji = "🐶"
+    ),
+    Expense(
+        id = "10",
+        title = "На собачку",
+        amount = 100000,
+        currency = "₽",
+        emoji = "🐶"
+    ),
+    Expense(
+        id = "11",
+        title = "На собачку",
+        amount = 100000,
+        currency = "₽",
+        emoji = "🐶"
+    ),
+    Expense(
+        id = "12",
+        title = "На собачку",
+        amount = 100000,
+        currency = "₽",
+        emoji = "🐶"
     ),
 )
 
