@@ -1,10 +1,10 @@
-package com.example.shmr_finance_app_android.data.model
+package com.example.shmr_finance_app_android.data.remote.api.model
 
-import com.example.shmr_finance_app_android.data.model.domain.Balance
-import com.example.shmr_finance_app_android.data.model.domain.Category
-import com.example.shmr_finance_app_android.data.model.domain.Expense
-import com.example.shmr_finance_app_android.data.model.domain.Income
-import com.example.shmr_finance_app_android.data.model.domain.Option
+import com.example.shmr_finance_app_android.domain.model.Balance
+import com.example.shmr_finance_app_android.domain.model.Category
+import com.example.shmr_finance_app_android.domain.model.Expense
+import com.example.shmr_finance_app_android.domain.model.Income
+import com.example.shmr_finance_app_android.domain.model.Option
 
 val mockExpenses = listOf(
     Expense(

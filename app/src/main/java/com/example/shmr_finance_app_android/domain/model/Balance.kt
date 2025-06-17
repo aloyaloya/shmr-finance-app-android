@@ -1,4 +1,4 @@
-package com.example.shmr_finance_app_android.data.model.domain
+package com.example.shmr_finance_app_android.domain.model
 
 data class Balance(
     val name: String,

@@ -23,11 +23,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.shmr_finance_app_android.R
-import com.example.shmr_finance_app_android.data.model.domain.Balance
-import com.example.shmr_finance_app_android.data.model.ui.LeadContent
-import com.example.shmr_finance_app_android.data.model.ui.ListItem
-import com.example.shmr_finance_app_android.data.model.ui.MainContent
-import com.example.shmr_finance_app_android.data.model.ui.TrailContent
+import com.example.shmr_finance_app_android.domain.model.Balance
+import com.example.shmr_finance_app_android.domain.model.ui.LeadContent
+import com.example.shmr_finance_app_android.domain.model.ui.ListItem
+import com.example.shmr_finance_app_android.domain.model.ui.MainContent
+import com.example.shmr_finance_app_android.domain.model.ui.TrailContent
 import com.example.shmr_finance_app_android.navigation.config.FloatingActionConfig
 import com.example.shmr_finance_app_android.navigation.config.ScreenConfig
 import com.example.shmr_finance_app_android.navigation.config.TopBarAction

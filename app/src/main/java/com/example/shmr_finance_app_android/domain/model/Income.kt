@@ -1,8 +1,8 @@
-package com.example.shmr_finance_app_android.data.model.domain
+package com.example.shmr_finance_app_android.domain.model
 
-import com.example.shmr_finance_app_android.data.model.ui.ListItem
-import com.example.shmr_finance_app_android.data.model.ui.MainContent
-import com.example.shmr_finance_app_android.data.model.ui.TrailContent
+import com.example.shmr_finance_app_android.domain.model.ui.ListItem
+import com.example.shmr_finance_app_android.domain.model.ui.MainContent
+import com.example.shmr_finance_app_android.domain.model.ui.TrailContent
 
 data class Income(
     val id: String,

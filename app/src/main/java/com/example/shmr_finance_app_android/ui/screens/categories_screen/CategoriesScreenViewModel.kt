@@ -2,8 +2,8 @@ package com.example.shmr_finance_app_android.ui.screens.categories_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shmr_finance_app_android.data.model.domain.Category
-import com.example.shmr_finance_app_android.data.model.mockCategories
+import com.example.shmr_finance_app_android.domain.model.Category
+import com.example.shmr_finance_app_android.data.remote.api.model.mockCategories
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

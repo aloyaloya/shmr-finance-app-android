@@ -2,8 +2,8 @@ package com.example.shmr_finance_app_android.ui.screens.income_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shmr_finance_app_android.data.model.domain.Income
-import com.example.shmr_finance_app_android.data.model.mockIncomes
+import com.example.shmr_finance_app_android.domain.model.Income
+import com.example.shmr_finance_app_android.data.remote.api.model.mockIncomes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

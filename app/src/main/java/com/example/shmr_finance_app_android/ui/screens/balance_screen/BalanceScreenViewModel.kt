@@ -2,8 +2,8 @@ package com.example.shmr_finance_app_android.ui.screens.balance_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shmr_finance_app_android.data.model.domain.Balance
-import com.example.shmr_finance_app_android.data.model.mockBalance
+import com.example.shmr_finance_app_android.domain.model.Balance
+import com.example.shmr_finance_app_android.data.remote.api.model.mockBalance
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -2,8 +2,8 @@ package com.example.shmr_finance_app_android.ui.screens.expenses_history_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shmr_finance_app_android.data.model.domain.Expense
-import com.example.shmr_finance_app_android.data.model.mockHistoryExpenses
+import com.example.shmr_finance_app_android.domain.model.Expense
+import com.example.shmr_finance_app_android.data.remote.api.model.mockHistoryExpenses
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

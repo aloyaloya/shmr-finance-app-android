@@ -1,7 +1,7 @@
 package com.example.shmr_finance_app_android.ui.screens.settings_screen
 
 import androidx.lifecycle.ViewModel
-import com.example.shmr_finance_app_android.data.model.mockSettings
+import com.example.shmr_finance_app_android.data.remote.api.model.mockSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

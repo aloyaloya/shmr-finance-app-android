@@ -1,4 +1,4 @@
-package com.example.shmr_finance_app_android.data.model.ui
+package com.example.shmr_finance_app_android.domain.model.ui
 
 import androidx.compose.ui.graphics.Color
 
