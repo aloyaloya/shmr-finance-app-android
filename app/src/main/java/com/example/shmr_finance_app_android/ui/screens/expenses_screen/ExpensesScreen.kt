@@ -1,5 +1,6 @@
 package com.example.shmr_finance_app_android.ui.screens.expenses_screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,13 +26,15 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.data.model.domain.Expense
+import com.example.shmr_finance_app_android.data.model.ui.ListItem
+import com.example.shmr_finance_app_android.data.model.ui.MainContent
+import com.example.shmr_finance_app_android.data.model.ui.TrailContent
 import com.example.shmr_finance_app_android.navigation.config.FloatingActionConfig
 import com.example.shmr_finance_app_android.navigation.config.ScreenConfig
 import com.example.shmr_finance_app_android.navigation.config.TopBarAction
 import com.example.shmr_finance_app_android.navigation.config.TopBarConfig
 import com.example.shmr_finance_app_android.navigation.routes.Route
 import com.example.shmr_finance_app_android.ui.components.ListItemCard
-import com.example.shmr_finance_app_android.ui.components.TotalAmountCard
 
 @Composable
 fun ExpensesScreen(
@@ -78,7 +81,15 @@ private fun ExpensesSuccessState(
     expenses: List<Expense>
 ) {
     Column(Modifier.fillMaxSize()) {
-        TotalAmountCard(totalAmount = "436 558 ₽")
+        ListItemCard(
+            modifier = Modifier
+                .background(color = MaterialTheme.colorScheme.onTertiaryContainer)
+                .height(56.dp),
+            item = ListItem(
+                content = MainContent(title = stringResource(R.string.total_amount)),
+                trail = TrailContent(text = "436 558 ₽")
+            )
+        )
         LazyColumn {
             items(expenses, key = { expense -> expense.id }) { expense ->
                 ListItemCard(

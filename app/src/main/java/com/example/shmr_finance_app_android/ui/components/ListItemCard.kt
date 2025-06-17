@@ -31,12 +31,14 @@ import com.example.shmr_finance_app_android.data.model.ui.TrailContent
  *
  * @param item Данные для отображения
  * @param trailIcon Иконка в trailing-контенте (опционально)
+ * @param noDivider Отображается ли HorizontalDivider (по умолчанию да)
  */
 @Composable
 fun ListItemCard(
     modifier: Modifier = Modifier,
     item: ListItem,
-    trailIcon: Int? = null
+    trailIcon: Int? = null,
+    noDivider: Boolean = false
 ) {
     Row(
         modifier = modifier.padding(
@@ -71,7 +73,9 @@ fun ListItemCard(
         }
     }
 
-    HorizontalDivider()
+    if(!noDivider) {
+        HorizontalDivider()
+    }
 }
 
 @Composable
