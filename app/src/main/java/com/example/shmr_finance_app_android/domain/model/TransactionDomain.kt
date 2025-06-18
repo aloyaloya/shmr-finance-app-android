@@ -1,10 +1,10 @@
 package com.example.shmr_finance_app_android.domain.model
 
-import com.example.shmr_finance_app_android.domain.model.ui.LeadContent
-import com.example.shmr_finance_app_android.domain.model.ui.ListItem
-import com.example.shmr_finance_app_android.domain.model.ui.MainContent
-import com.example.shmr_finance_app_android.domain.model.ui.TrailContent
-import com.example.shmr_finance_app_android.utils.formatWithSpaces
+import com.example.shmr_finance_app_android.presentation.shared.model.LeadContent
+import com.example.shmr_finance_app_android.presentation.shared.model.ListItem
+import com.example.shmr_finance_app_android.presentation.shared.model.MainContent
+import com.example.shmr_finance_app_android.presentation.shared.model.TrailContent
+import com.example.shmr_finance_app_android.core.utils.formatWithSpaces
 import java.time.LocalDate
 import java.time.LocalTime
 

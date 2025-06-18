@@ -2,7 +2,7 @@ package com.example.shmr_finance_app_android.data.repository
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.example.shmr_finance_app_android.data.remote.datasource.FinanceRemoteDataSource
+import com.example.shmr_finance_app_android.data.datasource.FinanceRemoteDataSource
 import com.example.shmr_finance_app_android.domain.mapper.FinanceDomainMapper
 import com.example.shmr_finance_app_android.domain.model.AccountDomain
 import com.example.shmr_finance_app_android.domain.model.CategoryDomain

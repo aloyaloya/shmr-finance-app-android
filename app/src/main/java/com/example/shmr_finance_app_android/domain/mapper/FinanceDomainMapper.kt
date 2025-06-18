@@ -2,11 +2,11 @@ package com.example.shmr_finance_app_android.domain.mapper
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.example.shmr_finance_app_android.data.dto.AccountBriefDTO
-import com.example.shmr_finance_app_android.data.dto.AccountDTO
-import com.example.shmr_finance_app_android.data.dto.CategoryDTO
-import com.example.shmr_finance_app_android.data.dto.StatItemDTO
-import com.example.shmr_finance_app_android.data.dto.TransactionDTO
+import com.example.shmr_finance_app_android.data.model.AccountBriefDTO
+import com.example.shmr_finance_app_android.data.model.AccountDTO
+import com.example.shmr_finance_app_android.data.model.CategoryDTO
+import com.example.shmr_finance_app_android.data.model.StatItemDTO
+import com.example.shmr_finance_app_android.data.model.TransactionDTO
 import com.example.shmr_finance_app_android.domain.model.AccountBriefDomain
 import com.example.shmr_finance_app_android.domain.model.AccountDomain
 import com.example.shmr_finance_app_android.domain.model.CategoryDomain
