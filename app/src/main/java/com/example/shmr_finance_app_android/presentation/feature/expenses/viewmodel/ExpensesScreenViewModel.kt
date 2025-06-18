@@ -2,7 +2,6 @@ package com.example.shmr_finance_app_android.presentation.feature.expenses.viewm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shmr_finance_app_android.domain.model.TransactionDomain
 import com.example.shmr_finance_app_android.domain.usecases.GetExpensesTransactionsByPeriodUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -10,7 +9,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import com.example.shmr_finance_app_android.core.utils.formatWithSpaces
+import com.example.shmr_finance_app_android.presentation.feature.expenses.mapper.TransactionToExpenseMapper
+import com.example.shmr_finance_app_android.presentation.feature.expenses.model.ExpenseUiModel
 import javax.inject.Inject
 
 sealed interface ExpensesScreenState {
@@ -18,14 +18,15 @@ sealed interface ExpensesScreenState {
     data class Error(val message: String, val retryAction: () -> Unit) : ExpensesScreenState
     object Empty : ExpensesScreenState
     data class Success(
-        val expenses: List<TransactionDomain>,
+        val expenses: List<ExpenseUiModel>,
         val totalAmount: String
     ) : ExpensesScreenState
 }
 
 @HiltViewModel
 class ExpensesScreenViewModel @Inject constructor(
-    private val getTransactionsByPeriod: GetExpensesTransactionsByPeriodUseCase
+    private val getTransactionsByPeriod: GetExpensesTransactionsByPeriodUseCase,
+    private val mapper: TransactionToExpenseMapper
 ) : ViewModel() {
     private val _screenState = MutableStateFlow<ExpensesScreenState>(ExpensesScreenState.Loading)
     val screenState: StateFlow<ExpensesScreenState> = _screenState.asStateFlow()
@@ -43,8 +44,8 @@ class ExpensesScreenViewModel @Inject constructor(
                     _screenState.value = ExpensesScreenState.Empty
                 } else {
                     _screenState.value = ExpensesScreenState.Success(
-                        expenses = expensesTransactions,
-                        totalAmount = calculateTotalAmount(expensesTransactions)
+                        expenses = expensesTransactions.map { mapper.map(it) },
+                        totalAmount = mapper.calculateTotalAmount(expensesTransactions)
                     )
                 }
             } catch (e: Exception) {
@@ -55,10 +56,4 @@ class ExpensesScreenViewModel @Inject constructor(
             }
         }
     }
-}
-
-private fun calculateTotalAmount(transactions: List<TransactionDomain>): String {
-    val total = transactions.sumOf { it.amount }
-    val currency = transactions.firstOrNull()?.account?.getCurrencySymbol().orEmpty()
-    return "${total.toString().formatWithSpaces()} $currency"
 }
