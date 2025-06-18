@@ -2,7 +2,6 @@ package com.example.shmr_finance_app_android.presentation.feature.incomes.viewmo
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shmr_finance_app_android.domain.model.TransactionDomain
 import com.example.shmr_finance_app_android.domain.usecases.GetIncomesTransactionsByPeriodUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -10,7 +9,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import com.example.shmr_finance_app_android.core.utils.formatWithSpaces
+import com.example.shmr_finance_app_android.presentation.feature.incomes.mapper.TransactionToIncomeMapper
+import com.example.shmr_finance_app_android.presentation.feature.incomes.model.IncomeUiModel
 import javax.inject.Inject
 
 sealed interface IncomeScreenState {
@@ -18,14 +18,15 @@ sealed interface IncomeScreenState {
     data class Error(val message: String, val retryAction: () -> Unit) : IncomeScreenState
     object Empty : IncomeScreenState
     data class Success(
-        val incomes: List<TransactionDomain>,
+        val incomes: List<IncomeUiModel>,
         val totalAmount: String
     ) : IncomeScreenState
 }
 
 @HiltViewModel
 class IncomeScreenViewModel @Inject constructor(
-    private val getTransactionsByPeriodUseCase: GetIncomesTransactionsByPeriodUseCase
+    private val getTransactionsByPeriodUseCase: GetIncomesTransactionsByPeriodUseCase,
+    private val mapper: TransactionToIncomeMapper
 ) : ViewModel() {
     private val _screenState = MutableStateFlow<IncomeScreenState>(IncomeScreenState.Loading)
     val screenState: StateFlow<IncomeScreenState> = _screenState.asStateFlow()
@@ -43,8 +44,8 @@ class IncomeScreenViewModel @Inject constructor(
                     _screenState.value = IncomeScreenState.Empty
                 } else {
                     _screenState.value = IncomeScreenState.Success(
-                        incomes = incomeTransactions,
-                        totalAmount = calculateTotalAmount(incomeTransactions)
+                        incomes = incomeTransactions.map { mapper.map(it) },
+                        totalAmount = mapper.calculateTotalAmount(incomeTransactions)
                     )
                 }
             } catch (e: Exception) {
@@ -55,10 +56,4 @@ class IncomeScreenViewModel @Inject constructor(
             }
         }
     }
-}
-
-private fun calculateTotalAmount(transactions: List<TransactionDomain>): String {
-    val total = transactions.sumOf { it.amount }
-    val currency = transactions.firstOrNull()?.account?.getCurrencySymbol().orEmpty()
-    return "${total.toString().formatWithSpaces()} $currency"
 }

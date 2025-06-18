@@ -25,7 +25,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.shmr_finance_app_android.R
-import com.example.shmr_finance_app_android.domain.model.TransactionDomain
 import com.example.shmr_finance_app_android.presentation.shared.model.ListItem
 import com.example.shmr_finance_app_android.presentation.shared.model.MainContent
 import com.example.shmr_finance_app_android.presentation.shared.model.TrailContent
@@ -34,6 +33,7 @@ import com.example.shmr_finance_app_android.presentation.feature.main.model.Scre
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarAction
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarConfig
 import com.example.shmr_finance_app_android.core.navigation.Route
+import com.example.shmr_finance_app_android.presentation.feature.incomes.model.IncomeUiModel
 import com.example.shmr_finance_app_android.presentation.shared.components.ListItemCard
 import com.example.shmr_finance_app_android.presentation.feature.incomes.viewmodel.IncomeScreenState
 import com.example.shmr_finance_app_android.presentation.feature.incomes.viewmodel.IncomeScreenViewModel
@@ -81,7 +81,7 @@ fun IncomeScreen(
 
 @Composable
 private fun IncomeSuccessState(
-    incomes: List<TransactionDomain>,
+    incomes: List<IncomeUiModel>,
     totalAmount: String
 ) {
     Column(Modifier.fillMaxSize()) {
