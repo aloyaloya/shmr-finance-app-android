@@ -5,8 +5,11 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
+private const val INPUT_DATE_FORMAT = "yyyy-MM-dd"
+private const val OUTPUT_DATE_FORMAT = "d MMMM yyyy"
+
 fun getCurrentDate(): String {
-    val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    val sdf = SimpleDateFormat(INPUT_DATE_FORMAT, Locale.getDefault())
     return sdf.format(Date())
 }
 
@@ -21,7 +24,7 @@ fun getStartAndEndOfCurrentMonth(): Pair<String, String> {
     calendar.add(Calendar.DATE, -1)
     val endOfMonth = calendar.time
 
-    val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    val sdf = SimpleDateFormat(INPUT_DATE_FORMAT, Locale.getDefault())
 
     return Pair(
         sdf.format(startOfMonth),
@@ -30,8 +33,8 @@ fun getStartAndEndOfCurrentMonth(): Pair<String, String> {
 }
 
 fun formatDateToRussian(dateString: String): String {
-    val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-    val outputFormat = SimpleDateFormat("d MMMM yyyy", Locale("ru"))
+    val inputFormat = SimpleDateFormat(INPUT_DATE_FORMAT, Locale.getDefault())
+    val outputFormat = SimpleDateFormat(OUTPUT_DATE_FORMAT, Locale("ru"))
     val date = inputFormat.parse(dateString) ?: return dateString
     return outputFormat.format(date)
 }

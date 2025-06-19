@@ -1,3 +1,4 @@
+@file:Suppress("MagicNumber")
 package com.example.shmr_finance_app_android.presentation.shared.theme
 
 import androidx.compose.ui.graphics.Color

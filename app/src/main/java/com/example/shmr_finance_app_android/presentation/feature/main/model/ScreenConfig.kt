@@ -2,7 +2,6 @@ package com.example.shmr_finance_app_android.presentation.feature.main.model
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.example.shmr_finance_app_android.core.navigation.Route
 
 data class ScreenConfig(
     val route: String,
