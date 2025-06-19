@@ -2,7 +2,7 @@ package com.example.shmr_finance_app_android.presentation.feature.incomes.viewmo
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shmr_finance_app_android.domain.usecases.GetIncomesTransactionsByPeriodUseCase
+import com.example.shmr_finance_app_android.domain.usecases.GetIncomesByPeriodUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +25,7 @@ sealed interface IncomeScreenState {
 
 @HiltViewModel
 class IncomeScreenViewModel @Inject constructor(
-    private val getTransactionsByPeriodUseCase: GetIncomesTransactionsByPeriodUseCase,
+    private val getTransactionsByPeriodUseCase: GetIncomesByPeriodUseCase,
     private val mapper: TransactionToIncomeMapper
 ) : ViewModel() {
     private val _screenState = MutableStateFlow<IncomeScreenState>(IncomeScreenState.Loading)

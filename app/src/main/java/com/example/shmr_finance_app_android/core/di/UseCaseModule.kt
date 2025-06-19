@@ -2,9 +2,9 @@ package com.example.shmr_finance_app_android.core.di
 
 import com.example.shmr_finance_app_android.domain.repository.FinanceRepository
 import com.example.shmr_finance_app_android.domain.usecases.GetAccountUseCase
-import com.example.shmr_finance_app_android.domain.usecases.GetExpensesTransactionsByPeriodUseCase
+import com.example.shmr_finance_app_android.domain.usecases.GetExpensesByPeriodUseCase
 import com.example.shmr_finance_app_android.domain.usecases.GetIncomesCategoriesUseCase
-import com.example.shmr_finance_app_android.domain.usecases.GetIncomesTransactionsByPeriodUseCase
+import com.example.shmr_finance_app_android.domain.usecases.GetIncomesByPeriodUseCase
 import com.example.shmr_finance_app_android.domain.usecases.GetTransactionsByPeriodUseCase
 import dagger.Module
 import dagger.Provides
@@ -44,15 +44,15 @@ object UseCaseModule {
     @Singleton
     fun provideGetIncomesTransactionsByPeriodUseCase(
         getTransactionsByPeriod: GetTransactionsByPeriodUseCase
-    ): GetIncomesTransactionsByPeriodUseCase {
-        return GetIncomesTransactionsByPeriodUseCase(getTransactionsByPeriod)
+    ): GetIncomesByPeriodUseCase {
+        return GetIncomesByPeriodUseCase(getTransactionsByPeriod)
     }
 
     @Provides
     @Singleton
     fun provideGetExpensesTransactionsByPeriodUseCase(
         getTransactionsByPeriod: GetTransactionsByPeriodUseCase
-    ): GetExpensesTransactionsByPeriodUseCase {
-        return GetExpensesTransactionsByPeriodUseCase(getTransactionsByPeriod)
+    ): GetExpensesByPeriodUseCase {
+        return GetExpensesByPeriodUseCase(getTransactionsByPeriod)
     }
 }

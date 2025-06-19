@@ -5,8 +5,8 @@ data class AccountResponse(
     val name: String,
     val balance: String,
     val currency: String,
-    val incomeStats: StatItemResponse,
-    val expenseStats: StatItemResponse,
+    val incomeStats: List<StatItemResponse>,
+    val expenseStats: List<StatItemResponse>,
     val createdAt: String,
     val updatedAt: String
 )

@@ -2,7 +2,7 @@ package com.example.shmr_finance_app_android.domain.usecases
 
 import com.example.shmr_finance_app_android.domain.model.TransactionDomain
 
-class GetIncomesTransactionsByPeriodUseCase(
+class GetExpensesByPeriodUseCase(
     private val getTransactionsByPeriod: GetTransactionsByPeriodUseCase
 ) {
     suspend operator fun invoke(
@@ -14,6 +14,6 @@ class GetIncomesTransactionsByPeriodUseCase(
             accountId,
             startDate,
             endDate
-        ).filter { it.category.isIncome }
+        ).filterNot { it.category.isIncome }
     }
 }

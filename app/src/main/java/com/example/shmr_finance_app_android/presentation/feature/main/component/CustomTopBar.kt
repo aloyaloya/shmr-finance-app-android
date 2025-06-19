@@ -12,6 +12,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarConfig
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,7 +31,7 @@ fun CustomTopBar(
                 IconButton(onClick = onBack) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Назад"
+                        contentDescription = stringResource(R.string.back)
                     )
                 }
             }
@@ -38,7 +39,7 @@ fun CustomTopBar(
         actions = {
             config.action?.let { action ->
                 IconButton(
-                    onClick = { onActionRoute(action.actionRoute.path) }
+                    onClick = { onActionRoute(action.actionRoute) }
                 ) {
                     Icon(
                         painter = painterResource(action.iconResId),

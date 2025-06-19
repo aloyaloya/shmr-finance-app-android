@@ -7,11 +7,7 @@ import javax.inject.Inject
 class GetAccountUseCase @Inject constructor(
     private val repository: FinanceRepository
 ) {
-    suspend operator fun invoke(accountId: Int): Result<AccountDomain> {
-        return try {
-            Result.success(repository.getAccountById(accountId))
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+    suspend operator fun invoke(accountId: Int): AccountDomain {
+        return repository.getAccountById(accountId)
     }
 }

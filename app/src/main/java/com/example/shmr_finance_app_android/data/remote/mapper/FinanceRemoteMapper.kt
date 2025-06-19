@@ -19,8 +19,8 @@ class FinanceRemoteMapper @Inject constructor() {
             name = response.name,
             balance = response.balance,
             currency = response.currency,
-            incomeStats = mapStatItem(response.incomeStats),
-            expenseStats = mapStatItem(response.expenseStats),
+            incomeStats = response.incomeStats.map { mapStatItem(it) },
+            expenseStats = response.expenseStats.map { mapStatItem(it) },
             createdAt = response.createdAt,
             updatedAt = response.updatedAt
         )

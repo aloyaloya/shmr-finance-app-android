@@ -33,4 +33,5 @@
     <string name="period_start">Начало</string>
     <string name="period_end">Конец</string>
     <string name="summary">Сумма</string>
+    <string name="back">Назад</string>
 </resources>

@@ -2,9 +2,11 @@ package com.example.shmr_finance_app_android.presentation.feature.balance.viewmo
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shmr_finance_app_android.domain.model.Balance
-import com.example.shmr_finance_app_android.data.remote.model.mockBalance
+import com.example.shmr_finance_app_android.domain.usecases.GetAccountUseCase
+import com.example.shmr_finance_app_android.presentation.feature.balance.mapper.AccountToBalanceMapper
+import com.example.shmr_finance_app_android.presentation.feature.balance.model.BalanceUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,13 +14,16 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 sealed interface BalanceScreenState {
-    object Loading : BalanceScreenState
+    data object Loading : BalanceScreenState
     data class Error(val message: String, val retryAction: () -> Unit) : BalanceScreenState
-    data class Success(val balance: Balance) : BalanceScreenState
+    data class Success(val balance: BalanceUiModel) : BalanceScreenState
 }
 
 @HiltViewModel
-class BalanceScreenViewModel @Inject constructor() : ViewModel() {
+class BalanceScreenViewModel @Inject constructor(
+    private val getAccount: GetAccountUseCase,
+    private val mapper: AccountToBalanceMapper
+) : ViewModel() {
     private val _screenState = MutableStateFlow<BalanceScreenState>(BalanceScreenState.Loading)
     val screenState: StateFlow<BalanceScreenState> = _screenState.asStateFlow()
 
@@ -28,11 +33,11 @@ class BalanceScreenViewModel @Inject constructor() : ViewModel() {
 
     private fun loadBalanceInfo() {
         _screenState.value = BalanceScreenState.Loading
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
-                val balance = mockBalance
+                val balanceInfo = getAccount(accountId = 1)
                 _screenState.value = BalanceScreenState.Success(
-                    balance = balance
+                    balance = mapper.map(balanceInfo)
                 )
             } catch (e: Exception) {
                 _screenState.value = BalanceScreenState.Error(

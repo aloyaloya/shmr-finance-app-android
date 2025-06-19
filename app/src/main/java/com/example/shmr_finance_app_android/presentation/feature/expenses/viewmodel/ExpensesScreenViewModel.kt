@@ -2,7 +2,8 @@ package com.example.shmr_finance_app_android.presentation.feature.expenses.viewm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shmr_finance_app_android.domain.usecases.GetExpensesTransactionsByPeriodUseCase
+import com.example.shmr_finance_app_android.core.utils.getCurrentDate
+import com.example.shmr_finance_app_android.domain.usecases.GetExpensesByPeriodUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +26,7 @@ sealed interface ExpensesScreenState {
 
 @HiltViewModel
 class ExpensesScreenViewModel @Inject constructor(
-    private val getTransactionsByPeriod: GetExpensesTransactionsByPeriodUseCase,
+    private val getTransactionsByPeriod: GetExpensesByPeriodUseCase,
     private val mapper: TransactionToExpenseMapper
 ) : ViewModel() {
     private val _screenState = MutableStateFlow<ExpensesScreenState>(ExpensesScreenState.Loading)
@@ -39,7 +40,9 @@ class ExpensesScreenViewModel @Inject constructor(
         _screenState.value = ExpensesScreenState.Loading
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val expensesTransactions = getTransactionsByPeriod(accountId = 1)
+                val expensesTransactions = getTransactionsByPeriod(
+                    accountId = 1,
+                )
                 if (expensesTransactions.isEmpty()) {
                     _screenState.value = ExpensesScreenState.Empty
                 } else {

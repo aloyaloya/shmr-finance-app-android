@@ -54,12 +54,12 @@ fun ExpensesScreen(
                     action = TopBarAction(
                         iconResId = R.drawable.ic_history,
                         descriptionResId = R.string.expenses_history_description,
-                        actionRoute = Route.ExpensesSubScreens.ExpensesHistory
+                        actionRoute = Route.SubScreens.History.route(income = false)
                     )
                 ),
                 floatingActionConfig = FloatingActionConfig(
                     descriptionResId = R.string.add_expense_description,
-                    actionRoute = Route.Root.Expenses
+                    actionRoute = Route.Root.Expenses.path
                 )
             )
         )

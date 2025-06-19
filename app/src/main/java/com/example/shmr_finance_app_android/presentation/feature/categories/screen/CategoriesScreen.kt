@@ -25,7 +25,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.shmr_finance_app_android.R
-import com.example.shmr_finance_app_android.domain.model.Category
 import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarConfig
 import com.example.shmr_finance_app_android.core.navigation.Route
@@ -33,6 +32,7 @@ import com.example.shmr_finance_app_android.presentation.shared.components.ListI
 import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesScreenState
 import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesScreenViewModel
 import com.example.shmr_finance_app_android.presentation.feature.categories.component.SearchTextField
+import com.example.shmr_finance_app_android.presentation.feature.categories.model.IncomeCategoryUiModel
 
 @Composable
 fun CategoriesScreen(
@@ -76,7 +76,7 @@ fun CategoriesScreen(
 
 @Composable
 private fun CategoriesSuccessState(
-    categories: List<Category>
+    categories: List<IncomeCategoryUiModel>
 ) {
     LazyColumn {
         items(categories, key = { category -> category.id }) { category ->

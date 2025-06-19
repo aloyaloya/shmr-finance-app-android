@@ -54,12 +54,12 @@ fun IncomeScreen(
                     action = TopBarAction(
                         iconResId = R.drawable.ic_history,
                         descriptionResId = R.string.incomes_history_description,
-                        actionRoute = Route.Root.Income
+                        actionRoute = Route.SubScreens.History.route(income = true)
                     )
                 ),
                 floatingActionConfig = FloatingActionConfig(
                     descriptionResId = R.string.add_income_description,
-                    actionRoute = Route.Root.Income
+                    actionRoute = Route.Root.Income.path
                 )
             )
         )

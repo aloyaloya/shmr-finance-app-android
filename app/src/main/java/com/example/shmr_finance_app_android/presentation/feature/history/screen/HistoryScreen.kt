@@ -25,7 +25,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.shmr_finance_app_android.R
-import com.example.shmr_finance_app_android.domain.model.Expense
 import com.example.shmr_finance_app_android.presentation.shared.model.ListItem
 import com.example.shmr_finance_app_android.presentation.shared.model.MainContent
 import com.example.shmr_finance_app_android.presentation.shared.model.TrailContent
@@ -33,28 +32,31 @@ import com.example.shmr_finance_app_android.presentation.feature.main.model.Scre
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarAction
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarConfig
 import com.example.shmr_finance_app_android.core.navigation.Route
+import com.example.shmr_finance_app_android.presentation.feature.history.model.TransactionUiModel
 import com.example.shmr_finance_app_android.presentation.shared.components.ListItemCard
-import com.example.shmr_finance_app_android.presentation.feature.history.viewmodel.ExpensesHistoryScreenState
-import com.example.shmr_finance_app_android.presentation.feature.history.viewmodel.ExpensesHistoryScreenViewModel
+import com.example.shmr_finance_app_android.presentation.feature.history.viewmodel.HistoryScreenState
+import com.example.shmr_finance_app_android.presentation.feature.history.viewmodel.HistoryScreenViewModel
 
 @Composable
-fun ExpensesHistoryScreen(
-    viewModel: ExpensesHistoryScreenViewModel = hiltViewModel(),
+fun HistoryScreen(
+    viewModel: HistoryScreenViewModel = hiltViewModel(),
+    isIncome: Boolean,
     updateConfigState: (ScreenConfig) -> Unit
 ) {
     val state by viewModel.screenState.collectAsState()
+    viewModel.setHistoryTransactionsType(isIncome)
 
     LaunchedEffect(updateConfigState) {
         updateConfigState(
             ScreenConfig(
-                route = Route.ExpensesSubScreens.ExpensesHistory.path,
+                route = Route.SubScreens.History.path,
                 topBarConfig = TopBarConfig(
                     titleResId = R.string.expenses_history_screen_title,
                     showBackButton = true,
                     action = TopBarAction(
                         iconResId = R.drawable.ic_calendar,
                         descriptionResId = R.string.expenses_analysis_description,
-                        actionRoute = Route.ExpensesSubScreens.ExpensesHistory
+                        actionRoute = Route.SubScreens.History.route(income = isIncome)
                     )
                 )
             )
@@ -62,25 +64,25 @@ fun ExpensesHistoryScreen(
     }
 
     when (state) {
-        is ExpensesHistoryScreenState.Loading -> HistoryLoadingState()
-        is ExpensesHistoryScreenState.Error -> HistoryErrorState(
-            message = (state as ExpensesHistoryScreenState.Error).message,
-            onRetry = (state as ExpensesHistoryScreenState.Error).retryAction
+        is HistoryScreenState.Loading -> HistoryLoadingState()
+        is HistoryScreenState.Error -> HistoryErrorState(
+            message = (state as HistoryScreenState.Error).message,
+            onRetry = (state as HistoryScreenState.Error).retryAction
         )
-        is ExpensesHistoryScreenState.Empty -> HistoryEmptyState()
-        is ExpensesHistoryScreenState.Success -> HistorySuccessState(
-            expenses = (state as ExpensesHistoryScreenState.Success).expenses,
-            totalAmount = (state as ExpensesHistoryScreenState.Success).totalAmount,
-            startDate = (state as ExpensesHistoryScreenState.Success).startDate,
-            endDate = (state as ExpensesHistoryScreenState.Success).endDate
+        is HistoryScreenState.Empty -> HistoryEmptyState()
+        is HistoryScreenState.Success -> HistorySuccessState(
+            transactions = (state as HistoryScreenState.Success).transactions,
+            totalAmount = (state as HistoryScreenState.Success).totalAmount,
+            startDate = (state as HistoryScreenState.Success).startDate,
+            endDate = (state as HistoryScreenState.Success).endDate
         )
     }
 }
 
 @Composable
 private fun HistorySuccessState(
-    expenses: List<Expense>,
-    totalAmount: Int,
+    transactions: List<TransactionUiModel>,
+    totalAmount: String,
     startDate: String,
     endDate: String
 ) {
@@ -116,7 +118,7 @@ private fun HistorySuccessState(
                     )
                 )
             }
-            items(expenses, key = { expense -> expense.id }) { expense ->
+            items(transactions, key = { transaction -> transaction.id }) { expense ->
                 ListItemCard(
                     modifier = Modifier
                         .clickable { }

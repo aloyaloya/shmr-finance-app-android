@@ -33,9 +33,6 @@ fun MainScreen() {
                 onBack = { navController.popBackStack() },
                 onActionRoute = {
                     navController.navigate(it) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
                         launchSingleTop = true
                         restoreState = true
                     }
@@ -48,9 +45,6 @@ fun MainScreen() {
                 items = BottomBarItem.items,
                 onNavigate = {
                     navController.navigate(it) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
                         launchSingleTop = true
                         restoreState = true
                     }

@@ -13,8 +13,11 @@ sealed class Route(val path: String) {
         data object Settings : Root(path = "settings_screen")
     }
 
-    sealed class ExpensesSubScreens(path: String) : Route(path) {
-        data object ExpensesHistory : ExpensesSubScreens(path = "expenses_history_screen")
+    sealed class SubScreens(path: String) : Route(path) {
+        data object History : SubScreens("history_screen/{isIncome}") {
+            fun isIncome(): String = "isIncome"
+            fun route(income: Boolean) = "history_screen/$income"
+        }
     }
 }
 

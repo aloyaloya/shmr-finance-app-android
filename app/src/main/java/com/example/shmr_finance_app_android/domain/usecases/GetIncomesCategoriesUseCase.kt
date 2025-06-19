@@ -4,14 +4,13 @@ import com.example.shmr_finance_app_android.domain.model.CategoryDomain
 import com.example.shmr_finance_app_android.domain.repository.FinanceRepository
 import javax.inject.Inject
 
+// Честно говоря не совсем понятно какие статьи показывать, из запроса /categories
+// или же из StatItem аккаунта, который мы получили.
+// Зачем-то этот запрос есть, поэтому брал статьи из него
 class GetIncomesCategoriesUseCase @Inject constructor(
     private val repository: FinanceRepository
 ) {
-    suspend operator fun invoke(): Result<List<CategoryDomain>> {
-        return try {
-            Result.success(repository.getCategoriesByType(true))
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+    suspend operator fun invoke(): List<CategoryDomain> {
+        return repository.getCategoriesByType(true)
     }
 }

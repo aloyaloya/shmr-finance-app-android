@@ -5,8 +5,8 @@ data class AccountDTO(
     val name: String,
     val balance: String,
     val currency: String,
-    val incomeStats: StatItemDTO,
-    val expenseStats: StatItemDTO,
+    val incomeStats: List<StatItemDTO>,
+    val expenseStats: List<StatItemDTO>,
     val createdAt: String,
     val updatedAt: String
 )
