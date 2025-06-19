@@ -16,6 +16,7 @@ moshi = "1.15.2"
 moshiKotlin = "1.15.2"
 navigationCompose = "2.9.0"
 retrofit = "2.9.0"
+detekt = "1.23.8"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -46,4 +47,5 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt"}
 

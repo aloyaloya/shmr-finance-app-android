@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("com.google.dagger.hilt.android")
     id("kotlin-kapt")
+    alias(libs.plugins.detekt)
 }
 
 android {
@@ -39,6 +40,10 @@ android {
     buildFeatures {
         compose = true
     }
+}
+
+detekt {
+    buildUponDefaultConfig = true
 }
 
 dependencies {
