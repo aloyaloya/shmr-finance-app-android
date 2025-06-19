@@ -10,8 +10,10 @@ import com.example.shmr_finance_app_android.data.remote.model.AccountResponse
 import com.example.shmr_finance_app_android.data.remote.model.CategoryResponse
 import com.example.shmr_finance_app_android.data.remote.model.StatItemResponse
 import com.example.shmr_finance_app_android.data.remote.model.TransactionResponse
+import dagger.Reusable
 import javax.inject.Inject
 
+@Reusable
 class FinanceRemoteMapper @Inject constructor() {
     fun mapAccount(response: AccountResponse): AccountDTO {
         return AccountDTO(
