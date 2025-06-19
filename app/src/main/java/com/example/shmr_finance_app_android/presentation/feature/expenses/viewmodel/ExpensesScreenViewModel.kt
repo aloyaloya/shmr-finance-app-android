@@ -15,9 +15,9 @@ import com.example.shmr_finance_app_android.presentation.feature.expenses.model.
 import javax.inject.Inject
 
 sealed interface ExpensesScreenState {
-    object Loading : ExpensesScreenState
+    data object Loading : ExpensesScreenState
     data class Error(val message: String, val retryAction: () -> Unit) : ExpensesScreenState
-    object Empty : ExpensesScreenState
+    data object Empty : ExpensesScreenState
     data class Success(
         val expenses: List<ExpenseUiModel>,
         val totalAmount: String
@@ -42,6 +42,8 @@ class ExpensesScreenViewModel @Inject constructor(
             try {
                 val expensesTransactions = getTransactionsByPeriod(
                     accountId = 1,
+                    startDate = getCurrentDate(),
+                    endDate = getCurrentDate()
                 )
                 if (expensesTransactions.isEmpty()) {
                     _screenState.value = ExpensesScreenState.Empty

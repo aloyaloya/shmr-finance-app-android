@@ -2,6 +2,7 @@ package com.example.shmr_finance_app_android.presentation.feature.incomes.viewmo
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shmr_finance_app_android.core.utils.getCurrentDate
 import com.example.shmr_finance_app_android.domain.usecases.GetIncomesByPeriodUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -14,9 +15,9 @@ import com.example.shmr_finance_app_android.presentation.feature.incomes.model.I
 import javax.inject.Inject
 
 sealed interface IncomeScreenState {
-    object Loading : IncomeScreenState
+    data object Loading : IncomeScreenState
     data class Error(val message: String, val retryAction: () -> Unit) : IncomeScreenState
-    object Empty : IncomeScreenState
+    data object Empty : IncomeScreenState
     data class Success(
         val incomes: List<IncomeUiModel>,
         val totalAmount: String
@@ -39,7 +40,11 @@ class IncomeScreenViewModel @Inject constructor(
         _screenState.value = IncomeScreenState.Loading
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val incomeTransactions = getTransactionsByPeriodUseCase(accountId = 1)
+                val incomeTransactions = getTransactionsByPeriodUseCase(
+                    accountId = 1,
+                    startDate = getCurrentDate(),
+                    endDate = getCurrentDate()
+                )
                 if (incomeTransactions.isEmpty()) {
                     _screenState.value = IncomeScreenState.Empty
                 } else {
