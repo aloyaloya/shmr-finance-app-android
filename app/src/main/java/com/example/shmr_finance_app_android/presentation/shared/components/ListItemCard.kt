@@ -128,7 +128,7 @@ private fun MainItemContent(
             overflow = TextOverflow.Ellipsis
         )
 
-        content.subtitle?.let {
+        content.subtitle?.takeIf { it.isNotEmpty() }?.let {
             Text(
                 text = it,
                 style = subtitleStyle,
