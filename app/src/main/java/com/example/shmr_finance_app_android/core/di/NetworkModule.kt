@@ -1,12 +1,16 @@
 package com.example.shmr_finance_app_android.core.di
 
+import android.content.Context
 import com.example.shmr_finance_app_android.data.remote.api.FinanceApiService
+import com.example.shmr_finance_app_android.data.remote.api.NetworkChecker
+import com.example.shmr_finance_app_android.data.remote.api.NetworkCheckerImpl
 import com.example.shmr_finance_app_android.data.remote.api.RetryInterceptor
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -41,6 +45,10 @@ object NetworkModule {
             .add(KotlinJsonAdapterFactory())
             .build()
     }
+
+    @Provides
+    fun provideNetworkChecker(@ApplicationContext context: Context): NetworkChecker =
+        NetworkCheckerImpl(context)
 
     @Provides
     @Singleton
