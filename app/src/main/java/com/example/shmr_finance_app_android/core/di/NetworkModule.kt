@@ -1,6 +1,7 @@
 package com.example.shmr_finance_app_android.core.di
 
 import com.example.shmr_finance_app_android.data.remote.api.FinanceApiService
+import com.example.shmr_finance_app_android.data.remote.api.RetryInterceptor
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -23,6 +24,7 @@ object NetworkModule {
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
+            .addInterceptor(RetryInterceptor())
             .addInterceptor { chain ->
                 val request = chain.request().newBuilder()
                     .addHeader("Authorization", "Bearer $AUTH_TOKEN")
