@@ -67,7 +67,7 @@ fun BalanceScreen(
     when (state) {
         is BalanceScreenState.Loading -> BalanceLoadingState()
         is BalanceScreenState.Error -> BalanceErrorState(
-            message = (state as BalanceScreenState.Error).message,
+            messageResId = (state as BalanceScreenState.Error).messageResId,
             onRetry = (state as BalanceScreenState.Error).retryAction
         )
         is BalanceScreenState.Success -> BalanceSuccessState(
@@ -121,7 +121,7 @@ private fun BalanceLoadingState() {
 
 @Composable
 private fun BalanceErrorState(
-    message: String,
+    messageResId: Int,
     onRetry: () -> Unit
 ) {
     Column(
@@ -130,7 +130,7 @@ private fun BalanceErrorState(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = message,
+            text = stringResource(messageResId),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )

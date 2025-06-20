@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 sealed interface CategoriesScreenState {
     data object Loading : CategoriesScreenState
-    data class Error(val message: String, val retryAction: () -> Unit) : CategoriesScreenState
+    data class Error(val messageResId: Int, val retryAction: () -> Unit) : CategoriesScreenState
     data object Empty : CategoriesScreenState
     data class Success(val categories: List<IncomeCategoryUiModel>) : CategoriesScreenState
 }
@@ -50,13 +50,9 @@ class CategoriesScreenViewModel @Inject constructor(
                     )
                 }
             }.onFailure { error ->
+                val messageResId = (error as? AppError)?.messageResId ?: R.string.unknown_error
                 _screenState.value = CategoriesScreenState.Error(
-                    message = when (error as? AppError) {
-                        is AppError.Network -> R.string.network_error.toString()
-                        is AppError.ApiError -> "${R.string.network_error} ${error.message}"
-                        is AppError.Unknown -> R.string.unknown_error.toString()
-                        null -> R.string.unknown_error.toString()
-                    },
+                    messageResId = messageResId,
                     retryAction = { loadCategories() }
                 )
             }

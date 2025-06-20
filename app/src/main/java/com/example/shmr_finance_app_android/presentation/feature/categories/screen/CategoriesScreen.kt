@@ -63,7 +63,7 @@ fun CategoriesScreen(
         when (state) {
             is CategoriesScreenState.Loading -> CategoriesLoadingState()
             is CategoriesScreenState.Error -> CategoriesErrorState(
-                message = (state as CategoriesScreenState.Error).message,
+                messageResId = (state as CategoriesScreenState.Error).messageResId,
                 onRetry = (state as CategoriesScreenState.Error).retryAction
             )
             is CategoriesScreenState.Empty -> CategoriesEmptyState()
@@ -103,7 +103,7 @@ private fun CategoriesLoadingState() {
 
 @Composable
 private fun CategoriesErrorState(
-    message: String,
+    messageResId: Int,
     onRetry: () -> Unit
 ) {
     Column(
@@ -112,7 +112,7 @@ private fun CategoriesErrorState(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = message,
+            text = stringResource(messageResId),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )

@@ -6,6 +6,7 @@ import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.core.utils.getCurrentDate
 import com.example.shmr_finance_app_android.data.remote.api.AppError
 import com.example.shmr_finance_app_android.domain.usecases.GetExpensesByPeriodUseCase
+import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +19,7 @@ import javax.inject.Inject
 
 sealed interface ExpensesScreenState {
     data object Loading : ExpensesScreenState
-    data class Error(val message: String, val retryAction: () -> Unit) : ExpensesScreenState
+    data class Error(val messageResId: Int, val retryAction: () -> Unit) : ExpensesScreenState
     data object Empty : ExpensesScreenState
     data class Success(
         val expenses: List<ExpenseUiModel>,
@@ -57,13 +58,9 @@ class ExpensesScreenViewModel @Inject constructor(
                     )
                 }
             }.onFailure { error ->
+                val messageResId = (error as? AppError)?.messageResId ?: R.string.unknown_error
                 _screenState.value = ExpensesScreenState.Error(
-                    message = when (error as? AppError) {
-                        is AppError.Network -> R.string.network_error.toString()
-                        is AppError.ApiError -> "${R.string.network_error} ${error.message}"
-                        is AppError.Unknown -> R.string.unknown_error.toString()
-                        null -> R.string.unknown_error.toString()
-                    },
+                    messageResId = messageResId,
                     retryAction = { loadExpenses() }
                 )
             }

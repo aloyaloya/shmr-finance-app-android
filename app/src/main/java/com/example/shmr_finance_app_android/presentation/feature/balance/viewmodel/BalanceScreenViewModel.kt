@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 sealed interface BalanceScreenState {
     data object Loading : BalanceScreenState
-    data class Error(val message: String, val retryAction: () -> Unit) : BalanceScreenState
+    data class Error(val messageResId: Int, val retryAction: () -> Unit) : BalanceScreenState
     data class Success(val balance: BalanceUiModel) : BalanceScreenState
 }
 
@@ -42,13 +42,9 @@ class BalanceScreenViewModel @Inject constructor(
                     balance = mapper.map(data)
                 )
             }.onFailure { error ->
+                val messageResId = (error as? AppError)?.messageResId ?: R.string.unknown_error
                 _screenState.value = BalanceScreenState.Error(
-                    message = when (error as? AppError) {
-                        is AppError.Network -> R.string.network_error.toString()
-                        is AppError.ApiError -> "${R.string.network_error} ${error.message}"
-                        is AppError.Unknown -> R.string.unknown_error.toString()
-                        null -> R.string.unknown_error.toString()
-                    },
+                    messageResId = messageResId,
                     retryAction = { loadBalanceInfo() }
                 )
             }

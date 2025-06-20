@@ -66,7 +66,7 @@ fun HistoryScreen(
     when (state) {
         is HistoryScreenState.Loading -> HistoryLoadingState()
         is HistoryScreenState.Error -> HistoryErrorState(
-            message = (state as HistoryScreenState.Error).message,
+            messageResId = (state as HistoryScreenState.Error).messageResId,
             onRetry = (state as HistoryScreenState.Error).retryAction
         )
         is HistoryScreenState.Empty -> HistoryEmptyState()
@@ -145,7 +145,7 @@ private fun HistoryLoadingState() {
 
 @Composable
 private fun HistoryErrorState(
-    message: String,
+    messageResId: Int,
     onRetry: () -> Unit
 ) {
     Column(
@@ -154,7 +154,7 @@ private fun HistoryErrorState(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = message,
+            text = stringResource(messageResId),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )

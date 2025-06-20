@@ -35,6 +35,6 @@
     <string name="summary">Сумма</string>
     <string name="back">Назад</string>
     <string name="network_error">Нет интернета</string>
-    <string name="api_error">Ошибка</string>
+    <string name="api_error">Ошибка с сервером</string>
     <string name="unknown_error">"Что-то пошло не так"</string>
 </resources>

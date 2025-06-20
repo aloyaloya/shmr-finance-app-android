@@ -9,8 +9,8 @@ suspend fun <T> safeApiCall(call: suspend () -> T): Result<T> {
     } catch (e: IOException) {
         Result.failure(AppError.Network)
     } catch (e: HttpException) {
-        Result.failure(AppError.ApiError(e.code(), e.message()))
+        Result.failure(AppError.ApiError())
     } catch (e: Exception) {
-        Result.failure(AppError.Unknown(e))
+        Result.failure(AppError.Unknown())
     }
 }

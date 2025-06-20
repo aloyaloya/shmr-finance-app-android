@@ -68,7 +68,7 @@ fun ExpensesScreen(
     when (state) {
         is ExpensesScreenState.Loading -> ExpensesLoadingState()
         is ExpensesScreenState.Error -> ExpensesErrorState(
-            message = (state as ExpensesScreenState.Error).message,
+            messageResId = (state as ExpensesScreenState.Error).messageResId,
             onRetry = (state as ExpensesScreenState.Error).retryAction
         )
         is ExpensesScreenState.Empty -> ExpensesEmptyState()
@@ -121,7 +121,7 @@ private fun ExpensesLoadingState() {
 
 @Composable
 private fun ExpensesErrorState(
-    message: String,
+    messageResId: Int,
     onRetry: () -> Unit
 ) {
     Column(
@@ -130,7 +130,7 @@ private fun ExpensesErrorState(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = message,
+            text = stringResource(messageResId),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )

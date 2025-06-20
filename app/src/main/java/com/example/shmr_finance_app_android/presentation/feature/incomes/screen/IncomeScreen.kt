@@ -68,7 +68,7 @@ fun IncomeScreen(
     when (state) {
         is IncomeScreenState.Loading -> IncomeLoadingState()
         is IncomeScreenState.Error -> IncomeErrorState(
-            message = (state as IncomeScreenState.Error).message,
+            messageResId = (state as IncomeScreenState.Error).messageResId,
             onRetry = (state as IncomeScreenState.Error).retryAction
         )
         is IncomeScreenState.Empty -> IncomeEmptyState()
@@ -121,7 +121,7 @@ private fun IncomeLoadingState() {
 
 @Composable
 private fun IncomeErrorState(
-    message: String,
+    messageResId: Int,
     onRetry: () -> Unit
 ) {
     Column(
@@ -130,7 +130,7 @@ private fun IncomeErrorState(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = message,
+            text = stringResource(messageResId),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )

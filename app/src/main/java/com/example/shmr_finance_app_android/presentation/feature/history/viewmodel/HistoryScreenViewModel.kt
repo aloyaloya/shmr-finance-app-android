@@ -8,6 +8,7 @@ import com.example.shmr_finance_app_android.core.utils.getStartAndEndOfCurrentMo
 import com.example.shmr_finance_app_android.data.remote.api.AppError
 import com.example.shmr_finance_app_android.domain.usecases.GetExpensesByPeriodUseCase
 import com.example.shmr_finance_app_android.domain.usecases.GetIncomesByPeriodUseCase
+import com.example.shmr_finance_app_android.presentation.feature.expenses.viewmodel.ExpensesScreenState
 import com.example.shmr_finance_app_android.presentation.feature.history.mapper.TransactionToTransactionUiMapper
 import com.example.shmr_finance_app_android.presentation.feature.history.model.TransactionUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +21,7 @@ import javax.inject.Inject
 
 sealed interface HistoryScreenState {
     data object Loading : HistoryScreenState
-    data class Error(val message: String, val retryAction: () -> Unit) : HistoryScreenState
+    data class Error(val messageResId: Int, val retryAction: () -> Unit) : HistoryScreenState
     data object Empty : HistoryScreenState
     data class Success(
         val transactions: List<TransactionUiModel>,
@@ -75,13 +76,9 @@ class HistoryScreenViewModel @Inject constructor(
                     )
                 }
             }.onFailure { error ->
+                val messageResId = (error as? AppError)?.messageResId ?: R.string.unknown_error
                 _screenState.value = HistoryScreenState.Error(
-                    message = when (error as? AppError) {
-                        is AppError.Network -> R.string.network_error.toString()
-                        is AppError.ApiError -> "${R.string.network_error} ${error.message}"
-                        is AppError.Unknown -> R.string.unknown_error.toString()
-                        null -> R.string.unknown_error.toString()
-                    },
+                    messageResId = messageResId,
                     retryAction = { loadHistory() }
                 )
             }
