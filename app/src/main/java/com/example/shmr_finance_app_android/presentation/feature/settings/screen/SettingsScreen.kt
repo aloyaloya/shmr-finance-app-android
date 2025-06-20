@@ -20,6 +20,7 @@ import com.example.shmr_finance_app_android.presentation.shared.model.MainConten
 import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarConfig
 import com.example.shmr_finance_app_android.core.navigation.Route
+import com.example.shmr_finance_app_android.core.navigation.SettingsListItems
 import com.example.shmr_finance_app_android.presentation.shared.components.ListItemCard
 import com.example.shmr_finance_app_android.presentation.feature.settings.viewmodel.SettingsScreenViewModel
 import com.example.shmr_finance_app_android.presentation.feature.settings.component.ThemeSwitcherOptionCard
@@ -30,7 +31,6 @@ fun SettingsScreen(
     updateConfigState: (ScreenConfig) -> Unit
 ) {
     val darkThemeStatus by viewModel.darkThemeStatus.collectAsState()
-    val optionsItems = viewModel.optionsItems
 
     LaunchedEffect(updateConfigState) {
         updateConfigState(
@@ -52,12 +52,13 @@ fun SettingsScreen(
                     onCheckedChange = { viewModel.switchDarkTheme(it) }
                 )
             }
-            items(optionsItems) { option ->
+            items(SettingsListItems.items) { option ->
+                val optionTitle = stringResource(option.titleResId)
                 ListItemCard(
                     modifier = Modifier
                         .clickable { } // Переход пока не понятно куда
                         .height(56.dp),
-                    item = ListItem(content = MainContent(title = option.title)),
+                    item = ListItem(content = MainContent(title = optionTitle)),
                     trailIcon = R.drawable.ic_filled_arrow_right
                 )
             }

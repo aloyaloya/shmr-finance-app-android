@@ -36,5 +36,12 @@
     <string name="back">Назад</string>
     <string name="network_error">Нет интернета</string>
     <string name="api_error">Ошибка с сервером</string>
-    <string name="unknown_error">"Что-то пошло не так"</string>
+    <string name="unknown_error">Что-то пошло не так</string>
+    <string name="main_color_option">Основной цвет</string>
+    <string name="sounds_options">Звуки</string>
+    <string name="haptics_options">Хаптики</string>
+    <string name="code_password_option">Код пароль</string>
+    <string name="synchronize_option">Синхронизация</string>
+    <string name="language_option">Язык</string>
+    <string name="about_option">О программе</string>
 </resources>

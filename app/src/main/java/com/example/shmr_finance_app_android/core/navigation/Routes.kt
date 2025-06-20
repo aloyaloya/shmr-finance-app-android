@@ -56,3 +56,33 @@ data class BottomBarItem(
         )
     }
 }
+
+data class SettingsListItems(
+    @StringRes val titleResId: Int
+) {
+    companion object {
+        val items = listOf(
+            SettingsListItems(
+                titleResId = R.string.main_color_option,
+            ),
+            SettingsListItems(
+                titleResId = R.string.sounds_options,
+            ),
+            SettingsListItems(
+                titleResId = R.string.haptics_options,
+            ),
+            SettingsListItems(
+                titleResId = R.string.code_password_option,
+            ),
+            SettingsListItems(
+                titleResId = R.string.synchronize_option,
+            ),
+            SettingsListItems(
+                titleResId = R.string.language_option,
+            ),
+            SettingsListItems(
+                titleResId = R.string.about_option,
+            )
+        )
+    }
+}
