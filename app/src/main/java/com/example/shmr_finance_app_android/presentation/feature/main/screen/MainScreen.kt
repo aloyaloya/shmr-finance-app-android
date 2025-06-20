@@ -43,9 +43,11 @@ fun MainScreen() {
                 currentDestination = currentDestination,
                 items = BottomBarItem.items,
                 onNavigate = {
-                    navController.navigate(it) {
-                        launchSingleTop = true
-                        restoreState = true
+                    if (currentDestination != it) {
+                        navController.navigate(it) {
+                            launchSingleTop = true
+                            restoreState = true
+                        }
                     }
                 }
             )
