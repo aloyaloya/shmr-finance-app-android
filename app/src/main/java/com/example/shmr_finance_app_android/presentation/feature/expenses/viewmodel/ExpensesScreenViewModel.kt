@@ -6,7 +6,6 @@ import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.core.utils.getCurrentDate
 import com.example.shmr_finance_app_android.data.remote.api.AppError
 import com.example.shmr_finance_app_android.domain.usecases.GetExpensesByPeriodUseCase
-import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
