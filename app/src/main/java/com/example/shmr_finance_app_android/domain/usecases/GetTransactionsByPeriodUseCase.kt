@@ -13,9 +13,10 @@ class GetTransactionsByPeriodUseCase @Inject constructor(
         accountId: Int,
         startDate: String? = null,
         endDate: String? = null
-    ): List<TransactionDomain> = repository.getTransactionsByPeriod(
-        accountId,
-        startDate,
-        endDate
-    ).sortedByDescending { it.transactionDate }
+    ): Result<List<TransactionDomain>> {
+        return repository.getTransactionsByPeriod(accountId, startDate, endDate)
+            .map { list ->
+                list.sortedByDescending { it.transactionDate }
+            }
+    }
 }

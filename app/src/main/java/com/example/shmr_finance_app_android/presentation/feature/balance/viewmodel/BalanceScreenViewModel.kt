@@ -2,6 +2,8 @@ package com.example.shmr_finance_app_android.presentation.feature.balance.viewmo
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shmr_finance_app_android.R
+import com.example.shmr_finance_app_android.data.remote.api.AppError
 import com.example.shmr_finance_app_android.domain.usecases.GetAccountUseCase
 import com.example.shmr_finance_app_android.presentation.feature.balance.mapper.AccountToBalanceMapper
 import com.example.shmr_finance_app_android.presentation.feature.balance.model.BalanceUiModel
@@ -34,14 +36,19 @@ class BalanceScreenViewModel @Inject constructor(
     private fun loadBalanceInfo() {
         _screenState.value = BalanceScreenState.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val balanceInfo = getAccount(accountId = 1)
+            val balanceInfo = getAccount(accountId = 1)
+            balanceInfo.onSuccess { data ->
                 _screenState.value = BalanceScreenState.Success(
-                    balance = mapper.map(balanceInfo)
+                    balance = mapper.map(data)
                 )
-            } catch (e: Exception) {
+            }.onFailure { error ->
                 _screenState.value = BalanceScreenState.Error(
-                    message = e.message ?: "Неизвестна ошибка",
+                    message = when (error as? AppError) {
+                        is AppError.Network -> R.string.network_error.toString()
+                        is AppError.ApiError -> "${R.string.network_error} ${error.message}"
+                        is AppError.Unknown -> R.string.unknown_error.toString()
+                        null -> R.string.unknown_error.toString()
+                    },
                     retryAction = { loadBalanceInfo() }
                 )
             }

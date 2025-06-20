@@ -2,6 +2,8 @@ package com.example.shmr_finance_app_android.presentation.feature.categories.vie
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shmr_finance_app_android.R
+import com.example.shmr_finance_app_android.data.remote.api.AppError
 import com.example.shmr_finance_app_android.domain.usecases.GetIncomesCategoriesUseCase
 import com.example.shmr_finance_app_android.presentation.feature.categories.mapper.CategoryToIncomeCategoryMapper
 import com.example.shmr_finance_app_android.presentation.feature.categories.model.IncomeCategoryUiModel
@@ -38,18 +40,23 @@ class CategoriesScreenViewModel @Inject constructor(
     private fun loadCategories() {
         _screenState.value = CategoriesScreenState.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val incomeCategories = getIncomeCategories()
-                _screenState.value = if (incomeCategories.isEmpty()) {
+            val incomeCategories = getIncomeCategories()
+            incomeCategories.onSuccess { data ->
+                _screenState.value = if (data.isEmpty()) {
                     CategoriesScreenState.Empty
                 } else {
                     CategoriesScreenState.Success(
-                        categories = incomeCategories.map { mapper.map(it) }
+                        categories = data.map { mapper.map(it) }
                     )
                 }
-            } catch (e: Exception) {
+            }.onFailure { error ->
                 _screenState.value = CategoriesScreenState.Error(
-                    message = e.message ?: "Неизвестна ошибка",
+                    message = when (error as? AppError) {
+                        is AppError.Network -> R.string.network_error.toString()
+                        is AppError.ApiError -> "${R.string.network_error} ${error.message}"
+                        is AppError.Unknown -> R.string.unknown_error.toString()
+                        null -> R.string.unknown_error.toString()
+                    },
                     retryAction = { loadCategories() }
                 )
             }

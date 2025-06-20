@@ -12,11 +12,10 @@ class GetExpensesByPeriodUseCase @Inject constructor(
         accountId: Int,
         startDate: String? = null,
         endDate: String? = null
-    ): List<TransactionDomain> {
-        return getTransactionsByPeriod(
-            accountId,
-            startDate,
-            endDate
-        ).filterNot { it.category.isIncome }
+    ): Result<List<TransactionDomain>> {
+        return getTransactionsByPeriod(accountId, startDate, endDate)
+            .map { list ->
+                list.filterNot { it.category.isIncome }
+            }
     }
 }

@@ -2,8 +2,10 @@ package com.example.shmr_finance_app_android.presentation.feature.history.viewmo
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.core.utils.formatDateToRussian
 import com.example.shmr_finance_app_android.core.utils.getStartAndEndOfCurrentMonth
+import com.example.shmr_finance_app_android.data.remote.api.AppError
 import com.example.shmr_finance_app_android.domain.usecases.GetExpensesByPeriodUseCase
 import com.example.shmr_finance_app_android.domain.usecases.GetIncomesByPeriodUseCase
 import com.example.shmr_finance_app_android.presentation.feature.history.mapper.TransactionToTransactionUiMapper
@@ -48,33 +50,38 @@ class HistoryScreenViewModel @Inject constructor(
     private fun loadHistory() {
         _screenState.value = HistoryScreenState.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val transactions = when (_historyTransactionsType.value) {
-                    true -> getIncomesByPeriodUseCase(
-                        accountId = 1,
-                        startDate = _historyDates.value.first,
-                        endDate = _historyDates.value.second
-                    )
-                    false -> getExpensesByPeriodUseCase(
-                        accountId = 1,
-                        startDate = _historyDates.value.first,
-                        endDate = _historyDates.value.second
-                    )
-                }
+            val transactions = when (_historyTransactionsType.value) {
+                true -> getIncomesByPeriodUseCase(
+                    accountId = 1,
+                    startDate = _historyDates.value.first,
+                    endDate = _historyDates.value.second
+                )
+                false -> getExpensesByPeriodUseCase(
+                    accountId = 1,
+                    startDate = _historyDates.value.first,
+                    endDate = _historyDates.value.second
+                )
+            }
 
-                _screenState.value = if (transactions.isEmpty()) {
+            transactions.onSuccess { data ->
+                _screenState.value = if (data.isEmpty()) {
                     HistoryScreenState.Empty
                 } else {
                     HistoryScreenState.Success(
-                        transactions = transactions.map { mapper.map(it) },
-                        totalAmount = mapper.calculateTotalAmount(transactions),
+                        transactions = data.map { mapper.map(it) },
+                        totalAmount = mapper.calculateTotalAmount(data),
                         startDate = formatDateToRussian(_historyDates.value.first),
                         endDate = formatDateToRussian(_historyDates.value.second)
                     )
                 }
-            } catch (e: Exception) {
+            }.onFailure { error ->
                 _screenState.value = HistoryScreenState.Error(
-                    message = e.message ?: "Неизвестная ошибка",
+                    message = when (error as? AppError) {
+                        is AppError.Network -> R.string.network_error.toString()
+                        is AppError.ApiError -> "${R.string.network_error} ${error.message}"
+                        is AppError.Unknown -> R.string.unknown_error.toString()
+                        null -> R.string.unknown_error.toString()
+                    },
                     retryAction = { loadHistory() }
                 )
             }

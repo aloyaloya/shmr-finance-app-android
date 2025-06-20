@@ -12,7 +12,7 @@ import javax.inject.Inject
 class GetIncomesCategoriesUseCase @Inject constructor(
     private val repository: FinanceRepository
 ) {
-    suspend operator fun invoke(): List<CategoryDomain> {
+    suspend operator fun invoke(): Result<List<CategoryDomain>> {
         return repository.getCategoriesByType(true)
     }
 }

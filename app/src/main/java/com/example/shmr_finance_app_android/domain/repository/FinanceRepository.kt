@@ -5,11 +5,11 @@ import com.example.shmr_finance_app_android.domain.model.CategoryDomain
 import com.example.shmr_finance_app_android.domain.model.TransactionDomain
 
 interface FinanceRepository {
-    suspend fun getAccountById(accountId: Int): AccountDomain
-    suspend fun getCategoriesByType(isIncome: Boolean): List<CategoryDomain>
+    suspend fun getAccountById(accountId: Int): Result<AccountDomain>
+    suspend fun getCategoriesByType(isIncome: Boolean): Result<List<CategoryDomain>>
     suspend fun getTransactionsByPeriod(
         accountId: Int,
         startDate: String?,
         endDate: String?
-    ): List<TransactionDomain>
+    ): Result<List<TransactionDomain>>
 }

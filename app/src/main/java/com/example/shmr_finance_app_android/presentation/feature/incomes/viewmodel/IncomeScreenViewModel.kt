@@ -2,7 +2,9 @@ package com.example.shmr_finance_app_android.presentation.feature.incomes.viewmo
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.core.utils.getCurrentDate
+import com.example.shmr_finance_app_android.data.remote.api.AppError
 import com.example.shmr_finance_app_android.domain.usecases.GetIncomesByPeriodUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -39,23 +41,29 @@ class IncomeScreenViewModel @Inject constructor(
     private fun loadIncomes() {
         _screenState.value = IncomeScreenState.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val incomeTransactions = getTransactionsByPeriodUseCase(
-                    accountId = 1,
-                    startDate = getCurrentDate(),
-                    endDate = getCurrentDate()
-                )
-                if (incomeTransactions.isEmpty()) {
+            val incomeTransactions = getTransactionsByPeriodUseCase(
+                accountId = 1,
+                startDate = getCurrentDate(),
+                endDate = getCurrentDate()
+            )
+
+            incomeTransactions.onSuccess { data ->
+                if (data.isEmpty()) {
                     _screenState.value = IncomeScreenState.Empty
                 } else {
                     _screenState.value = IncomeScreenState.Success(
-                        incomes = incomeTransactions.map { mapper.map(it) },
-                        totalAmount = mapper.calculateTotalAmount(incomeTransactions)
+                        incomes = data.map { mapper.map(it) },
+                        totalAmount = mapper.calculateTotalAmount(data)
                     )
                 }
-            } catch (e: Exception) {
+            }.onFailure { error ->
                 _screenState.value = IncomeScreenState.Error(
-                    message = e.message ?: "Не удалось загрузить ваши доходы",
+                    message = when (error as? AppError) {
+                        is AppError.Network -> R.string.network_error.toString()
+                        is AppError.ApiError -> "${R.string.network_error} ${error.message}"
+                        is AppError.Unknown -> R.string.unknown_error.toString()
+                        null -> R.string.unknown_error.toString()
+                    },
                     retryAction = { loadIncomes() }
                 )
             }
