@@ -22,7 +22,7 @@ data class TransactionUiModel(
         return ListItem(
             lead = LeadContent(text = emoji),
             content = MainContent(title = title, subtitle = subtitle),
-            trail = TrailContent(text = amountFormatted)
+            trail = TrailContent(text = amountFormatted, subtext = transactionTime)
         )
     }
 }

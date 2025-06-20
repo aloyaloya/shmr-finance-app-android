@@ -87,11 +87,28 @@ private fun TrailItemContent(
     modifier: Modifier = Modifier,
     trail: TrailContent
 ) {
-    Text(
+    Column(
         modifier = modifier,
-        text = trail.text,
-        style = MaterialTheme.typography.bodyLarge
-    )
+        verticalArrangement = Arrangement.SpaceBetween,
+        horizontalAlignment = Alignment.End
+    ) {
+        Text(
+            text = trail.text,
+            style = MaterialTheme.typography.bodyLarge,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+
+        trail.subtext?.let {
+            Text(
+                text = it,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
 }
 
 @Composable

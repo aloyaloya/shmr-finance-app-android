@@ -114,7 +114,7 @@ private fun HistorySuccessState(
                     showDivider = false,
                     item = ListItem(
                         content = MainContent(title = stringResource(R.string.summary)),
-                        trail = TrailContent(text = totalAmount.toString())
+                        trail = TrailContent(text = totalAmount)
                     )
                 )
             }
