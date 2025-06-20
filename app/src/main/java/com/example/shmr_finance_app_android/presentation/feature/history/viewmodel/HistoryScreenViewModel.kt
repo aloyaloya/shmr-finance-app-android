@@ -1,14 +1,16 @@
 package com.example.shmr_finance_app_android.presentation.feature.history.viewmodel
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shmr_finance_app_android.R
-import com.example.shmr_finance_app_android.core.utils.formatDateToRussian
-import com.example.shmr_finance_app_android.core.utils.getStartAndEndOfCurrentMonth
+import com.example.shmr_finance_app_android.core.utils.formatHumanDateToIso
+import com.example.shmr_finance_app_android.core.utils.formatLongToHumanDate
+import com.example.shmr_finance_app_android.core.utils.getEndOfCurrentMonth
+import com.example.shmr_finance_app_android.core.utils.getStartOfCurrentMonth
 import com.example.shmr_finance_app_android.data.remote.api.AppError
 import com.example.shmr_finance_app_android.domain.usecases.GetExpensesByPeriodUseCase
 import com.example.shmr_finance_app_android.domain.usecases.GetIncomesByPeriodUseCase
-import com.example.shmr_finance_app_android.presentation.feature.expenses.viewmodel.ExpensesScreenState
 import com.example.shmr_finance_app_android.presentation.feature.history.mapper.TransactionToTransactionUiMapper
 import com.example.shmr_finance_app_android.presentation.feature.history.model.TransactionUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,9 +27,7 @@ sealed interface HistoryScreenState {
     data object Empty : HistoryScreenState
     data class Success(
         val transactions: List<TransactionUiModel>,
-        val totalAmount: String,
-        val startDate: String,
-        val endDate: String
+        val totalAmount: String
     ) : HistoryScreenState
 }
 
@@ -37,12 +37,21 @@ class HistoryScreenViewModel @Inject constructor(
     private val getIncomesByPeriodUseCase: GetIncomesByPeriodUseCase,
     private val mapper: TransactionToTransactionUiMapper
 ) : ViewModel() {
+
     private val _historyTransactionsType = MutableStateFlow(false)
-    private val _historyDates = MutableStateFlow(getStartAndEndOfCurrentMonth())
-    private val _screenState = MutableStateFlow<HistoryScreenState>(
-        HistoryScreenState.Loading
-    )
+
+    private val _historyStartDate = MutableStateFlow(getStartOfCurrentMonth())
+    val historyStartDate: StateFlow<String> = _historyStartDate.asStateFlow()
+    private val _historyEndDate = MutableStateFlow(getEndOfCurrentMonth())
+    val historyEndDate: StateFlow<String> = _historyEndDate.asStateFlow()
+
+    private val _screenState = MutableStateFlow<HistoryScreenState>(HistoryScreenState.Loading)
     val screenState: StateFlow<HistoryScreenState> = _screenState.asStateFlow()
+
+    private val _editingDateType = mutableStateOf<DateType?>(null)
+
+    private val _showDatePickerModal = MutableStateFlow(false)
+    val showDatePickerModal: StateFlow<Boolean> = _showDatePickerModal.asStateFlow()
 
     init {
         loadHistory()
@@ -54,13 +63,14 @@ class HistoryScreenViewModel @Inject constructor(
             val transactions = when (_historyTransactionsType.value) {
                 true -> getIncomesByPeriodUseCase(
                     accountId = 1,
-                    startDate = _historyDates.value.first,
-                    endDate = _historyDates.value.second
+                    startDate = formatHumanDateToIso(_historyStartDate.value),
+                    endDate = formatHumanDateToIso(_historyEndDate.value)
                 )
+
                 false -> getExpensesByPeriodUseCase(
                     accountId = 1,
-                    startDate = _historyDates.value.first,
-                    endDate = _historyDates.value.second
+                    startDate = formatHumanDateToIso(_historyStartDate.value),
+                    endDate = formatHumanDateToIso(_historyEndDate.value)
                 )
             }
 
@@ -70,9 +80,7 @@ class HistoryScreenViewModel @Inject constructor(
                 } else {
                     HistoryScreenState.Success(
                         transactions = data.map { mapper.map(it) },
-                        totalAmount = mapper.calculateTotalAmount(data),
-                        startDate = formatDateToRussian(_historyDates.value.first),
-                        endDate = formatDateToRussian(_historyDates.value.second)
+                        totalAmount = mapper.calculateTotalAmount(data)
                     )
                 }
             }.onFailure { error ->
@@ -88,4 +96,24 @@ class HistoryScreenViewModel @Inject constructor(
     fun setHistoryTransactionsType(isIncome: Boolean) {
         _historyTransactionsType.value = isIncome
     }
+
+    fun showDatePickerModal(type: DateType) {
+        _showDatePickerModal.value = true
+        _editingDateType.value = type
+    }
+
+    fun confirmDateSelection(date: Long) {
+        when (_editingDateType.value as DateType) {
+            DateType.START -> _historyStartDate.value = formatLongToHumanDate(date)
+            DateType.END -> _historyEndDate.value = formatLongToHumanDate(date)
+        }
+
+        loadHistory()
+    }
+
+    fun onDismissDatePicker() {
+        _showDatePickerModal.value = false
+    }
 }
+
+enum class DateType { START, END }

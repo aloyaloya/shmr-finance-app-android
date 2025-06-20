@@ -44,4 +44,7 @@
     <string name="synchronize_option">Синхронизация</string>
     <string name="language_option">Язык</string>
     <string name="about_option">О программе</string>
+    <string name="select">Выбрать</string>
+    <string name="cancel">Отменить</string>
+    <string name="choice_date">Выберите дату</string>
 </resources>

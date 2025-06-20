@@ -13,28 +13,41 @@ fun getCurrentDate(): String {
     return sdf.format(Date())
 }
 
-fun getStartAndEndOfCurrentMonth(): Pair<String, String> {
+fun getStartOfCurrentMonth(): String {
     val calendar = Calendar.getInstance()
 
     calendar.set(Calendar.DAY_OF_MONTH, 1)
-    val startOfMonth = calendar.time
+
+    val sdf = SimpleDateFormat(OUTPUT_DATE_FORMAT, Locale("ru"))
+
+    return sdf.format(calendar.time)
+}
+
+fun getEndOfCurrentMonth(): String {
+    val calendar = Calendar.getInstance()
 
     calendar.add(Calendar.MONTH, 1)
     calendar.set(Calendar.DAY_OF_MONTH, 1)
     calendar.add(Calendar.DATE, -1)
-    val endOfMonth = calendar.time
 
-    val sdf = SimpleDateFormat(INPUT_DATE_FORMAT, Locale.getDefault())
+    val sdf = SimpleDateFormat(OUTPUT_DATE_FORMAT, Locale("ru"))
 
-    return Pair(
-        sdf.format(startOfMonth),
-        sdf.format(endOfMonth)
-    )
+    return sdf.format(calendar.time)
 }
 
-fun formatDateToRussian(dateString: String): String {
-    val inputFormat = SimpleDateFormat(INPUT_DATE_FORMAT, Locale.getDefault())
-    val outputFormat = SimpleDateFormat(OUTPUT_DATE_FORMAT, Locale("ru"))
-    val date = inputFormat.parse(dateString) ?: return dateString
-    return outputFormat.format(date)
+fun formatLongToHumanDate(timestamp: Long): String {
+    val formatter = SimpleDateFormat(OUTPUT_DATE_FORMAT, Locale("ru"))
+    return formatter.format(Date(timestamp))
+}
+
+fun formatHumanDateToIso(humanDate: String): String {
+    return try {
+        val humanFormatter = SimpleDateFormat(OUTPUT_DATE_FORMAT, Locale("ru"))
+        val date = humanFormatter.parse(humanDate)
+        val isoFormatter = SimpleDateFormat(INPUT_DATE_FORMAT, Locale.US)
+        date?.let { isoFormatter.format(it) } ?: ""
+    } catch (e: Exception) {
+        e.printStackTrace()
+        ""
+    }
 }

@@ -32,7 +32,9 @@ import com.example.shmr_finance_app_android.presentation.feature.main.model.Scre
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarAction
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarConfig
 import com.example.shmr_finance_app_android.core.navigation.Route
+import com.example.shmr_finance_app_android.presentation.feature.history.component.DatePickerModal
 import com.example.shmr_finance_app_android.presentation.feature.history.model.TransactionUiModel
+import com.example.shmr_finance_app_android.presentation.feature.history.viewmodel.DateType
 import com.example.shmr_finance_app_android.presentation.shared.components.ListItemCard
 import com.example.shmr_finance_app_android.presentation.feature.history.viewmodel.HistoryScreenState
 import com.example.shmr_finance_app_android.presentation.feature.history.viewmodel.HistoryScreenViewModel
@@ -43,8 +45,13 @@ fun HistoryScreen(
     isIncome: Boolean,
     updateConfigState: (ScreenConfig) -> Unit
 ) {
-    val state by viewModel.screenState.collectAsState()
     viewModel.setHistoryTransactionsType(isIncome)
+
+    val state by viewModel.screenState.collectAsState()
+    val startDate by viewModel.historyStartDate.collectAsState()
+    val endDate by viewModel.historyEndDate.collectAsState()
+
+    val showDatePickerModal by viewModel.showDatePickerModal.collectAsState()
 
     LaunchedEffect(updateConfigState) {
         updateConfigState(
@@ -63,18 +70,46 @@ fun HistoryScreen(
         )
     }
 
-    when (state) {
-        is HistoryScreenState.Loading -> HistoryLoadingState()
-        is HistoryScreenState.Error -> HistoryErrorState(
-            messageResId = (state as HistoryScreenState.Error).messageResId,
-            onRetry = (state as HistoryScreenState.Error).retryAction
+    Column(Modifier.fillMaxSize()) {
+        ListItemCard(
+            modifier = Modifier
+                .clickable { viewModel.showDatePickerModal(DateType.START) }
+                .background(color = MaterialTheme.colorScheme.onTertiaryContainer)
+                .height(56.dp),
+            item = ListItem(
+                content = MainContent(title = stringResource(R.string.period_start)),
+                trail = TrailContent(text = startDate)
+            )
         )
-        is HistoryScreenState.Empty -> HistoryEmptyState()
-        is HistoryScreenState.Success -> HistorySuccessState(
-            transactions = (state as HistoryScreenState.Success).transactions,
-            totalAmount = (state as HistoryScreenState.Success).totalAmount,
-            startDate = (state as HistoryScreenState.Success).startDate,
-            endDate = (state as HistoryScreenState.Success).endDate
+        ListItemCard(
+            modifier = Modifier
+                .clickable { viewModel.showDatePickerModal(DateType.END) }
+                .background(color = MaterialTheme.colorScheme.onTertiaryContainer)
+                .height(56.dp),
+            item = ListItem(
+                content = MainContent(title = stringResource(R.string.period_end)),
+                trail = TrailContent(text = endDate)
+            )
+        )
+
+        when (state) {
+            is HistoryScreenState.Loading -> HistoryLoadingState()
+            is HistoryScreenState.Error -> HistoryErrorState(
+                messageResId = (state as HistoryScreenState.Error).messageResId,
+                onRetry = (state as HistoryScreenState.Error).retryAction
+            )
+            is HistoryScreenState.Empty -> HistoryEmptyState()
+            is HistoryScreenState.Success -> HistorySuccessState(
+                transactions = (state as HistoryScreenState.Success).transactions,
+                totalAmount = (state as HistoryScreenState.Success).totalAmount
+            )
+        }
+    }
+
+    if (showDatePickerModal) {
+        DatePickerModal(
+            onDateSelected = { viewModel.confirmDateSelection(it) },
+            onDismiss = { viewModel.onDismissDatePicker() }
         )
     }
 }
@@ -82,31 +117,11 @@ fun HistoryScreen(
 @Composable
 private fun HistorySuccessState(
     transactions: List<TransactionUiModel>,
-    totalAmount: String,
-    startDate: String,
-    endDate: String
+    totalAmount: String
 ) {
     Column(Modifier.fillMaxSize()) {
         LazyColumn {
             item {
-                ListItemCard(
-                    modifier = Modifier
-                        .background(color = MaterialTheme.colorScheme.onTertiaryContainer)
-                        .height(56.dp),
-                    item = ListItem(
-                        content = MainContent(title = stringResource(R.string.period_start)),
-                        trail = TrailContent(text = startDate)
-                    )
-                )
-                ListItemCard(
-                    modifier = Modifier
-                        .background(color = MaterialTheme.colorScheme.onTertiaryContainer)
-                        .height(56.dp),
-                    item = ListItem(
-                        content = MainContent(title = stringResource(R.string.period_end)),
-                        trail = TrailContent(text = endDate)
-                    )
-                )
                 ListItemCard(
                     modifier = Modifier
                         .background(color = MaterialTheme.colorScheme.onTertiaryContainer)
