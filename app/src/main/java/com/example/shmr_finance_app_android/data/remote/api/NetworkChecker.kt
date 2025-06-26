@@ -14,6 +14,7 @@ interface NetworkChecker {
 class NetworkCheckerImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ) : NetworkChecker {
+
     override fun isNetworkAvailable(): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
