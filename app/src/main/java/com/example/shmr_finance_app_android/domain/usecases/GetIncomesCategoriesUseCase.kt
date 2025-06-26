@@ -3,7 +3,7 @@ package com.example.shmr_finance_app_android.domain.usecases
 import com.example.shmr_finance_app_android.data.remote.api.AppError
 import com.example.shmr_finance_app_android.data.remote.api.NetworkChecker
 import com.example.shmr_finance_app_android.domain.model.CategoryDomain
-import com.example.shmr_finance_app_android.domain.repository.FinanceRepository
+import com.example.shmr_finance_app_android.domain.repository.CategoriesRepository
 import dagger.Reusable
 import javax.inject.Inject
 
@@ -12,7 +12,7 @@ import javax.inject.Inject
 // Зачем-то этот запрос есть, поэтому брал статьи из него
 @Reusable
 class GetIncomesCategoriesUseCase @Inject constructor(
-    private val repository: FinanceRepository,
+    private val repository: CategoriesRepository,
     private val networkChecker: NetworkChecker
 ) {
     suspend operator fun invoke(): Result<List<CategoryDomain>> {
