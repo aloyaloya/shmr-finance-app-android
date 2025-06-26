@@ -1,5 +1,7 @@
 package com.example.shmr_finance_app_android.presentation.feature.history.screen
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,20 +27,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.shmr_finance_app_android.R
-import com.example.shmr_finance_app_android.presentation.shared.model.ListItem
-import com.example.shmr_finance_app_android.presentation.shared.model.MainContent
-import com.example.shmr_finance_app_android.presentation.shared.model.TrailContent
-import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
-import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarAction
-import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarConfig
 import com.example.shmr_finance_app_android.core.navigation.Route
 import com.example.shmr_finance_app_android.presentation.feature.history.component.DatePickerModal
 import com.example.shmr_finance_app_android.presentation.feature.history.model.TransactionUiModel
 import com.example.shmr_finance_app_android.presentation.feature.history.viewmodel.DateType
-import com.example.shmr_finance_app_android.presentation.shared.components.ListItemCard
 import com.example.shmr_finance_app_android.presentation.feature.history.viewmodel.HistoryScreenState
 import com.example.shmr_finance_app_android.presentation.feature.history.viewmodel.HistoryScreenViewModel
+import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
+import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarAction
+import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarConfig
+import com.example.shmr_finance_app_android.presentation.shared.components.ListItemCard
+import com.example.shmr_finance_app_android.presentation.shared.model.ListItem
+import com.example.shmr_finance_app_android.presentation.shared.model.MainContent
+import com.example.shmr_finance_app_android.presentation.shared.model.TrailContent
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HistoryScreen(
     viewModel: HistoryScreenViewModel = hiltViewModel(),
@@ -98,6 +101,7 @@ fun HistoryScreen(
                 messageResId = (state as HistoryScreenState.Error).messageResId,
                 onRetry = (state as HistoryScreenState.Error).retryAction
             )
+
             is HistoryScreenState.Empty -> HistoryEmptyState()
             is HistoryScreenState.Success -> HistorySuccessState(
                 transactions = (state as HistoryScreenState.Success).transactions,
@@ -120,19 +124,17 @@ private fun HistorySuccessState(
     totalAmount: String
 ) {
     Column(Modifier.fillMaxSize()) {
+        ListItemCard(
+            modifier = Modifier
+                .background(color = MaterialTheme.colorScheme.onTertiaryContainer)
+                .height(56.dp),
+            showDivider = false,
+            item = ListItem(
+                content = MainContent(title = stringResource(R.string.summary)),
+                trail = TrailContent(text = totalAmount)
+            )
+        )
         LazyColumn {
-            item {
-                ListItemCard(
-                    modifier = Modifier
-                        .background(color = MaterialTheme.colorScheme.onTertiaryContainer)
-                        .height(56.dp),
-                    showDivider = false,
-                    item = ListItem(
-                        content = MainContent(title = stringResource(R.string.summary)),
-                        trail = TrailContent(text = totalAmount)
-                    )
-                )
-            }
             items(transactions, key = { transaction -> transaction.id }) { expense ->
                 ListItemCard(
                     modifier = Modifier

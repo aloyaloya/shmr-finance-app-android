@@ -13,7 +13,7 @@ data class TransactionUiModel(
     val currency: String,
     val subtitle: String?,
     val emoji: String,
-    val transactionTime: String
+    val transactionAt: String,
 ) {
     private val amountFormatted: String
         get() = "${amount.toString().formatWithSpaces()} $currency"
@@ -22,7 +22,7 @@ data class TransactionUiModel(
         return ListItem(
             lead = LeadContent(text = emoji),
             content = MainContent(title = title, subtitle = subtitle),
-            trail = TrailContent(text = amountFormatted, subtext = transactionTime)
+            trail = TrailContent(text = amountFormatted, subtext = transactionAt)
         )
     }
 }

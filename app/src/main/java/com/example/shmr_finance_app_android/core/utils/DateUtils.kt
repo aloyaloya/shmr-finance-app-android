@@ -51,3 +51,10 @@ fun formatHumanDateToIso(humanDate: String): String {
         ""
     }
 }
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun formatDateAndTime(time: LocalTime, date: LocalDate): String {
+    val formatter = SimpleDateFormat(OUTPUT_DATE_TIME_FORMAT, Locale("ru"))
+    val combinedDate = Date.from(date.atTime(time).atZone(ZoneId.systemDefault()).toInstant())
+    return formatter.format(combinedDate)
+}
