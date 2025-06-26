@@ -4,12 +4,12 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.shmr_finance_app_android.data.datasource.AccountRemoteDataSource
 import com.example.shmr_finance_app_android.data.remote.api.safeApiCall
-import com.example.shmr_finance_app_android.domain.mapper.AccountDomainMapper
+import com.example.shmr_finance_app_android.data.repository.mapper.AccountDomainMapper
 import com.example.shmr_finance_app_android.domain.model.AccountDomain
 import com.example.shmr_finance_app_android.domain.repository.AccountRepository
 import javax.inject.Inject
 
-class AccountRepositoryImpl @Inject constructor(
+internal class AccountRepositoryImpl @Inject constructor(
     private val remoteDataSource: AccountRemoteDataSource,
     private val mapper: AccountDomainMapper
 ) : AccountRepository {
