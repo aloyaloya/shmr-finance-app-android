@@ -8,6 +8,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsScreenViewModel @Inject constructor() : ViewModel() {
+
     private val _darkThemeStatus = MutableStateFlow(false)
     val darkThemeStatus: StateFlow<Boolean> = _darkThemeStatus
 

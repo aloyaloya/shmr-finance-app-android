@@ -16,7 +16,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,26 +23,27 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shmr_finance_app_android.R
-import com.example.shmr_finance_app_android.presentation.shared.model.ListItem
-import com.example.shmr_finance_app_android.presentation.shared.model.MainContent
-import com.example.shmr_finance_app_android.presentation.shared.model.TrailContent
+import com.example.shmr_finance_app_android.core.navigation.Route
+import com.example.shmr_finance_app_android.presentation.feature.incomes.model.IncomeUiModel
+import com.example.shmr_finance_app_android.presentation.feature.incomes.viewmodel.IncomeScreenState
+import com.example.shmr_finance_app_android.presentation.feature.incomes.viewmodel.IncomeScreenViewModel
 import com.example.shmr_finance_app_android.presentation.feature.main.model.FloatingActionConfig
 import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarAction
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarConfig
-import com.example.shmr_finance_app_android.core.navigation.Route
-import com.example.shmr_finance_app_android.presentation.feature.incomes.model.IncomeUiModel
 import com.example.shmr_finance_app_android.presentation.shared.components.ListItemCard
-import com.example.shmr_finance_app_android.presentation.feature.incomes.viewmodel.IncomeScreenState
-import com.example.shmr_finance_app_android.presentation.feature.incomes.viewmodel.IncomeScreenViewModel
+import com.example.shmr_finance_app_android.presentation.shared.model.ListItem
+import com.example.shmr_finance_app_android.presentation.shared.model.MainContent
+import com.example.shmr_finance_app_android.presentation.shared.model.TrailContent
 
 @Composable
 fun IncomeScreen(
     viewModel: IncomeScreenViewModel = hiltViewModel(),
     updateConfigState: (ScreenConfig) -> Unit
 ) {
-    val state by viewModel.screenState.collectAsState()
+    val state by viewModel.screenState.collectAsStateWithLifecycle()
 
     LaunchedEffect(updateConfigState) {
         updateConfigState(
@@ -71,6 +71,7 @@ fun IncomeScreen(
             messageResId = (state as IncomeScreenState.Error).messageResId,
             onRetry = (state as IncomeScreenState.Error).retryAction
         )
+
         is IncomeScreenState.Empty -> IncomeEmptyState()
         is IncomeScreenState.Success -> IncomeSuccessState(
             incomes = (state as IncomeScreenState.Success).incomes,

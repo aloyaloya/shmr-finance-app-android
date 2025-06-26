@@ -16,7 +16,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,23 +23,24 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shmr_finance_app_android.R
-import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
-import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarConfig
 import com.example.shmr_finance_app_android.core.navigation.Route
-import com.example.shmr_finance_app_android.presentation.shared.components.ListItemCard
-import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesScreenState
-import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesScreenViewModel
 import com.example.shmr_finance_app_android.presentation.feature.categories.component.SearchTextField
 import com.example.shmr_finance_app_android.presentation.feature.categories.model.IncomeCategoryUiModel
+import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesScreenState
+import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesScreenViewModel
+import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
+import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarConfig
+import com.example.shmr_finance_app_android.presentation.shared.components.ListItemCard
 
 @Composable
 fun CategoriesScreen(
     viewModel: CategoriesScreenViewModel = hiltViewModel(),
     updateConfigState: (ScreenConfig) -> Unit
 ) {
-    val state by viewModel.screenState.collectAsState()
-    val searchRequest by viewModel.searchRequest.collectAsState()
+    val state by viewModel.screenState.collectAsStateWithLifecycle()
+    val searchRequest by viewModel.searchRequest.collectAsStateWithLifecycle()
 
     LaunchedEffect(updateConfigState) {
         updateConfigState(
@@ -57,7 +57,7 @@ fun CategoriesScreen(
         SearchTextField(
             value = searchRequest,
             onChange = { viewModel.onChangeSearchRequest(it) },
-            onActionClick = {  } // Кнопка поиска
+            onActionClick = { } // Кнопка поиска
         )
         HorizontalDivider()
         when (state) {
@@ -66,6 +66,7 @@ fun CategoriesScreen(
                 messageResId = (state as CategoriesScreenState.Error).messageResId,
                 onRetry = (state as CategoriesScreenState.Error).retryAction
             )
+
             is CategoriesScreenState.Empty -> CategoriesEmptyState()
             is CategoriesScreenState.Success -> CategoriesSuccessState(
                 categories = (state as CategoriesScreenState.Success).categories

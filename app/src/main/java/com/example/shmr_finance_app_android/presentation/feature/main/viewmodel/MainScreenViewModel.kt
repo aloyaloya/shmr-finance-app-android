@@ -14,6 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainScreenViewModel @Inject constructor() : ViewModel() {
+
     private val _configState = MutableStateFlow(
         ScreenConfig(
             route = Route.Root.Expenses.path,
@@ -31,6 +32,7 @@ class MainScreenViewModel @Inject constructor() : ViewModel() {
             )
         )
     )
+    
     val configState: StateFlow<ScreenConfig> = _configState
 
     fun updateConfigForScreen(config: ScreenConfig) {

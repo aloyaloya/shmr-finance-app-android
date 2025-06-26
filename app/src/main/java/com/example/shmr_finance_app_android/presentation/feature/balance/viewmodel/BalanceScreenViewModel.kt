@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.data.remote.api.AppError
+import com.example.shmr_finance_app_android.domain.model.AccountDomain
 import com.example.shmr_finance_app_android.domain.usecases.GetAccountUseCase
 import com.example.shmr_finance_app_android.presentation.feature.balance.mapper.AccountToBalanceMapper
 import com.example.shmr_finance_app_android.presentation.feature.balance.model.BalanceUiModel
@@ -26,6 +27,7 @@ class BalanceScreenViewModel @Inject constructor(
     private val getAccount: GetAccountUseCase,
     private val mapper: AccountToBalanceMapper
 ) : ViewModel() {
+
     private val _screenState = MutableStateFlow<BalanceScreenState>(BalanceScreenState.Loading)
     val screenState: StateFlow<BalanceScreenState> = _screenState.asStateFlow()
 
@@ -36,18 +38,25 @@ class BalanceScreenViewModel @Inject constructor(
     private fun loadBalanceInfo() {
         _screenState.value = BalanceScreenState.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            val balanceInfo = getAccount(accountId = 1)
-            balanceInfo.onSuccess { data ->
-                _screenState.value = BalanceScreenState.Success(
-                    balance = mapper.map(data)
-                )
-            }.onFailure { error ->
-                val messageResId = (error as? AppError)?.messageResId ?: R.string.unknown_error
-                _screenState.value = BalanceScreenState.Error(
-                    messageResId = messageResId,
-                    retryAction = { loadBalanceInfo() }
-                )
-            }
+            handleBalanceResult(getAccount(accountId = 1))
         }
+    }
+
+    private fun handleBalanceResult(result: Result<AccountDomain>) {
+        result
+            .onSuccess { data -> handleSuccess(mapper.map(data)) }
+            .onFailure { error -> handleError(error) }
+    }
+
+    private fun handleSuccess(data: BalanceUiModel) {
+        _screenState.value = BalanceScreenState.Success(data)
+    }
+
+    private fun handleError(error: Throwable) {
+        val messageResId = (error as? AppError)?.messageResId ?: R.string.unknown_error
+        _screenState.value = BalanceScreenState.Error(
+            messageResId = messageResId,
+            retryAction = { loadBalanceInfo() }
+        )
     }
 }

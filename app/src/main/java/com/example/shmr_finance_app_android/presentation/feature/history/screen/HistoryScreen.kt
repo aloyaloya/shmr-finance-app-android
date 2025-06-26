@@ -18,7 +18,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,9 +25,11 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.core.navigation.Route
 import com.example.shmr_finance_app_android.presentation.feature.history.component.DatePickerModal
+import com.example.shmr_finance_app_android.presentation.feature.history.component.DateSelectionHeader
 import com.example.shmr_finance_app_android.presentation.feature.history.model.TransactionUiModel
 import com.example.shmr_finance_app_android.presentation.feature.history.viewmodel.DateType
 import com.example.shmr_finance_app_android.presentation.feature.history.viewmodel.HistoryScreenState
@@ -50,11 +51,11 @@ fun HistoryScreen(
 ) {
     viewModel.setHistoryTransactionsType(isIncome)
 
-    val state by viewModel.screenState.collectAsState()
-    val startDate by viewModel.historyStartDate.collectAsState()
-    val endDate by viewModel.historyEndDate.collectAsState()
+    val state by viewModel.screenState.collectAsStateWithLifecycle()
+    val startDate by viewModel.historyStartDate.collectAsStateWithLifecycle()
+    val endDate by viewModel.historyEndDate.collectAsStateWithLifecycle()
 
-    val showDatePickerModal by viewModel.showDatePickerModal.collectAsState()
+    val showDatePickerModal by viewModel.showDatePickerModal.collectAsStateWithLifecycle()
 
     LaunchedEffect(updateConfigState) {
         updateConfigState(
@@ -74,25 +75,11 @@ fun HistoryScreen(
     }
 
     Column(Modifier.fillMaxSize()) {
-        ListItemCard(
-            modifier = Modifier
-                .clickable { viewModel.showDatePickerModal(DateType.START) }
-                .background(color = MaterialTheme.colorScheme.onTertiaryContainer)
-                .height(56.dp),
-            item = ListItem(
-                content = MainContent(title = stringResource(R.string.period_start)),
-                trail = TrailContent(text = startDate)
-            )
-        )
-        ListItemCard(
-            modifier = Modifier
-                .clickable { viewModel.showDatePickerModal(DateType.END) }
-                .background(color = MaterialTheme.colorScheme.onTertiaryContainer)
-                .height(56.dp),
-            item = ListItem(
-                content = MainContent(title = stringResource(R.string.period_end)),
-                trail = TrailContent(text = endDate)
-            )
+        DateSelectionHeader(
+            startDate = startDate,
+            onStartDate = { viewModel.showDatePickerModal(DateType.START) },
+            endDate = endDate,
+            onEndDate = { viewModel.showDatePickerModal(DateType.END) }
         )
 
         when (state) {

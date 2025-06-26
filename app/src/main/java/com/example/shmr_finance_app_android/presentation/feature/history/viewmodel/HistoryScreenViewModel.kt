@@ -11,6 +11,7 @@ import com.example.shmr_finance_app_android.core.utils.formatLongToHumanDate
 import com.example.shmr_finance_app_android.core.utils.getCurrentDateIso
 import com.example.shmr_finance_app_android.core.utils.getStartOfCurrentMonth
 import com.example.shmr_finance_app_android.data.remote.api.AppError
+import com.example.shmr_finance_app_android.domain.model.TransactionDomain
 import com.example.shmr_finance_app_android.domain.usecases.GetExpensesByPeriodUseCase
 import com.example.shmr_finance_app_android.domain.usecases.GetIncomesByPeriodUseCase
 import com.example.shmr_finance_app_android.presentation.feature.history.mapper.TransactionToTransactionUiMapper
@@ -64,37 +65,53 @@ class HistoryScreenViewModel @Inject constructor(
     private fun loadHistory() {
         _screenState.value = HistoryScreenState.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            val transactions = when (_historyTransactionsType.value) {
-                true -> getIncomesByPeriodUseCase(
-                    accountId = 1,
-                    startDate = formatHumanDateToIso(_historyStartDate.value),
-                    endDate = formatHumanDateToIso(_historyEndDate.value)
-                )
-
-                false -> getExpensesByPeriodUseCase(
-                    accountId = 1,
-                    startDate = formatHumanDateToIso(_historyStartDate.value),
-                    endDate = formatHumanDateToIso(_historyEndDate.value)
-                )
-            }
-
-            transactions.onSuccess { data ->
-                _screenState.value = if (data.isEmpty()) {
-                    HistoryScreenState.Empty
-                } else {
-                    HistoryScreenState.Success(
-                        transactions = data.map { mapper.map(it) },
-                        totalAmount = mapper.calculateTotalAmount(data)
+            when (_historyTransactionsType.value) {
+                true -> handleTransactionsResult(
+                    getIncomesByPeriodUseCase(
+                        accountId = 1,
+                        startDate = formatHumanDateToIso(_historyStartDate.value),
+                        endDate = formatHumanDateToIso(_historyEndDate.value)
                     )
-                }
-            }.onFailure { error ->
-                val messageResId = (error as? AppError)?.messageResId ?: R.string.unknown_error
-                _screenState.value = HistoryScreenState.Error(
-                    messageResId = messageResId,
-                    retryAction = { loadHistory() }
+                )
+
+                false -> handleTransactionsResult(
+                    getExpensesByPeriodUseCase(
+                        accountId = 1,
+                        startDate = formatHumanDateToIso(_historyStartDate.value),
+                        endDate = formatHumanDateToIso(_historyEndDate.value)
+                    )
                 )
             }
         }
+    }
+
+    private fun handleTransactionsResult(result: Result<List<TransactionDomain>>) {
+        result
+            .onSuccess { data ->
+                handleSuccess(
+                    data = data.map { mapper.map(it) },
+                    totalAmount = mapper.calculateTotalAmount(data)
+                )
+            }
+            .onFailure { error -> handleError(error) }
+    }
+
+    private fun handleSuccess(
+        data: List<TransactionUiModel>,
+        totalAmount: String
+    ) {
+        _screenState.value = HistoryScreenState.Success(
+            transactions = data,
+            totalAmount = totalAmount
+        )
+    }
+
+    private fun handleError(error: Throwable) {
+        val messageResId = (error as? AppError)?.messageResId ?: R.string.unknown_error
+        _screenState.value = HistoryScreenState.Error(
+            messageResId = messageResId,
+            retryAction = { loadHistory() }
+        )
     }
 
     fun setHistoryTransactionsType(isIncome: Boolean) {

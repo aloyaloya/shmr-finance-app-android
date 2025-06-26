@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.data.remote.api.AppError
+import com.example.shmr_finance_app_android.domain.model.CategoryDomain
 import com.example.shmr_finance_app_android.domain.usecases.GetIncomesCategoriesUseCase
 import com.example.shmr_finance_app_android.presentation.feature.categories.mapper.CategoryToIncomeCategoryMapper
 import com.example.shmr_finance_app_android.presentation.feature.categories.model.IncomeCategoryUiModel
@@ -27,7 +28,9 @@ class CategoriesScreenViewModel @Inject constructor(
     private val getIncomeCategories: GetIncomesCategoriesUseCase,
     private val mapper: CategoryToIncomeCategoryMapper
 ) : ViewModel() {
-    private val _screenState = MutableStateFlow<CategoriesScreenState>(CategoriesScreenState.Loading)
+
+    private val _screenState =
+        MutableStateFlow<CategoriesScreenState>(CategoriesScreenState.Loading)
     val screenState: StateFlow<CategoriesScreenState> = _screenState.asStateFlow()
 
     private val _searchRequest = MutableStateFlow("")
@@ -40,23 +43,26 @@ class CategoriesScreenViewModel @Inject constructor(
     private fun loadCategories() {
         _screenState.value = CategoriesScreenState.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            val incomeCategories = getIncomeCategories()
-            incomeCategories.onSuccess { data ->
-                _screenState.value = if (data.isEmpty()) {
-                    CategoriesScreenState.Empty
-                } else {
-                    CategoriesScreenState.Success(
-                        categories = data.map { mapper.map(it) }
-                    )
-                }
-            }.onFailure { error ->
-                val messageResId = (error as? AppError)?.messageResId ?: R.string.unknown_error
-                _screenState.value = CategoriesScreenState.Error(
-                    messageResId = messageResId,
-                    retryAction = { loadCategories() }
-                )
-            }
+            handleCategoriesResult(getIncomeCategories())
         }
+    }
+
+    private fun handleCategoriesResult(result: Result<List<CategoryDomain>>) {
+        result
+            .onSuccess { data -> handleSuccess(data.map { mapper.map(it) }) }
+            .onFailure { error -> handleError(error) }
+    }
+
+    private fun handleSuccess(data: List<IncomeCategoryUiModel>) {
+        _screenState.value = CategoriesScreenState.Success(data)
+    }
+
+    private fun handleError(error: Throwable) {
+        val messageResId = (error as? AppError)?.messageResId ?: R.string.unknown_error
+        _screenState.value = CategoriesScreenState.Error(
+            messageResId = messageResId,
+            retryAction = { loadCategories() }
+        )
     }
 
     fun onChangeSearchRequest(request: String) {

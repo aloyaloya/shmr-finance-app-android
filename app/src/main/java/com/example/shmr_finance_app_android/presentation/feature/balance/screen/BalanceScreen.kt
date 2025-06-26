@@ -14,7 +14,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,27 +21,28 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shmr_finance_app_android.R
-import com.example.shmr_finance_app_android.presentation.shared.model.LeadContent
-import com.example.shmr_finance_app_android.presentation.shared.model.ListItem
-import com.example.shmr_finance_app_android.presentation.shared.model.MainContent
-import com.example.shmr_finance_app_android.presentation.shared.model.TrailContent
+import com.example.shmr_finance_app_android.core.navigation.Route
+import com.example.shmr_finance_app_android.presentation.feature.balance.model.BalanceUiModel
+import com.example.shmr_finance_app_android.presentation.feature.balance.viewmodel.BalanceScreenState
+import com.example.shmr_finance_app_android.presentation.feature.balance.viewmodel.BalanceScreenViewModel
 import com.example.shmr_finance_app_android.presentation.feature.main.model.FloatingActionConfig
 import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarAction
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarConfig
-import com.example.shmr_finance_app_android.core.navigation.Route
-import com.example.shmr_finance_app_android.presentation.feature.balance.model.BalanceUiModel
 import com.example.shmr_finance_app_android.presentation.shared.components.ListItemCard
-import com.example.shmr_finance_app_android.presentation.feature.balance.viewmodel.BalanceScreenState
-import com.example.shmr_finance_app_android.presentation.feature.balance.viewmodel.BalanceScreenViewModel
+import com.example.shmr_finance_app_android.presentation.shared.model.LeadContent
+import com.example.shmr_finance_app_android.presentation.shared.model.ListItem
+import com.example.shmr_finance_app_android.presentation.shared.model.MainContent
+import com.example.shmr_finance_app_android.presentation.shared.model.TrailContent
 
 @Composable
 fun BalanceScreen(
     viewModel: BalanceScreenViewModel = hiltViewModel(),
     updateConfigState: (ScreenConfig) -> Unit
 ) {
-    val state by viewModel.screenState.collectAsState()
+    val state by viewModel.screenState.collectAsStateWithLifecycle()
 
     LaunchedEffect(updateConfigState) {
         updateConfigState(
@@ -83,7 +83,7 @@ private fun BalanceSuccessState(
     Column(Modifier.fillMaxSize()) {
         ListItemCard(
             modifier = Modifier
-                .clickable {  }
+                .clickable { }
                 .background(color = MaterialTheme.colorScheme.onTertiaryContainer)
                 .height(56.dp),
             item = ListItem(
@@ -95,7 +95,7 @@ private fun BalanceSuccessState(
         )
         ListItemCard(
             modifier = Modifier
-                .clickable {  }
+                .clickable { }
                 .background(color = MaterialTheme.colorScheme.onTertiaryContainer)
                 .height(56.dp),
             item = ListItem(

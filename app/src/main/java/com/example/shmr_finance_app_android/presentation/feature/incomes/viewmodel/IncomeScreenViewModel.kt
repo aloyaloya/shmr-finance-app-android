@@ -5,15 +5,16 @@ import androidx.lifecycle.viewModelScope
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.core.utils.getCurrentDate
 import com.example.shmr_finance_app_android.data.remote.api.AppError
+import com.example.shmr_finance_app_android.domain.model.TransactionDomain
 import com.example.shmr_finance_app_android.domain.usecases.GetIncomesByPeriodUseCase
+import com.example.shmr_finance_app_android.presentation.feature.incomes.mapper.TransactionToIncomeMapper
+import com.example.shmr_finance_app_android.presentation.feature.incomes.model.IncomeUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import com.example.shmr_finance_app_android.presentation.feature.incomes.mapper.TransactionToIncomeMapper
-import com.example.shmr_finance_app_android.presentation.feature.incomes.model.IncomeUiModel
 import javax.inject.Inject
 
 sealed interface IncomeScreenState {
@@ -31,6 +32,7 @@ class IncomeScreenViewModel @Inject constructor(
     private val getTransactionsByPeriodUseCase: GetIncomesByPeriodUseCase,
     private val mapper: TransactionToIncomeMapper
 ) : ViewModel() {
+
     private val _screenState = MutableStateFlow<IncomeScreenState>(IncomeScreenState.Loading)
     val screenState: StateFlow<IncomeScreenState> = _screenState.asStateFlow()
 
@@ -41,28 +43,42 @@ class IncomeScreenViewModel @Inject constructor(
     private fun loadIncomes() {
         _screenState.value = IncomeScreenState.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            val incomeTransactions = getTransactionsByPeriodUseCase(
-                accountId = 1,
-                startDate = getCurrentDate(),
-                endDate = getCurrentDate()
+            handleIncomesResult(
+                getTransactionsByPeriodUseCase(
+                    accountId = 1,
+                    startDate = getCurrentDate(),
+                    endDate = getCurrentDate()
+                )
             )
+        }
+    }
 
-            incomeTransactions.onSuccess { data ->
-                if (data.isEmpty()) {
-                    _screenState.value = IncomeScreenState.Empty
-                } else {
-                    _screenState.value = IncomeScreenState.Success(
-                        incomes = data.map { mapper.map(it) },
-                        totalAmount = mapper.calculateTotalAmount(data)
-                    )
-                }
-            }.onFailure { error ->
-                val messageResId = (error as? AppError)?.messageResId ?: R.string.unknown_error
-                _screenState.value = IncomeScreenState.Error(
-                    messageResId = messageResId,
-                    retryAction = { loadIncomes() }
+    private fun handleIncomesResult(result: Result<List<TransactionDomain>>) {
+        result
+            .onSuccess { data ->
+                handleSuccess(
+                    data = data.map { mapper.map(it) },
+                    totalAmount = mapper.calculateTotalAmount(data)
                 )
             }
-        }
+            .onFailure { error -> handleError(error) }
+    }
+
+    private fun handleSuccess(
+        data: List<IncomeUiModel>,
+        totalAmount: String
+    ) {
+        _screenState.value = IncomeScreenState.Success(
+            incomes = data,
+            totalAmount = totalAmount
+        )
+    }
+
+    private fun handleError(error: Throwable) {
+        val messageResId = (error as? AppError)?.messageResId ?: R.string.unknown_error
+        _screenState.value = IncomeScreenState.Error(
+            messageResId = messageResId,
+            retryAction = { loadIncomes() }
+        )
     }
 }
