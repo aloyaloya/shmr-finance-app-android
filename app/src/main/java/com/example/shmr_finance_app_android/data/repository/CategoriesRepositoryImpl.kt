@@ -11,6 +11,7 @@ internal class CategoriesRepositoryImpl @Inject constructor(
     private val remoteDataSource: CategoriesRemoteDataSource,
     private val mapper: CategoryDomainMapper
 ) : CategoriesRepository {
+
     override suspend fun getCategoriesByType(isIncome: Boolean): Result<List<CategoryDomain>> {
         return safeApiCall {
             remoteDataSource.getCategoriesByType(isIncome)

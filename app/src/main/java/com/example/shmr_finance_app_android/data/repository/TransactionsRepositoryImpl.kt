@@ -13,6 +13,7 @@ internal class TransactionsRepositoryImpl @Inject constructor(
     private val remoteDataSource: TransactionsRemoteDataSource,
     private val mapper: TransactionsDomainMapper
 ) : TransactionsRepository {
+    
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun getTransactionsByPeriod(
         accountId: Int,

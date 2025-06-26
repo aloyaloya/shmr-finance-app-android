@@ -13,6 +13,7 @@ internal class AccountRepositoryImpl @Inject constructor(
     private val remoteDataSource: AccountRemoteDataSource,
     private val mapper: AccountDomainMapper
 ) : AccountRepository {
+
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun getAccountById(accountId: Int): Result<AccountDomain> {
         return safeApiCall {

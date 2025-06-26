@@ -13,6 +13,7 @@ internal class CategoriesRemoteDataSourceImpl @Inject constructor(
     private val api: FinanceApiService,
     private val mapper: CategoryRemoteMapper
 ) : CategoriesRemoteDataSource {
+
     override suspend fun getCategoriesByType(isIncome: Boolean): List<CategoryDTO> {
         return api.getCategoriesByType(isIncome)
             .map(mapper::mapCategory)

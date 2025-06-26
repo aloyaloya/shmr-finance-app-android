@@ -17,6 +17,7 @@ internal class TransactionsRemoteDataSourceImpl @Inject constructor(
     private val api: FinanceApiService,
     private val mapper: TransactionsRemoteMapper
 ) : TransactionsRemoteDataSource {
+
     override suspend fun getTransactionsByPeriod(
         accountId: Int,
         startDate: String?,
