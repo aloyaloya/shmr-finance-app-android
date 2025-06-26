@@ -1,4 +1,4 @@
-package com.example.shmr_finance_app_android.domain.mapper
+package com.example.shmr_finance_app_android.data.repository.mapper
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -12,7 +12,7 @@ import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
-class AccountDomainMapper @Inject constructor() {
+internal class AccountDomainMapper @Inject constructor() {
     @RequiresApi(Build.VERSION_CODES.O)
     fun mapAccount(dto: AccountDTO): AccountDomain {
         val createdAt = Instant.parse(dto.createdAt).atZone(ZoneId.systemDefault())

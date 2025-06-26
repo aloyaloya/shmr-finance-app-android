@@ -1,10 +1,10 @@
-package com.example.shmr_finance_app_android.domain.mapper
+package com.example.shmr_finance_app_android.data.repository.mapper
 
 import com.example.shmr_finance_app_android.data.model.CategoryDTO
 import com.example.shmr_finance_app_android.domain.model.CategoryDomain
 import javax.inject.Inject
 
-class CategoryDomainMapper @Inject constructor() {
+internal class CategoryDomainMapper @Inject constructor() {
     fun mapCategory(dto: CategoryDTO): CategoryDomain {
         return CategoryDomain(
             id = dto.id,

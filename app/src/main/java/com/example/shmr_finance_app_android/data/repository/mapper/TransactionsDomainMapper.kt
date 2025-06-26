@@ -1,4 +1,4 @@
-package com.example.shmr_finance_app_android.domain.mapper
+package com.example.shmr_finance_app_android.data.repository.mapper
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -12,7 +12,7 @@ import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
-class TransactionsDomainMapper @Inject constructor(
+internal class TransactionsDomainMapper @Inject constructor(
     private val categoryMapper: CategoryDomainMapper
 ) {
     @RequiresApi(Build.VERSION_CODES.O)
