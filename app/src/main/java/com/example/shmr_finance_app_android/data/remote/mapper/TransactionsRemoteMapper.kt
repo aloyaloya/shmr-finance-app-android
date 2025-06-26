@@ -8,7 +8,7 @@ import dagger.Reusable
 import javax.inject.Inject
 
 @Reusable
-class TransactionsRemoteMapper @Inject constructor(
+internal class TransactionsRemoteMapper @Inject constructor(
     private val categoryMapper: CategoryRemoteMapper
 ) {
     fun mapTransaction(response: TransactionResponse): TransactionDTO {

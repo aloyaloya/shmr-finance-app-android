@@ -6,7 +6,7 @@ import dagger.Reusable
 import javax.inject.Inject
 
 @Reusable
-class CategoryRemoteMapper @Inject constructor() {
+internal class CategoryRemoteMapper @Inject constructor() {
     fun mapCategory(response: CategoryResponse): CategoryDTO {
         return CategoryDTO(
             id = response.id,

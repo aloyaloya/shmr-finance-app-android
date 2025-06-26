@@ -8,7 +8,7 @@ import dagger.Reusable
 import javax.inject.Inject
 
 @Reusable
-class AccountRemoteMapper @Inject constructor() {
+internal class AccountRemoteMapper @Inject constructor() {
     fun mapAccount(response: AccountResponse): AccountDTO {
         return AccountDTO(
             id = response.id,

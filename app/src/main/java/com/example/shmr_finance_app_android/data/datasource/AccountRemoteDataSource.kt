@@ -9,7 +9,7 @@ interface AccountRemoteDataSource {
     suspend fun getAccountById(accountId: Int): AccountDTO
 }
 
-class AccountRemoteDataSourceImpl @Inject constructor(
+internal class AccountRemoteDataSourceImpl @Inject constructor(
     private val api: FinanceApiService,
     private val mapper: AccountRemoteMapper
 ) : AccountRemoteDataSource {

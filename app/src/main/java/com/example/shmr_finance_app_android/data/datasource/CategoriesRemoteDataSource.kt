@@ -9,7 +9,7 @@ interface CategoriesRemoteDataSource {
     suspend fun getCategoriesByType(isIncome: Boolean): List<CategoryDTO>
 }
 
-class CategoriesRemoteDataSourceImpl @Inject constructor(
+internal class CategoriesRemoteDataSourceImpl @Inject constructor(
     private val api: FinanceApiService,
     private val mapper: CategoryRemoteMapper
 ) : CategoriesRemoteDataSource {

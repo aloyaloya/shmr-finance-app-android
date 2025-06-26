@@ -13,7 +13,7 @@ interface TransactionsRemoteDataSource {
     ): List<TransactionDTO>
 }
 
-class TransactionsRemoteDataSourceImpl @Inject constructor(
+internal class TransactionsRemoteDataSourceImpl @Inject constructor(
     private val api: FinanceApiService,
     private val mapper: TransactionsRemoteMapper
 ) : TransactionsRemoteDataSource {
