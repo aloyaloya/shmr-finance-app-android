@@ -16,6 +16,7 @@ private const val OUTPUT_DATE_TIME_FORMAT = "d MMMM HH:mm"
 
 fun getCurrentDate(): String {
     val sdf = SimpleDateFormat(INPUT_DATE_FORMAT, Locale.getDefault())
+
     return sdf.format(Date())
 }
 
@@ -23,17 +24,20 @@ fun getStartOfCurrentMonth(): String {
     val calendar = Calendar.getInstance()
     calendar.set(Calendar.DAY_OF_MONTH, 1)
     val sdf = SimpleDateFormat(OUTPUT_DATE_FORMAT, Locale("ru"))
+
     return sdf.format(calendar.time)
 }
 
 fun getCurrentDateIso(): String {
     val calendar = Calendar.getInstance()
     val sdf = SimpleDateFormat(OUTPUT_DATE_FORMAT, Locale("ru"))
+
     return sdf.format(calendar.time)
 }
 
 fun formatLongToHumanDate(timestamp: Long): String {
     val formatter = SimpleDateFormat(OUTPUT_DATE_FORMAT, Locale("ru"))
+
     return formatter.format(Date(timestamp))
 }
 
@@ -42,6 +46,7 @@ fun formatHumanDateToIso(humanDate: String): String {
         val humanFormatter = SimpleDateFormat(OUTPUT_DATE_FORMAT, Locale("ru"))
         val date = humanFormatter.parse(humanDate)
         val isoFormatter = SimpleDateFormat(INPUT_DATE_FORMAT, Locale.US)
+
         date?.let { isoFormatter.format(it) } ?: ""
     } catch (e: Exception) {
         e.printStackTrace()
@@ -53,5 +58,6 @@ fun formatHumanDateToIso(humanDate: String): String {
 fun formatDateAndTime(time: LocalTime, date: LocalDate): String {
     val formatter = SimpleDateFormat(OUTPUT_DATE_TIME_FORMAT, Locale("ru"))
     val combinedDate = Date.from(date.atTime(time).atZone(ZoneId.systemDefault()).toInstant())
+
     return formatter.format(combinedDate)
 }
