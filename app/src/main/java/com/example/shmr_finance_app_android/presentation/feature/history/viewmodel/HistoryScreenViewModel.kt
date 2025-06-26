@@ -1,12 +1,14 @@
 package com.example.shmr_finance_app_android.presentation.feature.history.viewmodel
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.core.utils.formatHumanDateToIso
 import com.example.shmr_finance_app_android.core.utils.formatLongToHumanDate
-import com.example.shmr_finance_app_android.core.utils.getEndOfCurrentMonth
+import com.example.shmr_finance_app_android.core.utils.getCurrentDateIso
 import com.example.shmr_finance_app_android.core.utils.getStartOfCurrentMonth
 import com.example.shmr_finance_app_android.data.remote.api.AppError
 import com.example.shmr_finance_app_android.domain.usecases.GetExpensesByPeriodUseCase
@@ -31,6 +33,7 @@ sealed interface HistoryScreenState {
     ) : HistoryScreenState
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @HiltViewModel
 class HistoryScreenViewModel @Inject constructor(
     private val getExpensesByPeriodUseCase: GetExpensesByPeriodUseCase,
@@ -42,7 +45,7 @@ class HistoryScreenViewModel @Inject constructor(
 
     private val _historyStartDate = MutableStateFlow(getStartOfCurrentMonth())
     val historyStartDate: StateFlow<String> = _historyStartDate.asStateFlow()
-    private val _historyEndDate = MutableStateFlow(getEndOfCurrentMonth())
+    private val _historyEndDate = MutableStateFlow(getCurrentDateIso())
     val historyEndDate: StateFlow<String> = _historyEndDate.asStateFlow()
 
     private val _screenState = MutableStateFlow<HistoryScreenState>(HistoryScreenState.Loading)
@@ -57,6 +60,7 @@ class HistoryScreenViewModel @Inject constructor(
         loadHistory()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun loadHistory() {
         _screenState.value = HistoryScreenState.Loading
         viewModelScope.launch(Dispatchers.IO) {
