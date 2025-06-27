@@ -7,6 +7,11 @@ import com.example.shmr_finance_app_android.data.remote.model.TransactionRespons
 import dagger.Reusable
 import javax.inject.Inject
 
+/**
+ * Маппер для преобразования [TransactionResponse] -> [TransactionDTO].
+ * Делегирует маппинг категории к [CategoryRemoteMapper]
+ * Создает краткую версию данных аккаунта [AccountBriefDTO]
+ */
 @Reusable
 internal class TransactionsRemoteMapper @Inject constructor(
     private val categoryMapper: CategoryRemoteMapper

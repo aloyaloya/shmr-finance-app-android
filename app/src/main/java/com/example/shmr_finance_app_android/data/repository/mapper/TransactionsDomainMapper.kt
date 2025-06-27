@@ -12,6 +12,11 @@ import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
+/**
+ * Маппер для преобразования [TransactionDTO] -> [TransactionDomain].
+ * Делегирует маппинг категории к [CategoryDomainMapper]
+ * Создает краткую версию данных аккаунта [AccountBriefDomain]
+ */
 internal class TransactionsDomainMapper @Inject constructor(
     private val categoryMapper: CategoryDomainMapper
 ) {
@@ -40,6 +45,10 @@ internal class TransactionsDomainMapper @Inject constructor(
     }
 }
 
+/**
+ * Преобразует строку с десятичным числом в целое число [Int].
+ * Дробная часть отбрасывается без округления
+ **/
 private fun String.toIntFromDecimal(): Int {
     return this.toBigDecimal()
         .setScale(0, RoundingMode.DOWN)

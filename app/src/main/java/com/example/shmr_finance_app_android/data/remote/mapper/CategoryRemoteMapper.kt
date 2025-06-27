@@ -5,6 +5,9 @@ import com.example.shmr_finance_app_android.data.remote.model.CategoryResponse
 import dagger.Reusable
 import javax.inject.Inject
 
+/**
+ * Маппер для преобразования [CategoryResponse] -> [CategoryDTO]
+ */
 @Reusable
 internal class CategoryRemoteMapper @Inject constructor() {
     fun mapCategory(response: CategoryResponse): CategoryDTO {

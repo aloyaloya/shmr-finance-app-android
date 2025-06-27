@@ -7,6 +7,10 @@ import com.example.shmr_finance_app_android.data.remote.model.StatItemResponse
 import dagger.Reusable
 import javax.inject.Inject
 
+/**
+ * Маппер для преобразования [AccountResponse] -> [AccountDTO]
+ * Создает модель данных статистики аккаунта [StatItemDTO]
+ */
 @Reusable
 internal class AccountRemoteMapper @Inject constructor() {
     fun mapAccount(response: AccountResponse): AccountDTO {
