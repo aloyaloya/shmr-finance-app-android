@@ -4,6 +4,9 @@ import com.example.shmr_finance_app_android.domain.model.CategoryDomain
 import com.example.shmr_finance_app_android.presentation.feature.categories.model.IncomeCategoryUiModel
 import javax.inject.Inject
 
+/**
+ * Маппер для преобразования [CategoryDomain] -> [IncomeCategoryUiModel]
+ */
 class CategoryToIncomeCategoryMapper @Inject constructor() {
     fun map(domain: CategoryDomain): IncomeCategoryUiModel {
         return IncomeCategoryUiModel(
