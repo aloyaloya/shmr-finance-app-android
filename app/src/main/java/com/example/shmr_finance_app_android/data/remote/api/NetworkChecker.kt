@@ -6,6 +6,10 @@ import dagger.Reusable
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
+/**
+ * Проверяет доступность интернет-соединения.
+ * Возвращает `true`, если сеть доступна
+ */
 interface NetworkChecker {
     fun isNetworkAvailable(): Boolean
 }

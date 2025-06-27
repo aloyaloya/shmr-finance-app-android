@@ -7,10 +7,30 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
+/**
+ * Отвечает за взаимодействие с API.
+ * Все методы возвращают сырые модели API (Response-классы), которые должны быть
+ * преобразованы в доменные модели через мапперы.
+ */
 interface FinanceApiService {
+
+    /**
+     * Получает данные аккаунта по ID.
+     * @param accountId - ID аккаунта
+     * @return [AccountResponse] - модель ответа API
+     */
     @GET("accounts/{id}")
     suspend fun getAccountById(@Path("id") accountId: Int): AccountResponse
 
+    /**
+     * Получает список транзакций за период.
+     * @param accountId - ID аккаунта
+     * @param startDate - дата начала периода необходимых транзакций
+     * (по умолчанию - начало текущего месяца)
+     * @param endDate - дата конца периода необходимых транзакций
+     * (по умолчанию - конец текущего месяца)
+     * @return Список [TransactionResponse] или пустой список, если транзакций нет.
+     */
     @GET("transactions/account/{accountId}/period")
     suspend fun getTransactionsByPeriod(
         @Path("accountId") accountId: Int,
@@ -18,6 +38,11 @@ interface FinanceApiService {
         @Query("endDate") endDate: String? = null
     ): List<TransactionResponse>
 
+    /**
+     * Получает список категорий по типу (доход/расход).
+     * @param isIncome - `true` для категорий доходов, `false` для расходов
+     * @return Список [CategoryResponse] или пустой список, если статей нет
+     */
     @GET("categories/type/{isIncome}")
     suspend fun getCategoriesByType(
         @Path("isIncome") isIncome: Boolean
