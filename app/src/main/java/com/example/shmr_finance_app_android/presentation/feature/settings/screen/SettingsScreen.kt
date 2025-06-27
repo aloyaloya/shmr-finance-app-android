@@ -8,29 +8,29 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shmr_finance_app_android.R
-import com.example.shmr_finance_app_android.presentation.shared.model.ListItem
-import com.example.shmr_finance_app_android.presentation.shared.model.MainContent
+import com.example.shmr_finance_app_android.core.navigation.Route
+import com.example.shmr_finance_app_android.core.navigation.SettingsListItem
 import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarConfig
-import com.example.shmr_finance_app_android.core.navigation.Route
-import com.example.shmr_finance_app_android.core.navigation.SettingsListItems
-import com.example.shmr_finance_app_android.presentation.shared.components.ListItemCard
-import com.example.shmr_finance_app_android.presentation.feature.settings.viewmodel.SettingsScreenViewModel
 import com.example.shmr_finance_app_android.presentation.feature.settings.component.ThemeSwitcherOptionCard
+import com.example.shmr_finance_app_android.presentation.feature.settings.viewmodel.SettingsScreenViewModel
+import com.example.shmr_finance_app_android.presentation.shared.components.ListItemCard
+import com.example.shmr_finance_app_android.presentation.shared.model.ListItem
+import com.example.shmr_finance_app_android.presentation.shared.model.MainContent
 
 @Composable
 fun SettingsScreen(
     viewModel: SettingsScreenViewModel = hiltViewModel(),
     updateConfigState: (ScreenConfig) -> Unit
 ) {
-    val darkThemeStatus by viewModel.darkThemeStatus.collectAsState()
+    val darkThemeStatus by viewModel.darkThemeStatus.collectAsStateWithLifecycle()
 
     LaunchedEffect(updateConfigState) {
         updateConfigState(
@@ -52,7 +52,7 @@ fun SettingsScreen(
                     onCheckedChange = { viewModel.switchDarkTheme(it) }
                 )
             }
-            items(SettingsListItems.items) { option ->
+            items(SettingsListItem.items) { option ->
                 val optionTitle = stringResource(option.titleResId)
                 ListItemCard(
                     modifier = Modifier

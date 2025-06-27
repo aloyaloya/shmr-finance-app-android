@@ -5,6 +5,9 @@ import com.example.shmr_finance_app_android.domain.model.TransactionDomain
 import com.example.shmr_finance_app_android.presentation.feature.incomes.model.IncomeUiModel
 import javax.inject.Inject
 
+/**
+ * Маппер для преобразования [TransactionDomain] -> [IncomeUiModel]
+ */
 class TransactionToIncomeMapper @Inject constructor() {
     fun map(domain: TransactionDomain): IncomeUiModel {
         return IncomeUiModel(

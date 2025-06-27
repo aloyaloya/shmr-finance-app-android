@@ -30,6 +30,7 @@ import com.example.shmr_finance_app_android.presentation.shared.model.TrailConte
 /**
  * Карточка элемента списка с ведущим, основным и завершающим контентом.
  *
+ * @param modifier Модификатор
  * @param item Данные для отображения
  * @param trailIcon Иконка в trailing-контенте (опционально)
  * @param showDivider Отображается ли HorizontalDivider (по умолчанию да)
@@ -77,7 +78,7 @@ fun ListItemCard(
         }
     }
 
-    if(showDivider) {
+    if (showDivider) {
         HorizontalDivider()
     }
 }

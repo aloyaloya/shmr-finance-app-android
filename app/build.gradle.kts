@@ -43,7 +43,9 @@ android {
 }
 
 detekt {
-    buildUponDefaultConfig = true
+    config.from("$rootDir/config/detekt/detekt.yml")
+    buildUponDefaultConfig = false;
+    autoCorrect = false
 }
 
 dependencies {

@@ -6,6 +6,10 @@ import dagger.Reusable
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
+/**
+ * Проверяет доступность интернет-соединения.
+ * Возвращает `true`, если сеть доступна
+ */
 interface NetworkChecker {
     fun isNetworkAvailable(): Boolean
 }
@@ -14,6 +18,7 @@ interface NetworkChecker {
 class NetworkCheckerImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ) : NetworkChecker {
+
     override fun isNetworkAvailable(): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager

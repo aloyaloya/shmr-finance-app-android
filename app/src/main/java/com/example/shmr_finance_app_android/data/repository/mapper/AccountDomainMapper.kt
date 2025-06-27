@@ -1,24 +1,22 @@
-package com.example.shmr_finance_app_android.domain.mapper
+package com.example.shmr_finance_app_android.data.repository.mapper
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.example.shmr_finance_app_android.data.model.AccountBriefDTO
 import com.example.shmr_finance_app_android.data.model.AccountDTO
-import com.example.shmr_finance_app_android.data.model.CategoryDTO
 import com.example.shmr_finance_app_android.data.model.StatItemDTO
-import com.example.shmr_finance_app_android.data.model.TransactionDTO
-import com.example.shmr_finance_app_android.domain.model.AccountBriefDomain
 import com.example.shmr_finance_app_android.domain.model.AccountDomain
-import com.example.shmr_finance_app_android.domain.model.CategoryDomain
 import com.example.shmr_finance_app_android.domain.model.StatItemDomain
-import com.example.shmr_finance_app_android.domain.model.TransactionDomain
 import java.math.RoundingMode
 import java.time.Instant
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
-class FinanceDomainMapper @Inject constructor() {
+/**
+ * Маппер для преобразования [AccountDTO] -> [AccountDomain]
+ * Создает модель данных статистики аккаунта [StatItemDomain]
+ */
+internal class AccountDomainMapper @Inject constructor() {
     @RequiresApi(Build.VERSION_CODES.O)
     fun mapAccount(dto: AccountDTO): AccountDomain {
         val createdAt = Instant.parse(dto.createdAt).atZone(ZoneId.systemDefault())
@@ -46,41 +44,12 @@ class FinanceDomainMapper @Inject constructor() {
             amount = dto.amount
         )
     }
-
-    fun mapCategory(dto: CategoryDTO): CategoryDomain {
-        return CategoryDomain(
-            id = dto.id,
-            name = dto.name,
-            emoji = dto.emoji,
-            isIncome = dto.isIncome
-        )
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun mapTransaction(dto: TransactionDTO): TransactionDomain {
-        val transactionAt = Instant.parse(dto.transactionDate).atZone(ZoneId.systemDefault())
-
-        return TransactionDomain(
-            id = dto.id,
-            account = mapAccountBrief(dto.account),
-            category = mapCategory(dto.category),
-            amount = dto.amount.toIntFromDecimal(),
-            transactionDate = transactionAt.toLocalDate(),
-            transactionTime = transactionAt.toLocalTime().truncatedTo(ChronoUnit.MINUTES),
-            comment = dto.comment,
-        )
-    }
-
-    private fun mapAccountBrief(dto: AccountBriefDTO): AccountBriefDomain {
-        return AccountBriefDomain(
-            id = dto.id,
-            name = dto.name,
-            balance = dto.balance.toIntFromDecimal(),
-            currency = dto.currency
-        )
-    }
 }
 
+/**
+ * Преобразует строку с десятичным числом в целое число [Int].
+ * Дробная часть отбрасывается без округления
+ **/
 private fun String.toIntFromDecimal(): Int {
     return this.toBigDecimal()
         .setScale(0, RoundingMode.DOWN)
