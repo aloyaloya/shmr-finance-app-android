@@ -16,7 +16,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.core.navigation.Route
-import com.example.shmr_finance_app_android.core.navigation.SettingsListItems
+import com.example.shmr_finance_app_android.core.navigation.SettingsListItem
 import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarConfig
 import com.example.shmr_finance_app_android.presentation.feature.settings.component.ThemeSwitcherOptionCard
@@ -52,7 +52,7 @@ fun SettingsScreen(
                     onCheckedChange = { viewModel.switchDarkTheme(it) }
                 )
             }
-            items(SettingsListItems.items) { option ->
+            items(SettingsListItem.items) { option ->
                 val optionTitle = stringResource(option.titleResId)
                 ListItemCard(
                     modifier = Modifier
