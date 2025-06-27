@@ -12,22 +12,38 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+/**
+ * Отвечает за предоставление реализаций удалённых источников данных (API)
+ * в виде абстракций (интерфейсов) для всего приложения.
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 internal interface DataSourceModule {
 
+    /**
+     * Предоставляет реализацию [AccountRemoteDataSource] для работы с API аккаунтов.
+     * Заменяет абстракцию конкретным классом [AccountRemoteDataSourceImpl].
+     */
     @Binds
     @Singleton
     fun bindsAccountRemoteDataSource(
         accountRemoteDataSource: AccountRemoteDataSourceImpl
     ): AccountRemoteDataSource
 
+    /**
+     * Предоставляет реализацию [CategoriesRemoteDataSource] для работы с API категорий.
+     * Заменяет абстракцию конкретным классом [CategoriesRemoteDataSourceImpl].
+     */
     @Binds
     @Singleton
     fun bindsCategoriesRemoteDataSource(
         categoriesRemoteDataSource: CategoriesRemoteDataSourceImpl
     ): CategoriesRemoteDataSource
 
+    /**
+     * Предоставляет реализацию [TransactionsRemoteDataSource] для работы с API транзакций.
+     * Заменяет абстракцию конкретным классом [TransactionsRemoteDataSourceImpl].
+     */
     @Binds
     @Singleton
     fun bindsTransactionsRemoteDataSource(

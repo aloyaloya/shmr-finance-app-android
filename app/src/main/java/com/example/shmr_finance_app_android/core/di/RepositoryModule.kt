@@ -12,22 +12,38 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+/**
+ * Отвечает за предоставление реализаций репозиториев
+ * в виде абстракций (интерфейсов) для всего приложения.
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 internal interface RepositoryModule {
 
+    /**
+     * Предоставляет реализацию [AccountRepository] для работы с репозиторием аккаунтов.
+     * Заменяет абстракцию конкретным классом [AccountRepositoryImpl].
+     */
     @Binds
     @Singleton
     fun bindsAccountRepository(
         accountRepository: AccountRepositoryImpl,
     ): AccountRepository
 
+    /**
+     * Предоставляет реализацию [CategoriesRepository] для работы с репозиторием категорий.
+     * Заменяет абстракцию конкретным классом [CategoriesRepositoryImpl].
+     */
     @Binds
     @Singleton
     fun bindsCategoriesRepository(
         categoriesRepository: CategoriesRepositoryImpl,
     ): CategoriesRepository
 
+    /**
+     * Предоставляет реализацию [TransactionsRepository] для работы с репозиторием транзакций.
+     * Заменяет абстракцию конкретным классом [TransactionsRepositoryImpl].
+     */
     @Binds
     @Singleton
     fun bindsTransactionsRepository(

@@ -17,6 +17,14 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
+/**
+ * Отвечает за предоставление всех зависимостей, связанных с сетевыми запросами:
+ * - Настройка HTTP-клиента [OkHttpClient]
+ * - Конфигурация JSON-парсера [Moshi]
+ * - Проверка доступности сети [NetworkChecker]
+ * - Создание и настройка Retrofit [Retrofit]
+ * - Предоставление API-сервиса для работы с запросами [FinanceApiService]
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
@@ -24,6 +32,11 @@ object NetworkModule {
     private const val BASE_URL = "https://shmr-finance.ru/api/v1/"
     private const val AUTH_TOKEN = "вставьте свой токен"
 
+    /**
+     * Отвечает за создание и настройку OkHttpClient:
+     * - Добавление Retry-механизма для перезапросов [RetryInterceptor]
+     * - Вставка токена в заголовки всех запросов
+     */
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
@@ -38,6 +51,10 @@ object NetworkModule {
             .build()
     }
 
+    /**
+     * Отвечает за создание Moshi-конвертера
+     * с поддержкой Kotlin-моделей [KotlinJsonAdapterFactory]
+     */
     @Provides
     @Singleton
     fun provideMoshi(): Moshi {
@@ -46,10 +63,20 @@ object NetworkModule {
             .build()
     }
 
+    /**
+     * Отвечает за предоставление механизма мониторинга доступности сети
+     * на основе констекста приложения [Context]
+     */
     @Provides
     fun provideNetworkChecker(@ApplicationContext context: Context): NetworkChecker =
         NetworkCheckerImpl(context)
 
+    /**
+     * Отвечает за создание и настройку [Retrofit]:
+     * - Указание базового URL
+     * - Подключение кастомного OkHttpClient
+     * - Подключение Moshi-конвертера
+     */
     @Provides
     @Singleton
     fun provideRetrofit(
@@ -63,6 +90,10 @@ object NetworkModule {
             .build()
     }
 
+    /**
+     * Отвечает за создание инстанса API-сервиса
+     * для работы с запросами
+     */
     @Provides
     @Singleton
     fun provideFinanceApiService(retrofit: Retrofit): FinanceApiService {
