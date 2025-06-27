@@ -6,6 +6,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
+/**
+ * ViewModel для экрана Настройки, реализующая:
+ * 1. Смену темы (темная, светлая) [switchDarkTheme]
+ **/
 @HiltViewModel
 class SettingsScreenViewModel @Inject constructor() : ViewModel() {
 
