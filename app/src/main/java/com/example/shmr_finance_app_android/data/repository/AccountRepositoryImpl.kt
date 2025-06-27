@@ -9,11 +9,23 @@ import com.example.shmr_finance_app_android.domain.model.AccountDomain
 import com.example.shmr_finance_app_android.domain.repository.AccountRepository
 import javax.inject.Inject
 
+/**
+ * Реализация [AccountRepository], отвечающая за:
+ * - Получение данных аккаунта из удаленного источника ([AccountRemoteDataSource])
+ * - Преобразование DTO -> доменную модель ([AccountDomainMapper])
+ * - Обработку ошибок через [safeApiCall]
+ */
 internal class AccountRepositoryImpl @Inject constructor(
     private val remoteDataSource: AccountRemoteDataSource,
     private val mapper: AccountDomainMapper
 ) : AccountRepository {
 
+    /**
+     * Получает данные аккаунта по ID.
+     * @param accountId - ID аккаунта
+     * @return [Result.success] с [AccountDomain] при успехе,
+     * [Result.failure] с [AppError] при ошибке
+     */
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun getAccountById(accountId: Int): Result<AccountDomain> {
         return safeApiCall {
