@@ -10,16 +10,29 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-private const val INPUT_DATE_FORMAT = "yyyy-MM-dd"
-private const val OUTPUT_DATE_FORMAT = "d MMMM yyyy"
-private const val OUTPUT_DATE_TIME_FORMAT = "d MMMM HH:mm"
+/**
+ * Отвечает за форматирование и преобразование дат в приложении.
+ * Содержит константы форматов и функции для конвертации между ними.
+ */
 
+private const val INPUT_DATE_FORMAT = "yyyy-MM-dd" // Формат для запросов
+private const val OUTPUT_DATE_FORMAT = "d MMMM yyyy" // Формат для отображения
+private const val OUTPUT_DATE_TIME_FORMAT = "d MMMM HH:mm" // Формат для отображения даты и времени
+
+/**
+ * Отвечает за получение текущей даты в формате ISO.
+ * @return Строка с текущей датой в ISO-формате [INPUT_DATE_FORMAT].
+ */
 fun getCurrentDate(): String {
     val sdf = SimpleDateFormat(INPUT_DATE_FORMAT, Locale.getDefault())
 
     return sdf.format(Date())
 }
 
+/**
+ * Отвечает за получение первого дня текущего месяца.
+ * @return Строка с датой в формате [OUTPUT_DATE_FORMAT] (например, "1 июня 2025")
+ */
 fun getStartOfCurrentMonth(): String {
     val calendar = Calendar.getInstance()
     calendar.set(Calendar.DAY_OF_MONTH, 1)
@@ -28,6 +41,10 @@ fun getStartOfCurrentMonth(): String {
     return sdf.format(calendar.time)
 }
 
+/**
+ * Отвечает за получение текущей даты.
+ * @return Строка с текущей датой в формате [OUTPUT_DATE_FORMAT]
+ */
 fun getCurrentDateIso(): String {
     val calendar = Calendar.getInstance()
     val sdf = SimpleDateFormat(OUTPUT_DATE_FORMAT, Locale("ru"))
@@ -35,12 +52,24 @@ fun getCurrentDateIso(): String {
     return sdf.format(calendar.time)
 }
 
+/**
+ * Отвечает за конвертацию timestamp в дату для отображения.
+ * @param timestamp - время в миллисекундах
+ * @return Отформатированная строка даты в формате [OUTPUT_DATE_FORMAT]
+ * или пустая строка при ошибке
+ */
 fun formatLongToHumanDate(timestamp: Long): String {
     val formatter = SimpleDateFormat(OUTPUT_DATE_FORMAT, Locale("ru"))
 
     return formatter.format(Date(timestamp))
 }
 
+/**
+ * Отвечает за конвертацию даты в ISO-формат.
+ * @param humanDate - дата в формате [OUTPUT_DATE_FORMAT]
+ * @return Дата в ISO-формате [INPUT_DATE_FORMAT]
+ * или пустая строка при ошибке
+ */
 fun formatHumanDateToIso(humanDate: String): String {
     return try {
         val humanFormatter = SimpleDateFormat(OUTPUT_DATE_FORMAT, Locale("ru"))
@@ -54,6 +83,12 @@ fun formatHumanDateToIso(humanDate: String): String {
     }
 }
 
+/**
+ * Отвечает за объединение и форматирование даты и времени.
+ * @param time - время для объединения
+ * @param date - дата для объединения
+ * @return Отформатированная строка в формате [OUTPUT_DATE_TIME_FORMAT] (например, "15 мая 14:30")
+ */
 @RequiresApi(Build.VERSION_CODES.O)
 fun formatDateAndTime(time: LocalTime, date: LocalDate): String {
     val formatter = SimpleDateFormat(OUTPUT_DATE_TIME_FORMAT, Locale("ru"))
