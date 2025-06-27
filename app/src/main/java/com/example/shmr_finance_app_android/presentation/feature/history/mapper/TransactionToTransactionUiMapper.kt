@@ -8,6 +8,9 @@ import com.example.shmr_finance_app_android.domain.model.TransactionDomain
 import com.example.shmr_finance_app_android.presentation.feature.history.model.TransactionUiModel
 import javax.inject.Inject
 
+/**
+ * Маппер для преобразования [TransactionDomain] -> [TransactionUiModel]
+ */
 class TransactionToTransactionUiMapper @Inject constructor() {
     @RequiresApi(Build.VERSION_CODES.O)
     fun map(domain: TransactionDomain): TransactionUiModel {
