@@ -48,6 +48,9 @@ class BalanceScreenViewModel @Inject constructor(
     private val _screenState = MutableStateFlow<BalanceScreenState>(Loading)
     val screenState: StateFlow<BalanceScreenState> = _screenState.asStateFlow()
 
+    private val _showCurrencyBottomSheet = MutableStateFlow(false)
+    val showCurrencyBottomSheet: StateFlow<Boolean> = _showCurrencyBottomSheet.asStateFlow()
+
     init {
         loadBalanceInfo()
     }
@@ -87,5 +90,16 @@ class BalanceScreenViewModel @Inject constructor(
             messageResId = messageResId,
             retryAction = { loadBalanceInfo() }
         )
+    }
+
+    fun onBalanceCurrencySelected(currency: String) {
+    }
+
+    fun onDismissBalanceCurrency() {
+        _showCurrencyBottomSheet.value = false
+    }
+
+    fun onShowBalanceCurrency() {
+        _showCurrencyBottomSheet.value = true
     }
 }

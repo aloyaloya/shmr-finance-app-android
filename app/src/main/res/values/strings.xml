@@ -47,4 +47,8 @@
     <string name="select">Выбрать</string>
     <string name="cancel">Отменить</string>
     <string name="choice_date">Выберите дату</string>
+    <string name="ruble_currency">Российский рубль</string>
+    <string name="dollar_currency">Американский доллар</string>
+    <string name="euro_currency">Евро</string>
+    <string name="dismiss">Отмена</string>
 </resources>
