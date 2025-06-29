@@ -88,7 +88,7 @@ class ExpensesScreenViewModel @Inject constructor(
         result
             .onSuccess { data ->
                 handleSuccess(
-                    data = data.map { mapper.map(it) },
+                    data = data.sortedByDescending { it.transactionTime }.map { mapper.map(it) },
                     totalAmount = mapper.calculateTotalAmount(data)
                 )
             }
