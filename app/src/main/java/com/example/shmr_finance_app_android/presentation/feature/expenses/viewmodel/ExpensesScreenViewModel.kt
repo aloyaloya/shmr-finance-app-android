@@ -100,10 +100,14 @@ class ExpensesScreenViewModel @Inject constructor(
         data: List<ExpenseUiModel>,
         totalAmount: String
     ) {
-        _screenState.value = Success(
-            expenses = data,
-            totalAmount = totalAmount
-        )
+        _screenState.value = if (data.isEmpty()) {
+            ExpensesScreenState.Empty
+        } else {
+            Success(
+                expenses = data,
+                totalAmount = totalAmount
+            )
+        }
     }
 
     /** Обрабатывает ошибку */

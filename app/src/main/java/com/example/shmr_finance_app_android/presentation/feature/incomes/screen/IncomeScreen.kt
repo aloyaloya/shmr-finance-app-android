@@ -155,7 +155,7 @@ private fun IncomeEmptyState() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = stringResource(R.string.no_income_found),
+            text = stringResource(R.string.today_no_income_found),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )

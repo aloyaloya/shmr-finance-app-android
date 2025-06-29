@@ -89,7 +89,7 @@ fun HistoryScreen(
                 onRetry = (state as HistoryScreenState.Error).retryAction
             )
 
-            is HistoryScreenState.Empty -> HistoryEmptyState()
+            is HistoryScreenState.Empty -> HistoryEmptyState(isIncome = isIncome)
             is HistoryScreenState.Success -> HistorySuccessState(
                 transactions = (state as HistoryScreenState.Success).transactions,
                 totalAmount = (state as HistoryScreenState.Success).totalAmount
@@ -175,14 +175,21 @@ private fun HistoryErrorState(
 }
 
 @Composable
-private fun HistoryEmptyState() {
+private fun HistoryEmptyState(
+    isIncome: Boolean
+) {
+    val emptyMessage = when (isIncome) {
+        true -> R.string.period_no_income_found
+        false -> R.string.period_no_expenses_found
+    }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = stringResource(R.string.no_expenses_found),
+            text = stringResource(emptyMessage),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )

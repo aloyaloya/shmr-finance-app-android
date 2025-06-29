@@ -82,7 +82,11 @@ class CategoriesScreenViewModel @Inject constructor(
 
     /** Обновляет состояние при успешной загрузке */
     private fun handleSuccess(data: List<IncomeCategoryUiModel>) {
-        _screenState.value = Success(data)
+        _screenState.value = if (data.isEmpty()) {
+            CategoriesScreenState.Empty
+        } else {
+            Success(data)
+        }
     }
 
     /** Обрабатывает ошибку */

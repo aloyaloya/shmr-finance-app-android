@@ -141,10 +141,14 @@ class HistoryScreenViewModel @Inject constructor(
         data: List<TransactionUiModel>,
         totalAmount: String
     ) {
-        _screenState.value = Success(
-            transactions = data,
-            totalAmount = totalAmount
-        )
+        _screenState.value = if (data.isEmpty()) {
+            HistoryScreenState.Empty
+        } else {
+            Success(
+                transactions = data,
+                totalAmount = totalAmount
+            )
+        }
     }
 
     /** Обрабатывает ошибку */

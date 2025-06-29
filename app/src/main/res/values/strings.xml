@@ -15,8 +15,10 @@
     <string name="expenses_history_description">История расходов</string>
     <string name="total_amount">Всего</string>
     <string name="retry">Повторить</string>
-    <string name="no_expenses_found">У вас нет расходов</string>
-    <string name="no_income_found">У вас нет доходов</string>
+    <string name="period_no_expenses_found">У вас нет расходов за указанный период</string>
+    <string name="period_no_income_found">У вас нет доходов за указанный период</string>
+    <string name="today_no_expenses_found">Сегодня у вас нет расходов</string>
+    <string name="today_no_income_found">Сегодня у вас нет доходов</string>
     <string name="incomes_history_description">История доходов</string>
     <string name="balance_edit_description">Изменить счет</string>
     <string name="balance">Баланс</string>

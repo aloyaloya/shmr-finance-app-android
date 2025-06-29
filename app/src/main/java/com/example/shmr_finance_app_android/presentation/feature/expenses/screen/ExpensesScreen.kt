@@ -155,7 +155,7 @@ private fun ExpensesEmptyState() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = stringResource(R.string.no_expenses_found),
+            text = stringResource(R.string.today_no_expenses_found),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
