@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shmr_finance_app_android.R
+import com.example.shmr_finance_app_android.core.utils.Constants
 import com.example.shmr_finance_app_android.core.utils.formatHumanDateToIso
 import com.example.shmr_finance_app_android.core.utils.formatLongToHumanDate
 import com.example.shmr_finance_app_android.core.utils.getCurrentDateIso
@@ -102,7 +103,7 @@ class HistoryScreenViewModel @Inject constructor(
             when (_historyTransactionsType.value) {
                 true -> handleTransactionsResult(
                     getIncomesByPeriodUseCase(
-                        accountId = 1,
+                        accountId = Constants.TEST_ACCOUNT_ID,
                         startDate = formatHumanDateToIso(_historyStartDate.value),
                         endDate = formatHumanDateToIso(_historyEndDate.value)
                     )
@@ -110,7 +111,7 @@ class HistoryScreenViewModel @Inject constructor(
 
                 false -> handleTransactionsResult(
                     getExpensesByPeriodUseCase(
-                        accountId = 1,
+                        accountId = Constants.TEST_ACCOUNT_ID,
                         startDate = formatHumanDateToIso(_historyStartDate.value),
                         endDate = formatHumanDateToIso(_historyEndDate.value)
                     )

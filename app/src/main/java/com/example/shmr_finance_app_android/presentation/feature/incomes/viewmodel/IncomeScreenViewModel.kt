@@ -3,6 +3,7 @@ package com.example.shmr_finance_app_android.presentation.feature.incomes.viewmo
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shmr_finance_app_android.R
+import com.example.shmr_finance_app_android.core.utils.Constants
 import com.example.shmr_finance_app_android.core.utils.getCurrentDate
 import com.example.shmr_finance_app_android.data.remote.api.AppError
 import com.example.shmr_finance_app_android.domain.model.TransactionDomain
@@ -69,7 +70,7 @@ class IncomeScreenViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             handleIncomesResult(
                 getTransactionsByPeriodUseCase(
-                    accountId = 1,
+                    accountId = Constants.TEST_ACCOUNT_ID,
                     startDate = getCurrentDate(),
                     endDate = getCurrentDate()
                 )
