@@ -15,7 +15,8 @@ class TransactionToIncomeMapper @Inject constructor() {
             title = domain.category.name,
             amount = domain.amount,
             currency = domain.account.getCurrencySymbol(),
-            subtitle = domain.comment
+            subtitle = domain.comment,
+            emoji = domain.category.emoji
         )
     }
 
