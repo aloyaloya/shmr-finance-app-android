@@ -53,4 +53,7 @@
     <string name="dollar_currency">Американский доллар</string>
     <string name="euro_currency">Евро</string>
     <string name="dismiss">Отмена</string>
+    <string name="balance_edit_save_description">Сохранить изменения</string>
+    <string name="balance_edit_cancel_description">Отменить изменения</string>
+    <string name="balance_name">Название счета</string>
 </resources>
