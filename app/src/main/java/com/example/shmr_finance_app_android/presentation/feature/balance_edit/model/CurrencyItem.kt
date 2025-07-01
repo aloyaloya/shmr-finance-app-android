@@ -1,4 +1,4 @@
-package com.example.shmr_finance_app_android.presentation.feature.balance.model
+package com.example.shmr_finance_app_android.presentation.feature.balance_edit.model
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes

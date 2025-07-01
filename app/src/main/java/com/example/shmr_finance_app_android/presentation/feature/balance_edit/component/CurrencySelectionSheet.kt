@@ -1,4 +1,4 @@
-package com.example.shmr_finance_app_android.presentation.feature.balance.component
+package com.example.shmr_finance_app_android.presentation.feature.balance_edit.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.shmr_finance_app_android.R
-import com.example.shmr_finance_app_android.presentation.feature.balance.model.CurrencyItem
+import com.example.shmr_finance_app_android.presentation.feature.balance_edit.model.CurrencyItem
 import com.example.shmr_finance_app_android.presentation.shared.components.ListItemCard
 import com.example.shmr_finance_app_android.presentation.shared.model.LeadContent
 import com.example.shmr_finance_app_android.presentation.shared.model.ListItem
@@ -26,10 +26,10 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CurrencyBottomSheet(
+fun CurrencySelectionSheet(
     modifier: Modifier = Modifier,
     items: List<CurrencyItem>,
-    onCurrencySelected: (String) -> Unit,
+    onItemSelected: (CurrencyItem) -> Unit,
     onDismiss: () -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState()
@@ -41,10 +41,10 @@ fun CurrencyBottomSheet(
         sheetState = sheetState,
         windowInsets = WindowInsets.systemBars.only(WindowInsetsSides.Bottom)
     ) {
-        CurrencyListContent(
-            currencies = items,
-            onCurrencySelected = {
-                onCurrencySelected(it)
+        ItemsListContent(
+            items = items,
+            onItemSelected = {
+                onItemSelected(it)
                 scope.launch { sheetState.hide() }.invokeOnCompletion {
                     onDismiss()
                 }
@@ -61,19 +61,19 @@ fun CurrencyBottomSheet(
 }
 
 @Composable
-private fun CurrencyListContent(
-    currencies: List<CurrencyItem>,
-    onCurrencySelected: (String) -> Unit
+private fun ItemsListContent(
+    items: List<CurrencyItem>,
+    onItemSelected: (CurrencyItem) -> Unit
 ) {
-    currencies.forEach { currency ->
-        val currencyTitle = stringResource(currency.currencyResId)
+    items.forEach { item ->
+        val itemTitle = stringResource(item.currencyResId)
         ListItemCard(
             modifier = Modifier
                 .height(72.dp)
-                .clickable { onCurrencySelected(currency.currencyCode) },
+                .clickable { onItemSelected(item) },
             item = ListItem(
-                lead = LeadContent.Icon(currency.currencyIconResId),
-                content = MainContent(title = "$currencyTitle ${currency.currencySymbol}")
+                lead = LeadContent.Icon(item.currencyIconResId),
+                content = MainContent(title = "$itemTitle ${item.currencySymbol}")
             )
         )
     }

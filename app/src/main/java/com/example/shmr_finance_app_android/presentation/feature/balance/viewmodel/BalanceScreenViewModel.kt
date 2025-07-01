@@ -49,8 +49,7 @@ class BalanceScreenViewModel @Inject constructor(
     private val _screenState = MutableStateFlow<BalanceScreenState>(Loading)
     val screenState: StateFlow<BalanceScreenState> = _screenState.asStateFlow()
 
-    private val _showCurrencyBottomSheet = MutableStateFlow(false)
-    val showCurrencyBottomSheet: StateFlow<Boolean> = _showCurrencyBottomSheet.asStateFlow()
+    private val _accountId = MutableStateFlow(Constants.TEST_ACCOUNT_ID)
 
     init {
         loadBalanceInfo()
@@ -64,7 +63,7 @@ class BalanceScreenViewModel @Inject constructor(
     private fun loadBalanceInfo() {
         _screenState.value = Loading
         viewModelScope.launch(Dispatchers.IO) {
-            handleBalanceResult(getAccount(accountId = Constants.TEST_ACCOUNT_ID))
+            handleBalanceResult(getAccount(accountId = _accountId.value))
         }
     }
 
@@ -93,14 +92,7 @@ class BalanceScreenViewModel @Inject constructor(
         )
     }
 
-    fun onBalanceCurrencySelected(currency: String) {
-    }
-
-    fun onDismissBalanceCurrency() {
-        _showCurrencyBottomSheet.value = false
-    }
-
-    fun onShowBalanceCurrency() {
-        _showCurrencyBottomSheet.value = true
+    fun getAccountId(): Int {
+        return _accountId.value
     }
 }
