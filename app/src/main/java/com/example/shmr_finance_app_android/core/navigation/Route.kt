@@ -26,5 +26,10 @@ sealed class Route(val path: String) {
             fun isIncome(): String = "isIncome"
             fun route(income: Boolean) = "history_screen/$income"
         }
+
+        data object BalanceEdit : SubScreens("balance_edit/{balanceId}") {
+            fun balanceId(): String = "balanceId"
+            fun route(balanceId: Int) = "balance_edit/$balanceId"
+        }
     }
 }
