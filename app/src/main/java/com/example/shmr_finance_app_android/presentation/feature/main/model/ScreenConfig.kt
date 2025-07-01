@@ -12,13 +12,20 @@ data class ScreenConfig(
 data class TopBarConfig(
     @StringRes val titleResId: Int,
     val showBackButton: Boolean = false,
+    val backAction: TopBarBackAction? = null,
     val action: TopBarAction? = null
 )
 
 data class TopBarAction(
     @DrawableRes val iconResId: Int,
     @StringRes val descriptionResId: Int,
-    val actionRoute: String
+    val actionRoute: String,
+    val action: (() -> Unit)? = null
+)
+
+data class TopBarBackAction(
+    @DrawableRes val iconResId: Int,
+    @StringRes val descriptionResId: Int,
 )
 
 data class FloatingActionConfig(

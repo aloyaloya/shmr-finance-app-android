@@ -1,7 +1,5 @@
 package com.example.shmr_finance_app_android.presentation.feature.main.component
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -13,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.example.shmr_finance_app_android.R
+import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarBackAction
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarConfig
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -28,12 +27,10 @@ fun CustomTopBar(
         },
         navigationIcon = {
             if (config.showBackButton) {
-                IconButton(onClick = onBack) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.back)
-                    )
-                }
+                BackAction(
+                    backActionConfig = config.backAction,
+                    onBack = onBack
+                )
             }
         },
         actions = {
@@ -52,4 +49,20 @@ fun CustomTopBar(
             containerColor = MaterialTheme.colorScheme.tertiary
         )
     )
+}
+
+@Composable
+private fun BackAction(
+    backActionConfig: TopBarBackAction? = null,
+    onBack: () -> Unit
+) {
+    val icon = backActionConfig?.iconResId ?: R.drawable.ic_back
+    val description = backActionConfig?.descriptionResId ?: R.string.back
+
+    IconButton(onClick = onBack) {
+        Icon(
+            painter = painterResource(icon),
+            contentDescription = stringResource(description)
+        )
+    }
 }
