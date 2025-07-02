@@ -1,15 +1,18 @@
 package com.example.shmr_finance_app_android.data.remote.api
 
 import com.example.shmr_finance_app_android.data.remote.model.AccountResponse
+import com.example.shmr_finance_app_android.data.remote.model.AccountUpdateRequest
 import com.example.shmr_finance_app_android.data.remote.model.CategoryResponse
 import com.example.shmr_finance_app_android.data.remote.model.TransactionResponse
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
 /**
  * Отвечает за взаимодействие с API.
- * Все методы возвращают сырые модели API (Response-классы), которые должны быть
+ * Методы возвращают сырые модели API (Response-классы), которые должны быть
  * преобразованы в доменные модели через мапперы.
  */
 interface FinanceApiService {
@@ -21,6 +24,17 @@ interface FinanceApiService {
      */
     @GET("accounts/{id}")
     suspend fun getAccountById(@Path("id") accountId: Int): AccountResponse
+
+    /**
+     * Обновляет данные аккаунта по ID.
+     * @param accountId ID аккаунта
+     * @param request Тело запроса [AccountUpdateRequest]
+     */
+    @PUT("accounts/{id}")
+    suspend fun updateAccountById(
+        @Path("id") accountId: Int,
+        @Body request: AccountUpdateRequest
+    ): TransactionResponse
 
     /**
      * Получает список транзакций за период.
