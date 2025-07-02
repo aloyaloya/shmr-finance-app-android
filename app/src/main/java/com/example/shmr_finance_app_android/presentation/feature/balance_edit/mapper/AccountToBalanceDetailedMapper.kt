@@ -12,7 +12,7 @@ class AccountToBalanceDetailedMapper @Inject constructor() {
         return BalanceDetailedUiModel(
             id = domain.id,
             name = domain.name,
-            amount = domain.balance,
+            amount = domain.balance.toString(),
             currencyCode = domain.currency,
             currencySymbol = domain.getCurrencySymbol(),
         )

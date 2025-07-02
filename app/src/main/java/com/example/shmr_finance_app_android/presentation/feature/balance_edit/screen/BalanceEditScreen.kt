@@ -64,7 +64,8 @@ fun BalanceEditScreen(
                     action = TopBarAction(
                         iconResId = R.drawable.ic_save,
                         descriptionResId = R.string.balance_edit_save_description,
-                        actionRoute = Route.Root.Balance.path
+                        actionRoute = Route.Root.Balance.path,
+                        actionUnit = { viewModel.updateAccountData() }
                     )
                 )
             )

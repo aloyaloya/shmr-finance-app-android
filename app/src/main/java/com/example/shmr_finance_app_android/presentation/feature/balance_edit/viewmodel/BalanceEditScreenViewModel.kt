@@ -6,6 +6,7 @@ import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.data.remote.api.AppError
 import com.example.shmr_finance_app_android.domain.model.AccountDomain
 import com.example.shmr_finance_app_android.domain.usecases.GetAccountUseCase
+import com.example.shmr_finance_app_android.domain.usecases.UpdateAccountUseCase
 import com.example.shmr_finance_app_android.presentation.feature.balance.mapper.AccountToBalanceMapper
 import com.example.shmr_finance_app_android.presentation.feature.balance_edit.mapper.AccountToBalanceDetailedMapper
 import com.example.shmr_finance_app_android.presentation.feature.balance_edit.model.BalanceDetailedUiModel
@@ -42,12 +43,14 @@ sealed interface BalanceEditScreenState {
 /**
  * ViewModel для экрана Счет, реализующая:
  * 1. Загрузку данных через [GetAccountUseCase]
- * 2. Преобразование доменной модели в UI-модель через [AccountToBalanceMapper]
- * 3. Управление состояниями экрана ([BalanceEditScreenState])
+ * 2. Обновление данных через [UpdateAccountUseCase]
+ * 3. Преобразование доменной модели в UI-модель через [AccountToBalanceMapper]
+ * 4. Управление состояниями экрана ([BalanceEditScreenState])
  **/
 @HiltViewModel
 class BalanceEditScreenViewModel @Inject constructor(
     private val getAccount: GetAccountUseCase,
+    private val updateAccount: UpdateAccountUseCase,
     private val mapper: AccountToBalanceDetailedMapper
 ) : ViewModel() {
 
@@ -99,7 +102,7 @@ class BalanceEditScreenViewModel @Inject constructor(
     /** Обновляет состояние при успешной загрузке */
     private fun handleSuccess(data: BalanceDetailedUiModel) {
         _accountName.value = data.name
-        _accountBalance.value = data.amount.toString()
+        _accountBalance.value = data.amount
         _accountCurrencyCode.value = data.currencyCode
         _accountCurrencySymbol.value = data.currencySymbol
 
@@ -119,13 +122,24 @@ class BalanceEditScreenViewModel @Inject constructor(
         )
     }
 
+    /** Обновляет данные счета через [updateAccount]: [UpdateAccountUseCase] */
+    fun updateAccountData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            updateAccount(
+                accountId = _accountId.value,
+                accountName = _accountName.value,
+                accountBalance = _accountBalance.value.toInt(),
+                accountCurrency = _accountCurrencyCode.value
+            )
+        }
+    }
+
     /**
      * Обрабатывает изменения состояния текущей валюты
      */
     fun onCurrencySelected(currency: CurrencyItem) {
         _accountCurrencyCode.value = currency.currencyCode
         _accountCurrencySymbol.value = currency.currencySymbol
-        hideCurrencyBottomSheet()
     }
 
     /**
