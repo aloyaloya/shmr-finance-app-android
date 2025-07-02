@@ -20,7 +20,7 @@ data class TopBarAction(
     @DrawableRes val iconResId: Int,
     @StringRes val descriptionResId: Int,
     val actionRoute: String,
-    val action: (() -> Unit)? = null
+    val actionUnit: (() -> Unit)? = null
 )
 
 data class TopBarBackAction(

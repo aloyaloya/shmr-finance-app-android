@@ -36,7 +36,10 @@ fun CustomTopBar(
         actions = {
             config.action?.let { action ->
                 IconButton(
-                    onClick = { onActionRoute(action.actionRoute) }
+                    onClick = {
+                        action.actionUnit?.invoke()
+                        onActionRoute(action.actionRoute)
+                    }
                 ) {
                     Icon(
                         painter = painterResource(action.iconResId),
