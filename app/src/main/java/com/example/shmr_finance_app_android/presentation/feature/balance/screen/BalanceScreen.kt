@@ -1,22 +1,14 @@
 package com.example.shmr_finance_app_android.presentation.feature.balance.screen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -30,7 +22,9 @@ import com.example.shmr_finance_app_android.presentation.feature.main.model.Floa
 import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarAction
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarConfig
+import com.example.shmr_finance_app_android.presentation.shared.components.ErrorState
 import com.example.shmr_finance_app_android.presentation.shared.components.ListItemCard
+import com.example.shmr_finance_app_android.presentation.shared.components.LoadingState
 import com.example.shmr_finance_app_android.presentation.shared.model.LeadContent
 import com.example.shmr_finance_app_android.presentation.shared.model.ListItem
 import com.example.shmr_finance_app_android.presentation.shared.model.MainContent
@@ -64,8 +58,8 @@ fun BalanceScreen(
     }
 
     when (state) {
-        is BalanceScreenState.Loading -> BalanceLoadingState()
-        is BalanceScreenState.Error -> BalanceErrorState(
+        is BalanceScreenState.Loading -> LoadingState()
+        is BalanceScreenState.Error -> ErrorState(
             messageResId = (state as BalanceScreenState.Error).messageResId,
             onRetry = (state as BalanceScreenState.Error).retryAction
         )
@@ -101,43 +95,5 @@ private fun BalanceSuccessState(
             ),
             showDivider = false
         )
-    }
-}
-
-@Composable
-private fun BalanceLoadingState() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        CircularProgressIndicator(color = MaterialTheme.colorScheme.tertiary)
-    }
-}
-
-@Composable
-private fun BalanceErrorState(
-    messageResId: Int,
-    onRetry: () -> Unit
-) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = stringResource(messageResId),
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Spacer(Modifier.height(dimensionResource(R.dimen.large_spacer)))
-        Button(
-            onClick = onRetry,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.tertiary
-            )
-        ) {
-            Text(text = stringResource(R.string.retry))
-        }
     }
 }
