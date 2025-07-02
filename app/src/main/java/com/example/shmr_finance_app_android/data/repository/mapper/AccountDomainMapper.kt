@@ -2,8 +2,10 @@ package com.example.shmr_finance_app_android.data.repository.mapper
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.example.shmr_finance_app_android.data.model.AccountBriefDTO
 import com.example.shmr_finance_app_android.data.model.AccountDTO
 import com.example.shmr_finance_app_android.data.model.StatItemDTO
+import com.example.shmr_finance_app_android.domain.model.AccountBriefDomain
 import com.example.shmr_finance_app_android.domain.model.AccountDomain
 import com.example.shmr_finance_app_android.domain.model.StatItemDomain
 import java.math.RoundingMode
@@ -13,7 +15,9 @@ import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
 /**
- * Маппер для преобразования [AccountDTO] -> [AccountDomain]
+ * Маппер для:
+ * Преобразования [AccountDTO] -> [AccountDomain] при получении данных
+ * Преобразования [AccountBriefDomain] -> [AccountBriefDTO] при изменении данных
  * Создает модель данных статистики аккаунта [StatItemDomain]
  */
 internal class AccountDomainMapper @Inject constructor() {
@@ -42,6 +46,15 @@ internal class AccountDomainMapper @Inject constructor() {
             categoryName = dto.categoryName,
             emoji = dto.emoji,
             amount = dto.amount
+        )
+    }
+
+    fun mapAccountBrief(domain: AccountBriefDomain): AccountBriefDTO {
+        return AccountBriefDTO(
+            id = domain.id,
+            name = domain.name,
+            balance = domain.balance.toString(),
+            currency = domain.currency
         )
     }
 }
