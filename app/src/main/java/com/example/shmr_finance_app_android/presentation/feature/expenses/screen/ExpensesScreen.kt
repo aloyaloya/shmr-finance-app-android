@@ -45,7 +45,7 @@ fun ExpensesScreen(
 ) {
     val state by viewModel.screenState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(updateConfigState) {
+    LaunchedEffect(Unit) {
         updateConfigState(
             ScreenConfig(
                 route = Route.Root.Expenses.path,

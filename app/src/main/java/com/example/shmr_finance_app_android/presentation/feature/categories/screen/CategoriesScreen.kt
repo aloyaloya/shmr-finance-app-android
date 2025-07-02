@@ -42,7 +42,7 @@ fun CategoriesScreen(
     val state by viewModel.screenState.collectAsStateWithLifecycle()
     val searchRequest by viewModel.searchRequest.collectAsStateWithLifecycle()
 
-    LaunchedEffect(updateConfigState) {
+    LaunchedEffect(Unit) {
         updateConfigState(
             ScreenConfig(
                 route = Route.Root.Categories.path,

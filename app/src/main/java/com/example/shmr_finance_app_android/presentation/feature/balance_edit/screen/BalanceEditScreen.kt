@@ -49,7 +49,7 @@ fun BalanceEditScreen(
     val isCurrencySelectionSheetVisible by viewModel
         .currencySelectionSheetVisible.collectAsStateWithLifecycle()
 
-    LaunchedEffect(updateConfigState) {
+    LaunchedEffect(Unit) {
         viewModel.setAccountId(balanceId)
         updateConfigState(
             ScreenConfig(

@@ -45,7 +45,7 @@ fun IncomeScreen(
 ) {
     val state by viewModel.screenState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(updateConfigState) {
+    LaunchedEffect(Unit) {
         updateConfigState(
             ScreenConfig(
                 route = Route.Root.Income.path,

@@ -32,7 +32,7 @@ fun SettingsScreen(
 ) {
     val darkThemeStatus by viewModel.darkThemeStatus.collectAsStateWithLifecycle()
 
-    LaunchedEffect(updateConfigState) {
+    LaunchedEffect(Unit) {
         updateConfigState(
             ScreenConfig(
                 route = Route.Root.Settings.path,

@@ -57,7 +57,7 @@ fun HistoryScreen(
 
     val showDatePickerModal by viewModel.showDatePickerModal.collectAsStateWithLifecycle()
 
-    LaunchedEffect(updateConfigState) {
+    LaunchedEffect(Unit) {
         updateConfigState(
             ScreenConfig(
                 route = Route.SubScreens.History.path,
