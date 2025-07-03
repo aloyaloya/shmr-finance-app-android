@@ -6,7 +6,7 @@ import com.example.shmr_finance_app_android.data.remote.mapper.CategoryRemoteMap
 import javax.inject.Inject
 
 /**
- * Отвечает за получение данных аккаунта из remote-источника (API).
+ * Отвечает за получение категорий из remote-источника (API).
  * Определяет контракт для работы с данными категорий без привязки к конкретной реализации.
  */
 interface CategoriesRemoteDataSource {

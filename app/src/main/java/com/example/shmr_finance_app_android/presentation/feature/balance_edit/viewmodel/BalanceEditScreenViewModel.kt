@@ -172,21 +172,22 @@ class BalanceEditScreenViewModel @Inject constructor(
         _accountBalance.value = balance
     }
 
-    /**
-     * Обрабатывает изменения состояния текущего названия счета
-     */
+    /** Обрабатывает изменения состояния текущего названия счета */
     fun onNameEdited(name: String) {
         _accountName.value = name
     }
 
+    /** Обрабатывает открытие CurrencyBottomSheet */
     fun showCurrencyBottomSheet() {
         _currencySelectionSheetVisible.value = true
     }
 
+    /** Обрабатывает закрытие CurrencyBottomSheet */
     fun hideCurrencyBottomSheet() {
         _currencySelectionSheetVisible.value = false
     }
 
+    /** Обрабатывает показ ErrorSnackbar */
     private fun showSnackBar(message: Int) {
         if (!_snackbarVisible.value) {
             _snackbarVisible.value = true
@@ -198,6 +199,7 @@ class BalanceEditScreenViewModel @Inject constructor(
         }
     }
 
+    /** Обрабатывает скрытие ErrorSnackbar */
     fun dismissSnackBar() {
         _snackbarVisible.value = false
     }

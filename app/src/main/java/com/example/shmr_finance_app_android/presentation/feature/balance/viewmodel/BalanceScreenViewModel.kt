@@ -92,6 +92,7 @@ class BalanceScreenViewModel @Inject constructor(
         )
     }
 
+    /** Получает ID аккаунта */
     fun getAccountId(): Int {
         return _accountId.value
     }
