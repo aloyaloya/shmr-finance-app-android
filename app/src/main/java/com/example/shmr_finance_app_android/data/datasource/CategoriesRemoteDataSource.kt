@@ -11,6 +11,7 @@ import javax.inject.Inject
  */
 interface CategoriesRemoteDataSource {
     suspend fun getCategoriesByType(isIncome: Boolean): List<CategoryDTO>
+    suspend fun getAllCategories(): List<CategoryDTO>
 }
 
 /**
@@ -37,6 +38,19 @@ internal class CategoriesRemoteDataSourceImpl @Inject constructor(
      */
     override suspend fun getCategoriesByType(isIncome: Boolean): List<CategoryDTO> {
         return api.getCategoriesByType(isIncome)
+            .map(mapper::mapCategory)
+    }
+
+    /**
+     * Реализация получения данных всех категорий:
+     * 1. Запрашивает данные через API
+     * 2. Преобразует результат в DTO
+     * 3. Возвращает готовый список DTO
+     *
+     * @return Список [CategoryDTO] - список преобразованных DTO данных категорий
+     */
+    override suspend fun getAllCategories(): List<CategoryDTO> {
+        return api.getAllCategories()
             .map(mapper::mapCategory)
     }
 }
