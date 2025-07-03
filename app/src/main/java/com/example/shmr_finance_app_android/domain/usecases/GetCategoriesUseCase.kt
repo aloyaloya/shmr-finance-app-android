@@ -7,29 +7,24 @@ import com.example.shmr_finance_app_android.domain.repository.CategoriesReposito
 import dagger.Reusable
 import javax.inject.Inject
 
-// Данный юзкейс использовался ранее на экране категорий
-// (в фигме отображались только статьи доходов),
-// сейчас же переделал под все категории, но данный юзкейс (и все, что с связано с этим запросом)
-// решил пока не удалять
-
 /**
  * UseCase для получения категорий доходов.
  * Поведение:
  * 1. Проверяет интернет-соединение через [NetworkChecker]
  * 2. Если сети нет - сразу возвращает [Result.failure] с [AppError.Network]
- * 3. Запрашивает категории через [CategoriesRepository.getCategoriesByType]
+ * 3. Запрашивает категории через [CategoriesRepository.getAllCategories]
  *
- * Честно говоря не совсем понятно какие статьи показывать, из запроса /categories
- * или же из StatItem аккаунта, который мы получили.
- * Зачем-то этот запрос есть, поэтому брал статьи из него
+ *  * Честно говоря не совсем понятно какие статьи показывать, из запроса /categories
+ *  * или же из StatItem аккаунта, который мы получили.
+ *  * Зачем-то этот запрос есть, поэтому брал статьи из него
  */
 @Reusable
-class GetIncomesCategoriesUseCase @Inject constructor(
+class GetCategoriesUseCase @Inject constructor(
     private val repository: CategoriesRepository,
     private val networkChecker: NetworkChecker
 ) {
     /**
-     * Получает список категорий доходов.
+     * Получает список всех категорий.
      * @return [Result.success] с списком [CategoryDomain] или
      * [Result.failure] с [AppError.Network] если нет соединения
      */
@@ -38,6 +33,6 @@ class GetIncomesCategoriesUseCase @Inject constructor(
             return Result.failure(AppError.Network)
         }
 
-        return repository.getCategoriesByType(true)
+        return repository.getAllCategories()
     }
 }
