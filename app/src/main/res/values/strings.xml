@@ -59,4 +59,5 @@
     <string name="balance_name_error_message">Введите корректное название счета</string>
     <string name="balance_amount_error_message">Введите корректный баланс</string>
     <string name="close">Закрыть</string>
+    <string name="empty_filtered_categories">Не найдено подходящих категорий</string>
 </resources>

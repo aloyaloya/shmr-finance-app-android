@@ -31,6 +31,7 @@ sealed interface CategoriesScreenState {
     data object Loading : CategoriesScreenState
     data class Error(val messageResId: Int, val retryAction: () -> Unit) : CategoriesScreenState
     data object Empty : CategoriesScreenState
+    data object SearchEmpty : CategoriesScreenState
     data class Success(val categories: List<IncomeCategoryUiModel>) : CategoriesScreenState
 }
 
@@ -49,6 +50,8 @@ class CategoriesScreenViewModel @Inject constructor(
     private val _screenState =
         MutableStateFlow<CategoriesScreenState>(Loading)
     val screenState: StateFlow<CategoriesScreenState> = _screenState.asStateFlow()
+
+    private var cachedCategories: List<IncomeCategoryUiModel> = emptyList()
 
     private val _searchRequest = MutableStateFlow("")
     val searchRequest: StateFlow<String> = _searchRequest
@@ -80,13 +83,10 @@ class CategoriesScreenViewModel @Inject constructor(
             .onFailure { error -> handleError(error) }
     }
 
-    /** Обновляет состояние при успешной загрузке */
+    /** Сохроняет данные при успешной загрузке, делегирует обновления состояния */
     private fun handleSuccess(data: List<IncomeCategoryUiModel>) {
-        _screenState.value = if (data.isEmpty()) {
-            CategoriesScreenState.Empty
-        } else {
-            Success(data)
-        }
+        cachedCategories = data
+        updateState()
     }
 
     /** Обрабатывает ошибку */
@@ -98,8 +98,32 @@ class CategoriesScreenViewModel @Inject constructor(
         )
     }
 
+    /**
+     * Обновляет состояние экрана [CategoriesScreenState]
+     * Поведение:
+     * 1. Проверяет, введен ли поисковой запрос
+     * 2. Выдает полученные/отфильтрованные комнаты
+     * 3. Изменяет состояние экрана
+     * */
+    fun updateState() {
+        val query = _searchRequest.value
+        val filtered = when {
+            query.isBlank() -> cachedCategories
+            else -> cachedCategories.filter {
+                it.name.contains(query, ignoreCase = true)
+            }
+        }
+
+        _screenState.value = when {
+            filtered.isEmpty() && query.isNotBlank() -> CategoriesScreenState.SearchEmpty
+            filtered.isEmpty() -> CategoriesScreenState.Empty
+            else -> Success(categories = filtered)
+        }
+    }
+
     /** Изменение поискового запроса */
     fun onChangeSearchRequest(request: String) {
         _searchRequest.value = request
+        updateState()
     }
 }

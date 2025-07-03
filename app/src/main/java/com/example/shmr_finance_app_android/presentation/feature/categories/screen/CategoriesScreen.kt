@@ -50,7 +50,7 @@ fun CategoriesScreen(
         SearchTextField(
             value = searchRequest,
             onChange = { viewModel.onChangeSearchRequest(it) },
-            onActionClick = { } // Кнопка поиска
+            onActionClick = { viewModel.updateState() }
         )
         HorizontalDivider()
         when (state) {
@@ -62,6 +62,10 @@ fun CategoriesScreen(
 
             is CategoriesScreenState.Empty -> EmptyState(
                 messageResId = R.string.no_categories_found
+            )
+
+            is CategoriesScreenState.SearchEmpty -> EmptyState(
+                messageResId = R.string.empty_filtered_categories
             )
 
             is CategoriesScreenState.Success -> CategoriesSuccessState(
