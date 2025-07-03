@@ -100,21 +100,17 @@ class HistoryScreenViewModel @Inject constructor(
     private fun loadHistory() {
         _screenState.value = Loading
         viewModelScope.launch(Dispatchers.IO) {
-            when (_historyTransactionsType.value) {
-                true -> handleTransactionsResult(
-                    getIncomesByPeriodUseCase(
-                        accountId = Constants.TEST_ACCOUNT_ID,
-                        startDate = formatHumanDateToIso(_historyStartDate.value),
-                        endDate = formatHumanDateToIso(_historyEndDate.value)
-                    )
+            if (_historyTransactionsType.value) {
+                getIncomesByPeriodUseCase(
+                    accountId = Constants.TEST_ACCOUNT_ID,
+                    startDate = formatHumanDateToIso(_historyStartDate.value),
+                    endDate = formatHumanDateToIso(_historyEndDate.value)
                 )
-
-                false -> handleTransactionsResult(
-                    getExpensesByPeriodUseCase(
-                        accountId = Constants.TEST_ACCOUNT_ID,
-                        startDate = formatHumanDateToIso(_historyStartDate.value),
-                        endDate = formatHumanDateToIso(_historyEndDate.value)
-                    )
+            } else {
+                getExpensesByPeriodUseCase(
+                    accountId = Constants.TEST_ACCOUNT_ID,
+                    startDate = formatHumanDateToIso(_historyStartDate.value),
+                    endDate = formatHumanDateToIso(_historyEndDate.value)
                 )
             }
         }
