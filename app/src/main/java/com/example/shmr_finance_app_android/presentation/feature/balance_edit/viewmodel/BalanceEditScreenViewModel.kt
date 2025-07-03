@@ -134,6 +134,22 @@ class BalanceEditScreenViewModel @Inject constructor(
         }
     }
 
+    fun validateAccountData(): Boolean {
+        if (_accountName.value.isBlank()) {
+            showSnackBar(R.string.balance_name_error_message)
+            return false
+        }
+
+        try {
+            _accountBalance.value.toInt()
+        } catch (e: NumberFormatException) {
+            showSnackBar(R.string.balance_amount_error_message)
+            return false
+        }
+
+        return true
+    }
+
     /**
      * Обрабатывает изменения состояния текущей валюты
      */
