@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.data.remote.api.AppError
 import com.example.shmr_finance_app_android.domain.model.CategoryDomain
-import com.example.shmr_finance_app_android.domain.usecases.GetIncomesCategoriesUseCase
+import com.example.shmr_finance_app_android.domain.usecases.GetCategoriesUseCase
 import com.example.shmr_finance_app_android.presentation.feature.categories.mapper.CategoryToIncomeCategoryMapper
 import com.example.shmr_finance_app_android.presentation.feature.categories.model.IncomeCategoryUiModel
 import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesScreenState.Error
@@ -42,7 +42,7 @@ sealed interface CategoriesScreenState {
  **/
 @HiltViewModel
 class CategoriesScreenViewModel @Inject constructor(
-    private val getIncomeCategories: GetIncomesCategoriesUseCase,
+    private val getCategories: GetCategoriesUseCase,
     private val mapper: CategoryToIncomeCategoryMapper
 ) : ViewModel() {
 
@@ -65,7 +65,7 @@ class CategoriesScreenViewModel @Inject constructor(
     private fun loadCategories() {
         _screenState.value = Loading
         viewModelScope.launch(Dispatchers.IO) {
-            handleCategoriesResult(getIncomeCategories())
+            handleCategoriesResult(getCategories())
         }
     }
 
