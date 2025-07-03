@@ -19,6 +19,7 @@ data class TopBarConfig(
 data class TopBarAction(
     @DrawableRes val iconResId: Int,
     @StringRes val descriptionResId: Int,
+    val isActive: () -> Boolean = { true },
     val actionRoute: String,
     val actionUnit: (() -> Unit)? = null
 )
