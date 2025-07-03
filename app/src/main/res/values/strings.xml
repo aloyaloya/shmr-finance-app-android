@@ -56,4 +56,7 @@
     <string name="balance_edit_save_description">Сохранить изменения</string>
     <string name="balance_edit_cancel_description">Отменить изменения</string>
     <string name="balance_name">Название счета</string>
+    <string name="balance_name_error_message">Введите корректное название счета</string>
+    <string name="balance_amount_error_message">Введите корректный баланс</string>
+    <string name="close">Закрыть</string>
 </resources>

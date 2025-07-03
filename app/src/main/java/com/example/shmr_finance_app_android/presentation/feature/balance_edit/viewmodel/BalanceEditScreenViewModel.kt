@@ -16,6 +16,7 @@ import com.example.shmr_finance_app_android.presentation.feature.balance_edit.vi
 import com.example.shmr_finance_app_android.presentation.feature.balance_edit.viewmodel.BalanceEditScreenState.Success
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -66,6 +67,12 @@ class BalanceEditScreenViewModel @Inject constructor(
     private val _currencySelectionSheetVisible = MutableStateFlow(false)
     val currencySelectionSheetVisible: StateFlow<Boolean> =
         _currencySelectionSheetVisible.asStateFlow()
+
+    private val _snackbarVisible = MutableStateFlow(false)
+    val snackbarVisible: StateFlow<Boolean> = _snackbarVisible.asStateFlow()
+
+    private val _snackbarMessageId = MutableStateFlow(0)
+    val snackbarMessage: StateFlow<Int> = _snackbarMessageId.asStateFlow()
 
     /**
      * Устанавливает ID полученного при навигации аккаунта
@@ -178,5 +185,20 @@ class BalanceEditScreenViewModel @Inject constructor(
 
     fun hideCurrencyBottomSheet() {
         _currencySelectionSheetVisible.value = false
+    }
+
+    private fun showSnackBar(message: Int) {
+        if (!_snackbarVisible.value) {
+            _snackbarVisible.value = true
+            _snackbarMessageId.value = message
+            viewModelScope.launch {
+                delay(4000)
+                dismissSnackBar()
+            }
+        }
+    }
+
+    fun dismissSnackBar() {
+        _snackbarVisible.value = false
     }
 }
