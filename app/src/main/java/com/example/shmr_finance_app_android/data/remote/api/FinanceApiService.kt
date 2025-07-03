@@ -34,7 +34,7 @@ interface FinanceApiService {
     suspend fun updateAccountById(
         @Path("id") accountId: Int,
         @Body request: AccountUpdateRequest
-    ): TransactionResponse
+    )
 
     /**
      * Получает список транзакций за период.
@@ -61,4 +61,11 @@ interface FinanceApiService {
     suspend fun getCategoriesByType(
         @Path("isIncome") isIncome: Boolean
     ): List<CategoryResponse>
+
+    /**
+     * Получает список всех категорий.
+     * @return Список [CategoryResponse] или пустой список, если статей нет
+     */
+    @GET("categories")
+    suspend fun getAllCategories(): List<CategoryResponse>
 }
