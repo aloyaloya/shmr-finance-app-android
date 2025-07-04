@@ -60,4 +60,5 @@
     <string name="balance_amount_error_message">Введите корректный баланс</string>
     <string name="close">Закрыть</string>
     <string name="empty_filtered_categories">Не найдено подходящих категорий</string>
+    <string name="delete_balance">Удалить счет</string>
 </resources>

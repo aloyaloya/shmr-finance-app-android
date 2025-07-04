@@ -3,15 +3,22 @@ package com.example.shmr_finance_app_android.presentation.feature.balance_edit.s
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -85,7 +92,8 @@ fun BalanceEditScreen(
                     state = state as BalanceEditScreenState.Success,
                     onNameChanged = { viewModel.onNameEdited(it) },
                     onBalanceChanged = { viewModel.onBalanceEdited(it) },
-                    onCurrencyClick = { viewModel.showCurrencyBottomSheet() }
+                    onCurrencyClick = { viewModel.showCurrencyBottomSheet() },
+                    onDeleteBalanceClick = { } // Удаление счета
                 )
             }
         }
@@ -113,7 +121,8 @@ private fun BalanceEditContent(
     state: BalanceEditScreenState.Success,
     onNameChanged: (String) -> Unit,
     onBalanceChanged: (String) -> Unit,
-    onCurrencyClick: () -> Unit
+    onCurrencyClick: () -> Unit,
+    onDeleteBalanceClick: () -> Unit
 ) {
     val name by state.name.collectAsState()
     val balance by state.balance.collectAsState()
@@ -147,5 +156,23 @@ private fun BalanceEditContent(
             ),
             trailIcon = R.drawable.ic_arrow_right,
         )
+
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.large_spacer)))
+
+        TextButton(
+            modifier = Modifier
+                .padding(horizontal = dimensionResource(R.dimen.medium_padding))
+                .fillMaxWidth(),
+            onClick = onDeleteBalanceClick,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.errorContainer,
+                contentColor = MaterialTheme.colorScheme.onErrorContainer
+            )
+        ) {
+            Text(
+                text = stringResource(R.string.delete_balance),
+                style = MaterialTheme.typography.labelLarge,
+            )
+        }
     }
 }
