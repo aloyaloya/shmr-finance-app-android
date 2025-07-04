@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -125,6 +126,7 @@ private fun MainItemContent(
         Text(
             text = content.title,
             style = MaterialTheme.typography.bodyLarge,
+            color = content.color ?: Color.Unspecified,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
@@ -146,18 +148,30 @@ private fun LeadItemContent(
     modifier: Modifier = Modifier,
     lead: LeadContent
 ) {
-    Box(
-        modifier = modifier
-            .size(dimensionResource(R.dimen.large_icon_size))
-            .background(
-                color = lead.color ?: MaterialTheme.colorScheme.onTertiaryContainer,
-                shape = CircleShape
-            ),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = lead.text,
-            style = MaterialTheme.typography.bodyMedium
-        )
+    when (lead) {
+        is LeadContent.Text -> {
+            Box(
+                modifier = modifier
+                    .size(dimensionResource(R.dimen.large_icon_size))
+                    .background(
+                        color = lead.color ?: MaterialTheme.colorScheme.onTertiaryContainer,
+                        shape = CircleShape
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = lead.text,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+
+        is LeadContent.Icon -> {
+            Icon(
+                painter = painterResource(lead.iconResId),
+                contentDescription = null,
+                tint = lead.color ?: MaterialTheme.colorScheme.onTertiary
+            )
+        }
     }
 }

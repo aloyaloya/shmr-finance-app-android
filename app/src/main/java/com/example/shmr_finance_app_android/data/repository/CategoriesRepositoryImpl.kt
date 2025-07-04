@@ -30,4 +30,17 @@ internal class CategoriesRepositoryImpl @Inject constructor(
                 .map(mapper::mapCategory)
         }
     }
+
+    /**
+     * Получает данные всех категорий.
+     *
+     * @return [Result.success] с [CategoryDomain] при успехе,
+     * [Result.failure] с [AppError] при ошибке
+     */
+    override suspend fun getAllCategories(): Result<List<CategoryDomain>> {
+        return safeApiCall {
+            remoteDataSource.getAllCategories()
+                .map(mapper::mapCategory)
+        }
+    }
 }

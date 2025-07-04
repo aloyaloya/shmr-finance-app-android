@@ -7,6 +7,11 @@ import com.example.shmr_finance_app_android.domain.repository.CategoriesReposito
 import dagger.Reusable
 import javax.inject.Inject
 
+// Данный юзкейс использовался ранее на экране категорий
+// (в фигме отображались только статьи доходов),
+// сейчас же переделал под все категории, но данный юзкейс (и все, что с связано с этим запросом)
+// решил пока не удалять
+
 /**
  * UseCase для получения категорий доходов.
  * Поведение:

@@ -3,6 +3,7 @@ package com.example.shmr_finance_app_android.presentation.feature.balance.viewmo
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shmr_finance_app_android.R
+import com.example.shmr_finance_app_android.core.utils.Constants
 import com.example.shmr_finance_app_android.data.remote.api.AppError
 import com.example.shmr_finance_app_android.domain.model.AccountDomain
 import com.example.shmr_finance_app_android.domain.usecases.GetAccountUseCase
@@ -48,6 +49,8 @@ class BalanceScreenViewModel @Inject constructor(
     private val _screenState = MutableStateFlow<BalanceScreenState>(Loading)
     val screenState: StateFlow<BalanceScreenState> = _screenState.asStateFlow()
 
+    private val _accountId = MutableStateFlow(Constants.TEST_ACCOUNT_ID)
+
     init {
         loadBalanceInfo()
     }
@@ -60,7 +63,7 @@ class BalanceScreenViewModel @Inject constructor(
     private fun loadBalanceInfo() {
         _screenState.value = Loading
         viewModelScope.launch(Dispatchers.IO) {
-            handleBalanceResult(getAccount(accountId = 1))
+            handleBalanceResult(getAccount(accountId = _accountId.value))
         }
     }
 
@@ -87,5 +90,10 @@ class BalanceScreenViewModel @Inject constructor(
             messageResId = messageResId,
             retryAction = { loadBalanceInfo() }
         )
+    }
+
+    /** Получает ID аккаунта */
+    fun getAccountId(): Int {
+        return _accountId.value
     }
 }

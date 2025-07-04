@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.shmr_finance_app_android.presentation.feature.balance.screen.BalanceScreen
+import com.example.shmr_finance_app_android.presentation.feature.balance_edit.screen.BalanceEditScreen
 import com.example.shmr_finance_app_android.presentation.feature.categories.screen.CategoriesScreen
 import com.example.shmr_finance_app_android.presentation.feature.expenses.screen.ExpensesScreen
 import com.example.shmr_finance_app_android.presentation.feature.history.screen.HistoryScreen
@@ -84,6 +85,27 @@ fun AppNavHost(
             ) ?: false
             HistoryScreen(
                 isIncome = isIncome,
+                updateConfigState = updateConfigState
+            )
+        }
+
+        /**
+         * Отвечает за:
+         * - Отображение экрана Редактирование счета
+         * - Обработку аргумента ID счета [balanceId]
+         * - Передачу конфигурации топ-бара
+         */
+        composable(
+            route = Route.SubScreens.BalanceEdit.path,
+            arguments = listOf(navArgument(Route.SubScreens.BalanceEdit.balanceId()) {
+                type = NavType.StringType
+            })
+        ) { backStackEntry ->
+            val balanceId = backStackEntry.arguments?.getString(
+                Route.SubScreens.BalanceEdit.balanceId()
+            ) ?: ""
+            BalanceEditScreen(
+                balanceId = balanceId,
                 updateConfigState = updateConfigState
             )
         }

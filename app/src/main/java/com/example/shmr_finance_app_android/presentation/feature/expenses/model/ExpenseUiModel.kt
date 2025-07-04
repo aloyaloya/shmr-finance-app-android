@@ -19,7 +19,7 @@ data class ExpenseUiModel(
 
     fun toListItem(): ListItem {
         return ListItem(
-            lead = LeadContent(text = emoji),
+            lead = LeadContent.Text(text = emoji),
             content = MainContent(title = title, subtitle = subtitle),
             trail = TrailContent(text = amountFormatted)
         )

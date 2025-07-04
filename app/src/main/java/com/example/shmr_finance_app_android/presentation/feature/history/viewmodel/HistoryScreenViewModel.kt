@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shmr_finance_app_android.R
+import com.example.shmr_finance_app_android.core.utils.Constants
 import com.example.shmr_finance_app_android.core.utils.formatHumanDateToIso
 import com.example.shmr_finance_app_android.core.utils.formatLongToHumanDate
 import com.example.shmr_finance_app_android.core.utils.getCurrentDateIso
@@ -99,21 +100,17 @@ class HistoryScreenViewModel @Inject constructor(
     private fun loadHistory() {
         _screenState.value = Loading
         viewModelScope.launch(Dispatchers.IO) {
-            when (_historyTransactionsType.value) {
-                true -> handleTransactionsResult(
-                    getIncomesByPeriodUseCase(
-                        accountId = 1,
-                        startDate = formatHumanDateToIso(_historyStartDate.value),
-                        endDate = formatHumanDateToIso(_historyEndDate.value)
-                    )
+            if (_historyTransactionsType.value) {
+                getIncomesByPeriodUseCase(
+                    accountId = Constants.TEST_ACCOUNT_ID,
+                    startDate = formatHumanDateToIso(_historyStartDate.value),
+                    endDate = formatHumanDateToIso(_historyEndDate.value)
                 )
-
-                false -> handleTransactionsResult(
-                    getExpensesByPeriodUseCase(
-                        accountId = 1,
-                        startDate = formatHumanDateToIso(_historyStartDate.value),
-                        endDate = formatHumanDateToIso(_historyEndDate.value)
-                    )
+            } else {
+                getExpensesByPeriodUseCase(
+                    accountId = Constants.TEST_ACCOUNT_ID,
+                    startDate = formatHumanDateToIso(_historyStartDate.value),
+                    endDate = formatHumanDateToIso(_historyEndDate.value)
                 )
             }
         }
@@ -128,7 +125,7 @@ class HistoryScreenViewModel @Inject constructor(
         result
             .onSuccess { data ->
                 handleSuccess(
-                    data = data.map { mapper.map(it) },
+                    data = data.sortedByDescending { it.transactionTime }.map { mapper.map(it) },
                     totalAmount = mapper.calculateTotalAmount(data)
                 )
             }
@@ -140,10 +137,14 @@ class HistoryScreenViewModel @Inject constructor(
         data: List<TransactionUiModel>,
         totalAmount: String
     ) {
-        _screenState.value = Success(
-            transactions = data,
-            totalAmount = totalAmount
-        )
+        _screenState.value = if (data.isEmpty()) {
+            HistoryScreenState.Empty
+        } else {
+            Success(
+                transactions = data,
+                totalAmount = totalAmount
+            )
+        }
     }
 
     /** Обрабатывает ошибку */

@@ -3,6 +3,7 @@ package com.example.shmr_finance_app_android.presentation.feature.incomes.viewmo
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shmr_finance_app_android.R
+import com.example.shmr_finance_app_android.core.utils.Constants
 import com.example.shmr_finance_app_android.core.utils.getCurrentDate
 import com.example.shmr_finance_app_android.data.remote.api.AppError
 import com.example.shmr_finance_app_android.domain.model.TransactionDomain
@@ -69,7 +70,7 @@ class IncomeScreenViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             handleIncomesResult(
                 getTransactionsByPeriodUseCase(
-                    accountId = 1,
+                    accountId = Constants.TEST_ACCOUNT_ID,
                     startDate = getCurrentDate(),
                     endDate = getCurrentDate()
                 )
@@ -86,7 +87,7 @@ class IncomeScreenViewModel @Inject constructor(
         result
             .onSuccess { data ->
                 handleSuccess(
-                    data = data.map { mapper.map(it) },
+                    data = data.sortedByDescending { it.transactionTime }.map { mapper.map(it) },
                     totalAmount = mapper.calculateTotalAmount(data)
                 )
             }
@@ -98,10 +99,14 @@ class IncomeScreenViewModel @Inject constructor(
         data: List<IncomeUiModel>,
         totalAmount: String
     ) {
-        _screenState.value = Success(
-            incomes = data,
-            totalAmount = totalAmount
-        )
+        _screenState.value = if (data.isEmpty()) {
+            IncomeScreenState.Empty
+        } else {
+            Success(
+                incomes = data,
+                totalAmount = totalAmount
+            )
+        }
     }
 
     /** Обрабатывает ошибку */

@@ -11,7 +11,7 @@ data class IncomeCategoryUiModel(
 ) {
     fun toListItem(): ListItem {
         return ListItem(
-            lead = LeadContent(text = emoji),
+            lead = LeadContent.Text(text = emoji),
             content = MainContent(title = name)
         )
     }

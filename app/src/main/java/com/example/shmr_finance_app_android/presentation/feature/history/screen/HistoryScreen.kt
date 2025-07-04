@@ -4,24 +4,16 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -37,7 +29,10 @@ import com.example.shmr_finance_app_android.presentation.feature.history.viewmod
 import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarAction
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarConfig
+import com.example.shmr_finance_app_android.presentation.shared.components.EmptyState
+import com.example.shmr_finance_app_android.presentation.shared.components.ErrorState
 import com.example.shmr_finance_app_android.presentation.shared.components.ListItemCard
+import com.example.shmr_finance_app_android.presentation.shared.components.LoadingState
 import com.example.shmr_finance_app_android.presentation.shared.model.ListItem
 import com.example.shmr_finance_app_android.presentation.shared.model.MainContent
 import com.example.shmr_finance_app_android.presentation.shared.model.TrailContent
@@ -57,7 +52,12 @@ fun HistoryScreen(
 
     val showDatePickerModal by viewModel.showDatePickerModal.collectAsStateWithLifecycle()
 
-    LaunchedEffect(updateConfigState) {
+    val emptyMessage = when (isIncome) {
+        true -> R.string.period_no_income_found
+        false -> R.string.period_no_expenses_found
+    }
+
+    LaunchedEffect(Unit) {
         updateConfigState(
             ScreenConfig(
                 route = Route.SubScreens.History.path,
@@ -83,13 +83,16 @@ fun HistoryScreen(
         )
 
         when (state) {
-            is HistoryScreenState.Loading -> HistoryLoadingState()
-            is HistoryScreenState.Error -> HistoryErrorState(
+            is HistoryScreenState.Loading -> LoadingState()
+            is HistoryScreenState.Error -> ErrorState(
                 messageResId = (state as HistoryScreenState.Error).messageResId,
                 onRetry = (state as HistoryScreenState.Error).retryAction
             )
 
-            is HistoryScreenState.Empty -> HistoryEmptyState()
+            is HistoryScreenState.Empty -> EmptyState(
+                messageResId = emptyMessage
+            )
+
             is HistoryScreenState.Success -> HistorySuccessState(
                 transactions = (state as HistoryScreenState.Success).transactions,
                 totalAmount = (state as HistoryScreenState.Success).totalAmount
@@ -133,58 +136,5 @@ private fun HistorySuccessState(
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun HistoryLoadingState() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        CircularProgressIndicator(color = MaterialTheme.colorScheme.tertiary)
-    }
-}
-
-@Composable
-private fun HistoryErrorState(
-    messageResId: Int,
-    onRetry: () -> Unit
-) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = stringResource(messageResId),
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Spacer(Modifier.height(dimensionResource(R.dimen.large_spacer)))
-        Button(
-            onClick = onRetry,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.tertiary
-            )
-        ) {
-            Text(text = stringResource(R.string.retry))
-        }
-    }
-}
-
-@Composable
-private fun HistoryEmptyState() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = stringResource(R.string.no_expenses_found),
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
     }
 }

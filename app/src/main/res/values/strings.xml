@@ -15,8 +15,10 @@
     <string name="expenses_history_description">История расходов</string>
     <string name="total_amount">Всего</string>
     <string name="retry">Повторить</string>
-    <string name="no_expenses_found">У вас нет расходов</string>
-    <string name="no_income_found">У вас нет доходов</string>
+    <string name="period_no_expenses_found">У вас нет расходов за указанный период</string>
+    <string name="period_no_income_found">У вас нет доходов за указанный период</string>
+    <string name="today_no_expenses_found">Сегодня у вас нет расходов</string>
+    <string name="today_no_income_found">Сегодня у вас нет доходов</string>
     <string name="incomes_history_description">История доходов</string>
     <string name="balance_edit_description">Изменить счет</string>
     <string name="balance">Баланс</string>
@@ -47,4 +49,16 @@
     <string name="select">Выбрать</string>
     <string name="cancel">Отменить</string>
     <string name="choice_date">Выберите дату</string>
+    <string name="ruble_currency">Российский рубль</string>
+    <string name="dollar_currency">Американский доллар</string>
+    <string name="euro_currency">Евро</string>
+    <string name="dismiss">Отмена</string>
+    <string name="balance_edit_save_description">Сохранить изменения</string>
+    <string name="balance_edit_cancel_description">Отменить изменения</string>
+    <string name="balance_name">Название счета</string>
+    <string name="balance_name_error_message">Введите корректное название счета</string>
+    <string name="balance_amount_error_message">Введите корректный баланс</string>
+    <string name="close">Закрыть</string>
+    <string name="empty_filtered_categories">Не найдено подходящих категорий</string>
+    <string name="delete_balance">Удалить счет</string>
 </resources>

@@ -6,11 +6,12 @@ import com.example.shmr_finance_app_android.data.remote.mapper.CategoryRemoteMap
 import javax.inject.Inject
 
 /**
- * Отвечает за получение данных аккаунта из remote-источника (API).
+ * Отвечает за получение категорий из remote-источника (API).
  * Определяет контракт для работы с данными категорий без привязки к конкретной реализации.
  */
 interface CategoriesRemoteDataSource {
     suspend fun getCategoriesByType(isIncome: Boolean): List<CategoryDTO>
+    suspend fun getAllCategories(): List<CategoryDTO>
 }
 
 /**
@@ -37,6 +38,19 @@ internal class CategoriesRemoteDataSourceImpl @Inject constructor(
      */
     override suspend fun getCategoriesByType(isIncome: Boolean): List<CategoryDTO> {
         return api.getCategoriesByType(isIncome)
+            .map(mapper::mapCategory)
+    }
+
+    /**
+     * Реализация получения данных всех категорий:
+     * 1. Запрашивает данные через API
+     * 2. Преобразует результат в DTO
+     * 3. Возвращает готовый список DTO
+     *
+     * @return Список [CategoryDTO] - список преобразованных DTO данных категорий
+     */
+    override suspend fun getAllCategories(): List<CategoryDTO> {
+        return api.getAllCategories()
             .map(mapper::mapCategory)
     }
 }

@@ -1,26 +1,16 @@
 package com.example.shmr_finance_app_android.presentation.feature.categories.screen
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -32,7 +22,10 @@ import com.example.shmr_finance_app_android.presentation.feature.categories.view
 import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesScreenViewModel
 import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarConfig
+import com.example.shmr_finance_app_android.presentation.shared.components.EmptyState
+import com.example.shmr_finance_app_android.presentation.shared.components.ErrorState
 import com.example.shmr_finance_app_android.presentation.shared.components.ListItemCard
+import com.example.shmr_finance_app_android.presentation.shared.components.LoadingState
 
 @Composable
 fun CategoriesScreen(
@@ -42,7 +35,7 @@ fun CategoriesScreen(
     val state by viewModel.screenState.collectAsStateWithLifecycle()
     val searchRequest by viewModel.searchRequest.collectAsStateWithLifecycle()
 
-    LaunchedEffect(updateConfigState) {
+    LaunchedEffect(Unit) {
         updateConfigState(
             ScreenConfig(
                 route = Route.Root.Categories.path,
@@ -57,17 +50,24 @@ fun CategoriesScreen(
         SearchTextField(
             value = searchRequest,
             onChange = { viewModel.onChangeSearchRequest(it) },
-            onActionClick = { } // Кнопка поиска
+            onActionClick = { viewModel.updateState() }
         )
         HorizontalDivider()
         when (state) {
-            is CategoriesScreenState.Loading -> CategoriesLoadingState()
-            is CategoriesScreenState.Error -> CategoriesErrorState(
+            is CategoriesScreenState.Loading -> LoadingState()
+            is CategoriesScreenState.Error -> ErrorState(
                 messageResId = (state as CategoriesScreenState.Error).messageResId,
                 onRetry = (state as CategoriesScreenState.Error).retryAction
             )
 
-            is CategoriesScreenState.Empty -> CategoriesEmptyState()
+            is CategoriesScreenState.Empty -> EmptyState(
+                messageResId = R.string.no_categories_found
+            )
+
+            is CategoriesScreenState.SearchEmpty -> EmptyState(
+                messageResId = R.string.empty_filtered_categories
+            )
+
             is CategoriesScreenState.Success -> CategoriesSuccessState(
                 categories = (state as CategoriesScreenState.Success).categories
             )
@@ -88,58 +88,5 @@ private fun CategoriesSuccessState(
                 item = category.toListItem()
             )
         }
-    }
-}
-
-@Composable
-private fun CategoriesLoadingState() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        CircularProgressIndicator(color = MaterialTheme.colorScheme.tertiary)
-    }
-}
-
-@Composable
-private fun CategoriesErrorState(
-    messageResId: Int,
-    onRetry: () -> Unit
-) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = stringResource(messageResId),
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Spacer(Modifier.height(dimensionResource(R.dimen.large_spacer)))
-        Button(
-            onClick = onRetry,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.tertiary
-            )
-        ) {
-            Text(text = stringResource(R.string.retry))
-        }
-    }
-}
-
-@Composable
-private fun CategoriesEmptyState() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = stringResource(R.string.no_categories_found),
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
     }
 }

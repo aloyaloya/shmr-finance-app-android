@@ -1,4 +1,5 @@
 @file:Suppress("MagicNumber")
+
 package com.example.shmr_finance_app_android.presentation.shared.theme
 
 import androidx.compose.ui.graphics.Color
@@ -17,3 +18,4 @@ val Black = Color(0xFF1D1B20)
 val DarkGray = Color(0xFF49454F)
 val LightGray = Color(0xFF3C434D)
 val White = Color(0xFFFFFFFF)
+val LightRed = Color(0xFFE46962)
