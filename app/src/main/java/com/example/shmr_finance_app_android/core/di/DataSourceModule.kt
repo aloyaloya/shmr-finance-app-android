@@ -8,8 +8,6 @@ import com.example.shmr_finance_app_android.data.datasource.TransactionsRemoteDa
 import com.example.shmr_finance_app_android.data.datasource.TransactionsRemoteDataSourceImpl
 import dagger.Binds
 import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 /**
@@ -17,7 +15,6 @@ import javax.inject.Singleton
  * в виде абстракций (интерфейсов) для всего приложения.
  */
 @Module
-@InstallIn(SingletonComponent::class)
 internal interface DataSourceModule {
 
     /**
@@ -26,7 +23,7 @@ internal interface DataSourceModule {
      */
     @Binds
     @Singleton
-    fun bindsAccountRemoteDataSource(
+    fun bindAccountRemoteDataSource(
         accountRemoteDataSource: AccountRemoteDataSourceImpl
     ): AccountRemoteDataSource
 
@@ -36,7 +33,7 @@ internal interface DataSourceModule {
      */
     @Binds
     @Singleton
-    fun bindsCategoriesRemoteDataSource(
+    fun bindCategoriesRemoteDataSource(
         categoriesRemoteDataSource: CategoriesRemoteDataSourceImpl
     ): CategoriesRemoteDataSource
 
@@ -46,7 +43,7 @@ internal interface DataSourceModule {
      */
     @Binds
     @Singleton
-    fun bindsTransactionsRemoteDataSource(
+    fun bindTransactionsRemoteDataSource(
         transactionsRemoteDataSource: TransactionsRemoteDataSourceImpl
     ): TransactionsRemoteDataSource
 }
