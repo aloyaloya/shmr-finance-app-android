@@ -7,7 +7,6 @@ import com.example.shmr_finance_app_android.presentation.feature.main.model.Floa
 import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarAction
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarConfig
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
@@ -17,7 +16,6 @@ import javax.inject.Inject
  * - Управление конфигурацией UI (TopAppBar, FAB) для текущего экрана
  * - Централизованное обновление состояния навигации
  */
-@HiltViewModel
 class MainScreenViewModel @Inject constructor() : ViewModel() {
 
     private val _configState = MutableStateFlow(
