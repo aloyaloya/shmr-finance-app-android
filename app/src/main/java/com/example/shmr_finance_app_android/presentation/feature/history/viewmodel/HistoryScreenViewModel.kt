@@ -20,7 +20,6 @@ import com.example.shmr_finance_app_android.presentation.feature.history.model.T
 import com.example.shmr_finance_app_android.presentation.feature.history.viewmodel.HistoryScreenState.Error
 import com.example.shmr_finance_app_android.presentation.feature.history.viewmodel.HistoryScreenState.Loading
 import com.example.shmr_finance_app_android.presentation.feature.history.viewmodel.HistoryScreenState.Success
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -58,7 +57,6 @@ sealed interface HistoryScreenState {
  * 4. Обработку выбора дат
  **/
 @RequiresApi(Build.VERSION_CODES.O)
-@HiltViewModel
 class HistoryScreenViewModel @Inject constructor(
     private val getExpensesByPeriodUseCase: GetExpensesByPeriodUseCase,
     private val getIncomesByPeriodUseCase: GetIncomesByPeriodUseCase,

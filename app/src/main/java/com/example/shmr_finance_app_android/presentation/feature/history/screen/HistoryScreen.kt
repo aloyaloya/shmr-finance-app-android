@@ -16,9 +16,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shmr_finance_app_android.R
+import com.example.shmr_finance_app_android.core.di.daggerViewModel
 import com.example.shmr_finance_app_android.core.navigation.Route
 import com.example.shmr_finance_app_android.presentation.feature.history.component.DatePickerModal
 import com.example.shmr_finance_app_android.presentation.feature.history.component.DateSelectionHeader
@@ -40,7 +40,7 @@ import com.example.shmr_finance_app_android.presentation.shared.model.TrailConte
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HistoryScreen(
-    viewModel: HistoryScreenViewModel = hiltViewModel(),
+    viewModel: HistoryScreenViewModel = daggerViewModel(),
     isIncome: Boolean,
     updateConfigState: (ScreenConfig) -> Unit
 ) {
