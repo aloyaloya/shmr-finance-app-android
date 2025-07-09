@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.core.di.daggerViewModel
-import com.example.shmr_finance_app_android.core.navigation.Route
 import com.example.shmr_finance_app_android.presentation.feature.expenses.model.ExpenseUiModel
 import com.example.shmr_finance_app_android.presentation.feature.expenses.viewmodel.ExpensesScreenState
 import com.example.shmr_finance_app_android.presentation.feature.expenses.viewmodel.ExpensesScreenViewModel
@@ -37,6 +36,7 @@ import com.example.shmr_finance_app_android.presentation.shared.model.TrailConte
 fun ExpensesScreen(
     viewModel: ExpensesScreenViewModel = daggerViewModel(),
     updateConfigState: (ScreenConfig) -> Unit,
+    onHistoryNavigate: () -> Unit
 ) {
     val state by viewModel.screenState.collectAsStateWithLifecycle()
 
@@ -44,18 +44,17 @@ fun ExpensesScreen(
         viewModel.initialize()
         updateConfigState(
             ScreenConfig(
-                route = Route.Root.Expenses.path,
                 topBarConfig = TopBarConfig(
                     titleResId = R.string.expense_screen_title,
                     action = TopBarAction(
                         iconResId = R.drawable.ic_history,
                         descriptionResId = R.string.expenses_history_description,
-                        actionRoute = Route.SubScreens.History.route(income = false)
+                        actionUnit = onHistoryNavigate
                     )
                 ),
                 floatingActionConfig = FloatingActionConfig(
                     descriptionResId = R.string.add_expense_description,
-                    actionRoute = Route.Root.Expenses.path
+                    actionUnit = {}
                 )
             )
         )

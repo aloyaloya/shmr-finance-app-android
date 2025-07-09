@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.core.di.daggerViewModel
-import com.example.shmr_finance_app_android.core.navigation.Route
 import com.example.shmr_finance_app_android.presentation.feature.history.component.DatePickerModal
 import com.example.shmr_finance_app_android.presentation.feature.history.component.DateSelectionHeader
 import com.example.shmr_finance_app_android.presentation.feature.history.model.TransactionUiModel
@@ -28,6 +27,7 @@ import com.example.shmr_finance_app_android.presentation.feature.history.viewmod
 import com.example.shmr_finance_app_android.presentation.feature.history.viewmodel.HistoryScreenViewModel
 import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarAction
+import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarBackAction
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarConfig
 import com.example.shmr_finance_app_android.presentation.shared.components.EmptyState
 import com.example.shmr_finance_app_android.presentation.shared.components.ErrorState
@@ -42,7 +42,8 @@ import com.example.shmr_finance_app_android.presentation.shared.model.TrailConte
 fun HistoryScreen(
     viewModel: HistoryScreenViewModel = daggerViewModel(),
     isIncome: Boolean,
-    updateConfigState: (ScreenConfig) -> Unit
+    updateConfigState: (ScreenConfig) -> Unit,
+    onBackNavigate: () -> Unit
 ) {
     val state by viewModel.screenState.collectAsStateWithLifecycle()
     val startDate by viewModel.historyStartDate.collectAsStateWithLifecycle()
@@ -55,19 +56,20 @@ fun HistoryScreen(
         false -> R.string.period_no_expenses_found
     }
 
-    LaunchedEffect(isIncome) {
+    LaunchedEffect(Unit) {
         viewModel.setHistoryTransactionsType(isIncome)
         viewModel.initialize()
         updateConfigState(
             ScreenConfig(
-                route = Route.SubScreens.History.path,
                 topBarConfig = TopBarConfig(
                     titleResId = R.string.expenses_history_screen_title,
-                    showBackButton = true,
+                    backAction = TopBarBackAction(
+                        actionUnit = onBackNavigate
+                    ),
                     action = TopBarAction(
                         iconResId = R.drawable.ic_calendar,
                         descriptionResId = R.string.expenses_analysis_description,
-                        actionRoute = Route.SubScreens.History.route(income = isIncome)
+                        actionUnit = onBackNavigate
                     )
                 )
             )

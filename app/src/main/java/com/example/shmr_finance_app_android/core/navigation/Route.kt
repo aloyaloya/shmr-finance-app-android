@@ -22,10 +22,8 @@ sealed class Route(val path: String) {
      * которые требуют передачи параметров или не отображаются в BottomNavigation.
      */
     sealed class SubScreens(path: String) : Route(path) {
-        data object History : SubScreens("history_screen/{isIncome}") {
-            fun isIncome(): String = "isIncome"
-            fun route(income: Boolean) = "history_screen/$income"
-        }
+        data object ExpensesHistory : Root(path = "history_screen/expenses")
+        data object IncomesHistory : Root(path = "history_screen/incomes")
 
         data object BalanceEdit : SubScreens("balance_edit/{balanceId}") {
             fun balanceId(): String = "balanceId"

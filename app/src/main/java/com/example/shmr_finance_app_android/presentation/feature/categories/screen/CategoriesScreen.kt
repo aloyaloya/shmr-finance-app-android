@@ -15,7 +15,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.core.di.daggerViewModel
-import com.example.shmr_finance_app_android.core.navigation.Route
 import com.example.shmr_finance_app_android.presentation.feature.categories.component.SearchTextField
 import com.example.shmr_finance_app_android.presentation.feature.categories.model.IncomeCategoryUiModel
 import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesScreenState
@@ -38,10 +37,7 @@ fun CategoriesScreen(
     LaunchedEffect(Unit) {
         updateConfigState(
             ScreenConfig(
-                route = Route.Root.Categories.path,
-                topBarConfig = TopBarConfig(
-                    titleResId = R.string.categories_screen_title
-                )
+                topBarConfig = TopBarConfig(titleResId = R.string.categories_screen_title)
             )
         )
     }

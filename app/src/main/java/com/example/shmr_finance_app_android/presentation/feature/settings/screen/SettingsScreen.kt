@@ -15,7 +15,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.core.di.daggerViewModel
-import com.example.shmr_finance_app_android.core.navigation.Route
 import com.example.shmr_finance_app_android.core.navigation.SettingsListItem
 import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarConfig
@@ -35,10 +34,7 @@ fun SettingsScreen(
     LaunchedEffect(Unit) {
         updateConfigState(
             ScreenConfig(
-                route = Route.Root.Settings.path,
-                topBarConfig = TopBarConfig(
-                    titleResId = R.string.settings_screen_title
-                )
+                topBarConfig = TopBarConfig(titleResId = R.string.settings_screen_title)
             )
         )
     }

@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.core.di.daggerViewModel
-import com.example.shmr_finance_app_android.core.navigation.Route
 import com.example.shmr_finance_app_android.presentation.feature.incomes.model.IncomeUiModel
 import com.example.shmr_finance_app_android.presentation.feature.incomes.viewmodel.IncomeScreenState
 import com.example.shmr_finance_app_android.presentation.feature.incomes.viewmodel.IncomeScreenViewModel
@@ -36,7 +35,8 @@ import com.example.shmr_finance_app_android.presentation.shared.model.TrailConte
 @Composable
 fun IncomeScreen(
     viewModel: IncomeScreenViewModel = daggerViewModel(),
-    updateConfigState: (ScreenConfig) -> Unit
+    updateConfigState: (ScreenConfig) -> Unit,
+    onHistoryNavigate: () -> Unit
 ) {
     val state by viewModel.screenState.collectAsStateWithLifecycle()
 
@@ -44,18 +44,17 @@ fun IncomeScreen(
         viewModel.initialize()
         updateConfigState(
             ScreenConfig(
-                route = Route.Root.Income.path,
                 topBarConfig = TopBarConfig(
                     titleResId = R.string.income_screen_title,
                     action = TopBarAction(
                         iconResId = R.drawable.ic_history,
                         descriptionResId = R.string.incomes_history_description,
-                        actionRoute = Route.SubScreens.History.route(income = true)
+                        actionUnit = onHistoryNavigate
                     )
                 ),
                 floatingActionConfig = FloatingActionConfig(
                     descriptionResId = R.string.add_income_description,
-                    actionRoute = Route.Root.Income.path
+                    actionUnit = {}
                 )
             )
         )

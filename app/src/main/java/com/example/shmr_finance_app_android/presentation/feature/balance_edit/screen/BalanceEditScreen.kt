@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.core.di.daggerViewModel
-import com.example.shmr_finance_app_android.core.navigation.Route
 import com.example.shmr_finance_app_android.presentation.feature.balance_edit.component.AnimatedErrorSnackbar
 import com.example.shmr_finance_app_android.presentation.feature.balance_edit.component.CurrencySelectionSheet
 import com.example.shmr_finance_app_android.presentation.feature.balance_edit.component.EditorTextField
@@ -47,7 +46,8 @@ import com.example.shmr_finance_app_android.presentation.shared.model.TrailConte
 fun BalanceEditScreen(
     viewModel: BalanceEditScreenViewModel = daggerViewModel(),
     balanceId: String,
-    updateConfigState: (ScreenConfig) -> Unit
+    updateConfigState: (ScreenConfig) -> Unit,
+    onBackNavigate: () -> Unit
 ) {
     val state by viewModel.screenState.collectAsStateWithLifecycle()
     val isCurrencySelectionSheetVisible by viewModel
@@ -59,20 +59,21 @@ fun BalanceEditScreen(
         viewModel.setAccountId(balanceId)
         updateConfigState(
             ScreenConfig(
-                route = Route.SubScreens.BalanceEdit.path,
                 topBarConfig = TopBarConfig(
                     titleResId = R.string.balance_screen_title,
-                    showBackButton = true,
                     backAction = TopBarBackAction(
                         iconResId = R.drawable.ic_cancel,
-                        descriptionResId = R.string.balance_edit_cancel_description
+                        descriptionResId = R.string.balance_edit_cancel_description,
+                        actionUnit = onBackNavigate
                     ),
                     action = TopBarAction(
                         iconResId = R.drawable.ic_save,
                         descriptionResId = R.string.balance_edit_save_description,
                         isActive = { viewModel.validateAccountData() },
-                        actionRoute = Route.Root.Balance.path,
-                        actionUnit = { viewModel.updateAccountData() }
+                        actionUnit = {
+                            viewModel.updateAccountData()
+                            onBackNavigate()
+                        }
                     )
                 )
             )

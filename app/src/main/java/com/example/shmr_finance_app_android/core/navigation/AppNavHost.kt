@@ -1,5 +1,7 @@
 package com.example.shmr_finance_app_android.core.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -22,6 +24,7 @@ import com.example.shmr_finance_app_android.presentation.feature.settings.screen
  * - Управляет переходами между корневыми и дочерними экранами
  * - Обрабатывает передачу аргументов между экранами
  */
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavHost(
     modifier: Modifier = Modifier,
@@ -33,25 +36,59 @@ fun AppNavHost(
         navController = navController,
         startDestination = Route.Root.Expenses.path
     ) {
+
         /**
-         * Отвечает за отображение экрана Расходы и передачу конфигурации топ-бара
+         * Отвечает за:
+         * 1. Отображение экрана Расходы
+         * 2. Передачу конфигурации топ-бара
+         * 3. Обработку навигации на экран Истории расходов
          */
         composable(route = Route.Root.Expenses.path) {
-            ExpensesScreen(updateConfigState = updateConfigState)
+            ExpensesScreen(
+                updateConfigState = updateConfigState,
+                onHistoryNavigate = {
+                    navController.navigate(Route.SubScreens.ExpensesHistory.path) {
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            )
         }
 
         /**
-         * Отвечает за отображение экрана Доходы и передачу конфигурации топ-бара
+         * Отвечает за:
+         * 1. Отображение экрана Доходы
+         * 2. Передачу конфигурации топ-бара
+         * 3. Обработку навигации на экран Истории доходов
          */
         composable(route = Route.Root.Income.path) {
-            IncomeScreen(updateConfigState = updateConfigState)
+            IncomeScreen(
+                updateConfigState = updateConfigState,
+                onHistoryNavigate = {
+                    navController.navigate(Route.SubScreens.IncomesHistory.path) {
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            )
         }
 
         /**
-         * Отвечает за отображение экрана Счет и передачу конфигурации топ-бара
+         * Отвечает за:
+         * 1. Отображение экрана Cчет
+         * 2. Передачу конфигурации топ-бара
+         * 3. Обработку навигации на экран Редактирования счета
          */
         composable(route = Route.Root.Balance.path) {
-            BalanceScreen(updateConfigState = updateConfigState)
+            BalanceScreen(
+                updateConfigState = updateConfigState,
+                onEditNavigate = {
+                    navController.navigate(Route.SubScreens.BalanceEdit.route(it)) {
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            )
         }
 
         /**
@@ -70,22 +107,29 @@ fun AppNavHost(
 
         /**
          * Отвечает за:
-         * - Отображение экрана История
-         * - Обработку аргумента типа операции (доходы/расходы) [isIncome]
-         * - Передачу конфигурации топ-бара
+         * 1. Отображение экрана История расходов
+         * 2. Передачу конфигурации топ-бара
+         * 3. Обработку навигации на предыдущий экран
          */
-        composable(
-            route = Route.SubScreens.History.path,
-            arguments = listOf(navArgument(Route.SubScreens.History.isIncome()) {
-                type = NavType.BoolType
-            })
-        ) { backStackEntry ->
-            val isIncome = backStackEntry.arguments?.getBoolean(
-                Route.SubScreens.History.isIncome()
-            ) ?: false
+        composable(route = Route.SubScreens.ExpensesHistory.path) {
             HistoryScreen(
-                isIncome = isIncome,
-                updateConfigState = updateConfigState
+                isIncome = false,
+                updateConfigState = updateConfigState,
+                onBackNavigate = { navController.popBackStack() }
+            )
+        }
+
+        /**
+         * Отвечает за:
+         * 1. Отображение экрана История доходов
+         * 2. Передачу конфигурации топ-бара
+         * 3. Обработку навигации на предыдущий экран
+         */
+        composable(route = Route.SubScreens.IncomesHistory.path) {
+            HistoryScreen(
+                isIncome = true,
+                updateConfigState = updateConfigState,
+                onBackNavigate = { navController.popBackStack() }
             )
         }
 
@@ -106,7 +150,8 @@ fun AppNavHost(
             ) ?: ""
             BalanceEditScreen(
                 balanceId = balanceId,
-                updateConfigState = updateConfigState
+                updateConfigState = updateConfigState,
+                onBackNavigate = { navController.popBackStack() }
             )
         }
     }

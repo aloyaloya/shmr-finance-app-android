@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.core.di.daggerViewModel
-import com.example.shmr_finance_app_android.core.navigation.Route
 import com.example.shmr_finance_app_android.presentation.feature.balance.model.BalanceUiModel
 import com.example.shmr_finance_app_android.presentation.feature.balance.viewmodel.BalanceScreenState
 import com.example.shmr_finance_app_android.presentation.feature.balance.viewmodel.BalanceScreenViewModel
@@ -33,7 +32,8 @@ import com.example.shmr_finance_app_android.presentation.shared.model.TrailConte
 @Composable
 fun BalanceScreen(
     viewModel: BalanceScreenViewModel = daggerViewModel(),
-    updateConfigState: (ScreenConfig) -> Unit
+    updateConfigState: (ScreenConfig) -> Unit,
+    onEditNavigate: (Int) -> Unit
 ) {
     val state by viewModel.screenState.collectAsStateWithLifecycle()
 
@@ -41,18 +41,17 @@ fun BalanceScreen(
         viewModel.initialize()
         updateConfigState(
             ScreenConfig(
-                route = Route.Root.Balance.path,
                 topBarConfig = TopBarConfig(
                     titleResId = R.string.balance_screen_title,
                     action = TopBarAction(
                         iconResId = R.drawable.ic_edit,
                         descriptionResId = R.string.balance_edit_description,
-                        actionRoute = Route.SubScreens.BalanceEdit.route(viewModel.getAccountId())
+                        actionUnit = { onEditNavigate(viewModel.getAccountId()) }
                     )
                 ),
                 floatingActionConfig = FloatingActionConfig(
                     descriptionResId = R.string.add_balance_description,
-                    actionRoute = Route.Root.Balance.path
+                    actionUnit = {}
                 )
             )
         )
