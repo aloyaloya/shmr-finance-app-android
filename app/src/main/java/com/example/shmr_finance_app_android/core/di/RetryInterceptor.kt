@@ -1,21 +1,23 @@
-package com.example.shmr_finance_app_android.data.remote.api
+package com.example.shmr_finance_app_android.core.di
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
+import javax.inject.Inject
+import javax.inject.Named
 
 const val SERVER_ERROR = 500  // Код HTTP 500 (Internal Server Error)
 
 /**
  * Интерсептор для повторных запросов при ошибках сервера.
  *
- * @property maxRetries - максимальное число попыток (по умолчанию 3).
- * @property retryDelayMillis - задержка между попытками в мс (по умолчанию 2000).
+ * @param maxRetries - максимальное число попыток (по умолчанию 3).
+ * @param retryDelayMillis - задержка между попытками в мс (по умолчанию 2000).
  */
-class RetryInterceptor(
-    private val maxRetries: Int = 3,
-    private val retryDelayMillis: Long = 2000L,
+class RetryInterceptor @Inject constructor(
+    @Named("maxRetries") private val maxRetries: Int,
+    @Named("retryDelay") private val retryDelayMillis: Long
 ) : Interceptor {
 
     /**
