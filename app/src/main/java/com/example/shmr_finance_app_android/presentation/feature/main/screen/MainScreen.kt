@@ -28,20 +28,7 @@ fun MainScreen() {
 
     Scaffold(
         topBar = {
-            CustomTopBar(
-                config = configState.topBarConfig,
-                onBack = { navController.popBackStack() },
-                onActionRoute = {
-                    navController.navigate(it) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
-            )
+            CustomTopBar(config = configState.topBarConfig)
         },
         bottomBar = {
             BottomNavigationBar(
@@ -62,10 +49,10 @@ fun MainScreen() {
             )
         },
         floatingActionButton = {
-            configState.floatingActionConfig?.let {
+            configState.floatingActionConfig?.let { action ->
                 CustomFloatingActionButton(
-                    description = it.descriptionResId,
-                    onClick = {}, // Дальнейшие экраны еще не делали
+                    description = action.descriptionResId,
+                    onClick = { action.actionUnit.invoke() }, // Дальнейшие экраны еще не делали
                 )
             }
         }
