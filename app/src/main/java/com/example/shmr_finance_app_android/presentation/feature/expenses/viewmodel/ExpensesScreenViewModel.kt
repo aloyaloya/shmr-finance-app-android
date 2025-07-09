@@ -14,7 +14,6 @@ import com.example.shmr_finance_app_android.presentation.feature.expenses.model.
 import com.example.shmr_finance_app_android.presentation.feature.expenses.viewmodel.ExpensesScreenState.Error
 import com.example.shmr_finance_app_android.presentation.feature.expenses.viewmodel.ExpensesScreenState.Loading
 import com.example.shmr_finance_app_android.presentation.feature.expenses.viewmodel.ExpensesScreenState.Success
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -48,7 +47,6 @@ sealed interface ExpensesScreenState {
  * 2. Преобразование доменной модели в UI-модель через [TransactionToExpenseMapper]
  * 3. Управление состояниями экрана ([ExpensesScreenState])
  **/
-@HiltViewModel
 class ExpensesScreenViewModel @Inject constructor(
     private val getTransactionsByPeriod: GetExpensesByPeriodUseCase,
     private val mapper: TransactionToExpenseMapper

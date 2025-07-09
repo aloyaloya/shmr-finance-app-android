@@ -14,9 +14,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shmr_finance_app_android.R
+import com.example.shmr_finance_app_android.core.di.daggerViewModel
 import com.example.shmr_finance_app_android.core.navigation.Route
 import com.example.shmr_finance_app_android.presentation.feature.expenses.model.ExpenseUiModel
 import com.example.shmr_finance_app_android.presentation.feature.expenses.viewmodel.ExpensesScreenState
@@ -35,7 +35,7 @@ import com.example.shmr_finance_app_android.presentation.shared.model.TrailConte
 
 @Composable
 fun ExpensesScreen(
-    viewModel: ExpensesScreenViewModel = hiltViewModel(),
+    viewModel: ExpensesScreenViewModel = daggerViewModel(),
     updateConfigState: (ScreenConfig) -> Unit,
 ) {
     val state by viewModel.screenState.collectAsStateWithLifecycle()
