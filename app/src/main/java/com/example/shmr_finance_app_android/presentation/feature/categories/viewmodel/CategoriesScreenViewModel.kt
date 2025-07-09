@@ -11,7 +11,6 @@ import com.example.shmr_finance_app_android.presentation.feature.categories.mode
 import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesScreenState.Error
 import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesScreenState.Loading
 import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesScreenState.Success
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -41,7 +40,6 @@ sealed interface CategoriesScreenState {
  * 2. Преобразование доменной модели в UI-модель через [CategoryToIncomeCategoryMapper]
  * 3. Управление состояниями экрана ([CategoriesScreenState])
  **/
-@HiltViewModel
 class CategoriesScreenViewModel @Inject constructor(
     private val getCategories: GetCategoriesUseCase,
     private val mapper: CategoryToIncomeCategoryMapper

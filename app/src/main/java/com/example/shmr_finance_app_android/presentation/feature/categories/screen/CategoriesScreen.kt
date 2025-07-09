@@ -12,9 +12,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shmr_finance_app_android.R
+import com.example.shmr_finance_app_android.core.di.daggerViewModel
 import com.example.shmr_finance_app_android.core.navigation.Route
 import com.example.shmr_finance_app_android.presentation.feature.categories.component.SearchTextField
 import com.example.shmr_finance_app_android.presentation.feature.categories.model.IncomeCategoryUiModel
@@ -29,7 +29,7 @@ import com.example.shmr_finance_app_android.presentation.shared.components.Loadi
 
 @Composable
 fun CategoriesScreen(
-    viewModel: CategoriesScreenViewModel = hiltViewModel(),
+    viewModel: CategoriesScreenViewModel = daggerViewModel(),
     updateConfigState: (ScreenConfig) -> Unit
 ) {
     val state by viewModel.screenState.collectAsStateWithLifecycle()
