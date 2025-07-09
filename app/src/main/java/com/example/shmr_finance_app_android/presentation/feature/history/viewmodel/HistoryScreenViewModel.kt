@@ -86,7 +86,7 @@ class HistoryScreenViewModel @Inject constructor(
     private val _showDatePickerModal = MutableStateFlow(false)
     val showDatePickerModal: StateFlow<Boolean> = _showDatePickerModal.asStateFlow()
 
-    init {
+    fun initialize() {
         loadHistory()
     }
 
@@ -100,19 +100,21 @@ class HistoryScreenViewModel @Inject constructor(
     private fun loadHistory() {
         _screenState.value = Loading
         viewModelScope.launch(Dispatchers.IO) {
-            if (_historyTransactionsType.value) {
-                getIncomesByPeriodUseCase(
-                    accountId = Constants.TEST_ACCOUNT_ID,
-                    startDate = formatHumanDateToIso(_historyStartDate.value),
-                    endDate = formatHumanDateToIso(_historyEndDate.value)
-                )
-            } else {
-                getExpensesByPeriodUseCase(
-                    accountId = Constants.TEST_ACCOUNT_ID,
-                    startDate = formatHumanDateToIso(_historyStartDate.value),
-                    endDate = formatHumanDateToIso(_historyEndDate.value)
-                )
-            }
+            handleTransactionsResult(
+                if (_historyTransactionsType.value) {
+                    getIncomesByPeriodUseCase(
+                        accountId = Constants.TEST_ACCOUNT_ID,
+                        startDate = formatHumanDateToIso(_historyStartDate.value),
+                        endDate = formatHumanDateToIso(_historyEndDate.value)
+                    )
+                } else {
+                    getExpensesByPeriodUseCase(
+                        accountId = Constants.TEST_ACCOUNT_ID,
+                        startDate = formatHumanDateToIso(_historyStartDate.value),
+                        endDate = formatHumanDateToIso(_historyEndDate.value)
+                    )
+                }
+            )
         }
     }
 

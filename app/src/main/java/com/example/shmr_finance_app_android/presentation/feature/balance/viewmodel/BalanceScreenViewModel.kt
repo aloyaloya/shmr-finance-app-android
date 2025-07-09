@@ -51,7 +51,7 @@ class BalanceScreenViewModel @Inject constructor(
 
     private val _accountId = MutableStateFlow(Constants.TEST_ACCOUNT_ID)
 
-    init {
+    fun initialize() {
         loadBalanceInfo()
     }
 

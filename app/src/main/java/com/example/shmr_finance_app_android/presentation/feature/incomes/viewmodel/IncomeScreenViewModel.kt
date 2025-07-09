@@ -56,7 +56,7 @@ class IncomeScreenViewModel @Inject constructor(
     private val _screenState = MutableStateFlow<IncomeScreenState>(Loading)
     val screenState: StateFlow<IncomeScreenState> = _screenState.asStateFlow()
 
-    init {
+    fun initialize() {
         loadIncomes()
     }
 

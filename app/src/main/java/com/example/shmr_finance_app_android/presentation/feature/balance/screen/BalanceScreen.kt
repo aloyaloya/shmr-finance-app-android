@@ -38,6 +38,7 @@ fun BalanceScreen(
     val state by viewModel.screenState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
+        viewModel.initialize()
         updateConfigState(
             ScreenConfig(
                 route = Route.Root.Balance.path,

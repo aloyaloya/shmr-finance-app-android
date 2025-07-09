@@ -57,7 +57,7 @@ class ExpensesScreenViewModel @Inject constructor(
     private val _screenState = MutableStateFlow<ExpensesScreenState>(Loading)
     val screenState: StateFlow<ExpensesScreenState> = _screenState.asStateFlow()
 
-    init {
+    fun initialize() {
         loadExpenses()
     }
 

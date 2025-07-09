@@ -44,8 +44,6 @@ fun HistoryScreen(
     isIncome: Boolean,
     updateConfigState: (ScreenConfig) -> Unit
 ) {
-    viewModel.setHistoryTransactionsType(isIncome)
-
     val state by viewModel.screenState.collectAsStateWithLifecycle()
     val startDate by viewModel.historyStartDate.collectAsStateWithLifecycle()
     val endDate by viewModel.historyEndDate.collectAsStateWithLifecycle()
@@ -57,7 +55,9 @@ fun HistoryScreen(
         false -> R.string.period_no_expenses_found
     }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(isIncome) {
+        viewModel.setHistoryTransactionsType(isIncome)
+        viewModel.initialize()
         updateConfigState(
             ScreenConfig(
                 route = Route.SubScreens.History.path,

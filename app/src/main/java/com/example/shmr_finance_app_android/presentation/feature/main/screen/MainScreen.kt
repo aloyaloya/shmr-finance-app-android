@@ -7,6 +7,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.shmr_finance_app_android.core.navigation.AppNavHost
@@ -32,6 +33,10 @@ fun MainScreen() {
                 onBack = { navController.popBackStack() },
                 onActionRoute = {
                     navController.navigate(it) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+
                         launchSingleTop = true
                         restoreState = true
                     }
@@ -45,6 +50,10 @@ fun MainScreen() {
                 onNavigate = {
                     if (currentDestination != it) {
                         navController.navigate(it) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+
                             launchSingleTop = true
                             restoreState = true
                         }
