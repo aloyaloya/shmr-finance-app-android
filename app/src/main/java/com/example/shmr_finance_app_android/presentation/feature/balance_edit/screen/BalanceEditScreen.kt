@@ -22,9 +22,9 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shmr_finance_app_android.R
+import com.example.shmr_finance_app_android.core.di.daggerViewModel
 import com.example.shmr_finance_app_android.core.navigation.Route
 import com.example.shmr_finance_app_android.presentation.feature.balance_edit.component.AnimatedErrorSnackbar
 import com.example.shmr_finance_app_android.presentation.feature.balance_edit.component.CurrencySelectionSheet
@@ -45,7 +45,7 @@ import com.example.shmr_finance_app_android.presentation.shared.model.TrailConte
 
 @Composable
 fun BalanceEditScreen(
-    viewModel: BalanceEditScreenViewModel = hiltViewModel(),
+    viewModel: BalanceEditScreenViewModel = daggerViewModel(),
     balanceId: String,
     updateConfigState: (ScreenConfig) -> Unit
 ) {
