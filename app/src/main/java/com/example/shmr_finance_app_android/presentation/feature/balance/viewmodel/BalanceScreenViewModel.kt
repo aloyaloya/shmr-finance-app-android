@@ -12,7 +12,6 @@ import com.example.shmr_finance_app_android.presentation.feature.balance.model.B
 import com.example.shmr_finance_app_android.presentation.feature.balance.viewmodel.BalanceScreenState.Error
 import com.example.shmr_finance_app_android.presentation.feature.balance.viewmodel.BalanceScreenState.Loading
 import com.example.shmr_finance_app_android.presentation.feature.balance.viewmodel.BalanceScreenState.Success
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -40,7 +39,6 @@ sealed interface BalanceScreenState {
  * 2. Преобразование доменной модели в UI-модель через [AccountToBalanceMapper]
  * 3. Управление состояниями экрана ([BalanceScreenState])
  **/
-@HiltViewModel
 class BalanceScreenViewModel @Inject constructor(
     private val getAccount: GetAccountUseCase,
     private val mapper: AccountToBalanceMapper
