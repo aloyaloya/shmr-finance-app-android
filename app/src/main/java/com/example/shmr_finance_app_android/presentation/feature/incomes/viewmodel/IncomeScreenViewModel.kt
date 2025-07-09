@@ -13,7 +13,6 @@ import com.example.shmr_finance_app_android.presentation.feature.incomes.model.I
 import com.example.shmr_finance_app_android.presentation.feature.incomes.viewmodel.IncomeScreenState.Error
 import com.example.shmr_finance_app_android.presentation.feature.incomes.viewmodel.IncomeScreenState.Loading
 import com.example.shmr_finance_app_android.presentation.feature.incomes.viewmodel.IncomeScreenState.Success
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -47,7 +46,6 @@ sealed interface IncomeScreenState {
  * 2. Преобразование доменной модели в UI-модель через [TransactionToIncomeMapper]
  * 3. Управление состояниями экрана ([IncomeScreenState])
  **/
-@HiltViewModel
 class IncomeScreenViewModel @Inject constructor(
     private val getTransactionsByPeriodUseCase: GetIncomesByPeriodUseCase,
     private val mapper: TransactionToIncomeMapper
