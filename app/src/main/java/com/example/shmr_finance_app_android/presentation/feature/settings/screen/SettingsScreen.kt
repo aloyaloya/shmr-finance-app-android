@@ -12,9 +12,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shmr_finance_app_android.R
+import com.example.shmr_finance_app_android.core.di.daggerViewModel
 import com.example.shmr_finance_app_android.core.navigation.Route
 import com.example.shmr_finance_app_android.core.navigation.SettingsListItem
 import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
@@ -27,7 +27,7 @@ import com.example.shmr_finance_app_android.presentation.shared.model.MainConten
 
 @Composable
 fun SettingsScreen(
-    viewModel: SettingsScreenViewModel = hiltViewModel(),
+    viewModel: SettingsScreenViewModel = daggerViewModel(),
     updateConfigState: (ScreenConfig) -> Unit
 ) {
     val darkThemeStatus by viewModel.darkThemeStatus.collectAsStateWithLifecycle()
