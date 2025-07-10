@@ -1,4 +1,4 @@
-package com.example.shmr_finance_app_android.presentation.feature.balance_edit.component
+package com.example.shmr_finance_app_android.presentation.shared.components
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,17 +17,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 
 @Composable
 fun EditorTextField(
+    modifier: Modifier = Modifier,
     value: String,
-    prefixResId: Int,
+    textAlign: TextAlign = TextAlign.Right,
+    prefix: String? = null,
     suffix: String? = null,
+    placeholder: String? = null,
+    placeholderAlign: TextAlign = TextAlign.End,
     onChange: (String) -> Unit,
-    keyboardType: KeyboardType = KeyboardType.Text,
+    keyboardType: KeyboardType = KeyboardType.Text
 ) {
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -40,15 +43,30 @@ fun EditorTextField(
     }
 
     TextField(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         value = value,
         onValueChange = onChange,
+        placeholder = {
+            if (value.isEmpty() && placeholder != null) {
+                Text(
+                    text = placeholder,
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = placeholderAlign
+                    ),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        },
         prefix = {
-            Text(
-                text = stringResource(prefixResId),
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            prefix?.let {
+                Text(
+                    text = prefix,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         },
         suffix = {
             suffix?.let {
@@ -67,7 +85,7 @@ fun EditorTextField(
         ),
         singleLine = true,
         textStyle = MaterialTheme.typography.bodyLarge.copy(
-            textAlign = TextAlign.Right
+            textAlign = textAlign
         ),
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         keyboardActions = KeyboardActions(
