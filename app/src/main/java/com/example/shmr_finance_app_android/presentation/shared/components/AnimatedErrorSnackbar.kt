@@ -1,4 +1,4 @@
-package com.example.shmr_finance_app_android.presentation.feature.balance_edit.component
+package com.example.shmr_finance_app_android.presentation.shared.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
