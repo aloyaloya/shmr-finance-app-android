@@ -14,7 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,16 +24,18 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.core.di.daggerViewModel
-import com.example.shmr_finance_app_android.presentation.feature.balance_edit.component.AnimatedErrorSnackbar
 import com.example.shmr_finance_app_android.presentation.feature.balance_edit.component.CurrencySelectionSheet
-import com.example.shmr_finance_app_android.presentation.feature.balance_edit.component.EditorTextField
 import com.example.shmr_finance_app_android.presentation.feature.balance_edit.model.CurrencyItem
 import com.example.shmr_finance_app_android.presentation.feature.balance_edit.viewmodel.BalanceEditScreenState
 import com.example.shmr_finance_app_android.presentation.feature.balance_edit.viewmodel.BalanceEditScreenViewModel
+import com.example.shmr_finance_app_android.presentation.feature.balance_edit.viewmodel.BalanceField
+import com.example.shmr_finance_app_android.presentation.feature.balance_edit.viewmodel.BalanceState
 import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarAction
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarBackAction
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarConfig
+import com.example.shmr_finance_app_android.presentation.shared.components.AnimatedErrorSnackbar
+import com.example.shmr_finance_app_android.presentation.shared.components.EditorTextField
 import com.example.shmr_finance_app_android.presentation.shared.components.ErrorState
 import com.example.shmr_finance_app_android.presentation.shared.components.ListItemCard
 import com.example.shmr_finance_app_android.presentation.shared.components.LoadingState
@@ -52,8 +53,8 @@ fun BalanceEditScreen(
     val state by viewModel.screenState.collectAsStateWithLifecycle()
     val isCurrencySelectionSheetVisible by viewModel
         .currencySelectionSheetVisible.collectAsStateWithLifecycle()
-    val isSnackbarVisible by viewModel.snackbarVisible.collectAsStateWithLifecycle()
-    val snackbarMessage by viewModel.snackbarMessage.collectAsStateWithLifecycle()
+    val isSnackbarVisible by viewModel.snackBarVisible.collectAsStateWithLifecycle()
+    val snackbarMessage by viewModel.snackBarMessage.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit, viewModel) {
         viewModel.setAccountId(balanceId)
@@ -63,12 +64,12 @@ fun BalanceEditScreen(
                     titleResId = R.string.balance_screen_title,
                     backAction = TopBarBackAction(
                         iconResId = R.drawable.ic_cancel,
-                        descriptionResId = R.string.balance_edit_cancel_description,
+                        descriptionResId = R.string.edit_cancel_description,
                         actionUnit = onBackNavigate
                     ),
                     action = TopBarAction(
                         iconResId = R.drawable.ic_save,
-                        descriptionResId = R.string.balance_edit_save_description,
+                        descriptionResId = R.string.edit_save_description,
                         isActive = { viewModel.validateAccountData() },
                         actionUnit = {
                             viewModel.updateAccountData()
@@ -90,9 +91,8 @@ fun BalanceEditScreen(
                 )
 
                 is BalanceEditScreenState.Success -> BalanceEditContent(
-                    state = state as BalanceEditScreenState.Success,
-                    onNameChanged = { viewModel.onNameEdited(it) },
-                    onBalanceChanged = { viewModel.onBalanceEdited(it) },
+                    state = (state as BalanceEditScreenState.Success).balance,
+                    onFieldChanged = { field, value -> viewModel.onFieldChanged(field, value) },
                     onCurrencyClick = { viewModel.showCurrencyBottomSheet() },
                     onDeleteBalanceClick = { } // Удаление счета
                 )
@@ -110,7 +110,7 @@ fun BalanceEditScreen(
     if (isCurrencySelectionSheetVisible) {
         CurrencySelectionSheet(
             items = CurrencyItem.items,
-            onItemSelected = { viewModel.onCurrencySelected(it) },
+            onItemSelected = { viewModel.onFieldChanged(BalanceField.CURRENCY, it) },
             onDismiss = { viewModel.hideCurrencyBottomSheet() }
         )
     }
@@ -119,28 +119,23 @@ fun BalanceEditScreen(
 @Composable
 private fun BalanceEditContent(
     modifier: Modifier = Modifier,
-    state: BalanceEditScreenState.Success,
-    onNameChanged: (String) -> Unit,
-    onBalanceChanged: (String) -> Unit,
+    state: BalanceState,
+    onFieldChanged: (BalanceField, String) -> Unit,
     onCurrencyClick: () -> Unit,
     onDeleteBalanceClick: () -> Unit
 ) {
-    val name by state.name.collectAsState()
-    val balance by state.balance.collectAsState()
-    val currencySymbol by state.currencySymbol.collectAsState()
-
     Column(modifier.fillMaxSize()) {
         EditorTextField(
-            value = name,
-            prefixResId = R.string.balance_name,
-            onChange = onNameChanged,
+            value = state.name,
+            prefix = stringResource(R.string.balance_name),
+            onChange = { onFieldChanged(BalanceField.NAME, it) },
         )
 
         EditorTextField(
-            value = balance,
-            prefixResId = R.string.balance,
-            suffix = currencySymbol,
-            onChange = onBalanceChanged,
+            value = state.amount,
+            prefix = stringResource(R.string.balance),
+            suffix = state.currencySymbol,
+            onChange = { onFieldChanged(BalanceField.AMOUNT, it) },
             keyboardType = KeyboardType.Number
         )
 
@@ -153,7 +148,7 @@ private fun BalanceEditContent(
                     title = stringResource(R.string.currency),
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 ),
-                trail = TrailContent(text = currencySymbol)
+                trail = TrailContent(text = state.currencySymbol)
             ),
             trailIcon = R.drawable.ic_arrow_right,
         )

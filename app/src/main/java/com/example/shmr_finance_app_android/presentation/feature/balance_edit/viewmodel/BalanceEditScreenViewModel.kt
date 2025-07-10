@@ -19,6 +19,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,16 +29,12 @@ import javax.inject.Inject
  * - [Error] Состояние ошибки с:
  * - Локализованным сообщением ([messageResId])
  * - Коллбэком повторной попытки ([retryAction])
- * - [Success] - успешное состояние с параметрами аккаунта в [StateFlow]
+ * - [Success] - успешное состояние с параметрами аккаунта в [BalanceState]
  */
 sealed interface BalanceEditScreenState {
     data object Loading : BalanceEditScreenState
     data class Error(val messageResId: Int, val retryAction: () -> Unit) : BalanceEditScreenState
-    data class Success(
-        val name: StateFlow<String>,
-        val balance: StateFlow<String>,
-        val currencySymbol: StateFlow<String>
-    ) : BalanceEditScreenState
+    data class Success(val balance: BalanceState) : BalanceEditScreenState
 }
 
 /**
@@ -54,23 +51,23 @@ class BalanceEditScreenViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _accountId = MutableStateFlow(0)
+
     private val _screenState = MutableStateFlow<BalanceEditScreenState>(Loading)
     val screenState: StateFlow<BalanceEditScreenState> = _screenState.asStateFlow()
 
-    private val _accountName = MutableStateFlow("")
-    private val _accountBalance = MutableStateFlow("")
-    private val _accountCurrencySymbol = MutableStateFlow("")
+    private val _balanceState = MutableStateFlow(BalanceState())
+
     private val _accountCurrencyCode = MutableStateFlow("")
 
     private val _currencySelectionSheetVisible = MutableStateFlow(false)
     val currencySelectionSheetVisible: StateFlow<Boolean> =
         _currencySelectionSheetVisible.asStateFlow()
 
-    private val _snackbarVisible = MutableStateFlow(false)
-    val snackbarVisible: StateFlow<Boolean> = _snackbarVisible.asStateFlow()
+    private val _snackBarVisible = MutableStateFlow(false)
+    val snackBarVisible: StateFlow<Boolean> = _snackBarVisible.asStateFlow()
 
-    private val _snackbarMessageId = MutableStateFlow(0)
-    val snackbarMessage: StateFlow<Int> = _snackbarMessageId.asStateFlow()
+    private val _snackBarMessageId = MutableStateFlow(0)
+    val snackBarMessage: StateFlow<Int> = _snackBarMessageId.asStateFlow()
 
     /**
      * Устанавливает ID полученного при навигации аккаунта
@@ -106,16 +103,15 @@ class BalanceEditScreenViewModel @Inject constructor(
 
     /** Обновляет состояние при успешной загрузке */
     private fun handleSuccess(data: BalanceDetailedUiModel) {
-        _accountName.value = data.name
-        _accountBalance.value = data.amount
-        _accountCurrencyCode.value = data.currencyCode
-        _accountCurrencySymbol.value = data.currencySymbol
+        _balanceState.update { current ->
+            current.copy(
+                name = data.name,
+                amount = data.amount,
+                currencySymbol = data.currencySymbol
+            )
+        }
 
-        _screenState.value = Success(
-            name = _accountName.asStateFlow(),
-            balance = _accountBalance.asStateFlow(),
-            currencySymbol = _accountCurrencySymbol.asStateFlow()
-        )
+        _screenState.value = Success(_balanceState.value)
     }
 
     /** Обрабатывает ошибку */
@@ -132,21 +128,22 @@ class BalanceEditScreenViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             updateAccount(
                 accountId = _accountId.value,
-                accountName = _accountName.value,
-                accountBalance = _accountBalance.value.toInt(),
+                accountName = _balanceState.value.name,
+                accountBalance = _balanceState.value.amount.toInt(),
                 accountCurrency = _accountCurrencyCode.value
             )
         }
     }
 
+    /** Валидация введенных данных аккаунта */
     fun validateAccountData(): Boolean {
-        if (_accountName.value.isBlank()) {
+        if (_balanceState.value.name.isBlank()) {
             showSnackBar(R.string.balance_name_error_message)
             return false
         }
 
         try {
-            _accountBalance.value.toInt()
+            _balanceState.value.amount.toInt()
         } catch (e: NumberFormatException) {
             showSnackBar(R.string.balance_amount_error_message)
             return false
@@ -155,24 +152,22 @@ class BalanceEditScreenViewModel @Inject constructor(
         return true
     }
 
-    /**
-     * Обрабатывает изменения состояния текущей валюты
-     */
-    fun onCurrencySelected(currency: CurrencyItem) {
-        _accountCurrencyCode.value = currency.currencyCode
-        _accountCurrencySymbol.value = currency.currencySymbol
-    }
+    /** Обрабатывает изменение полей с информацией о счете */
+    fun onFieldChanged(field: BalanceField, value: Any) {
+        _balanceState.update { current ->
+            when (field) {
+                BalanceField.NAME -> current.copy(name = value as String)
+                BalanceField.AMOUNT -> current.copy(amount = value as String)
+                BalanceField.CURRENCY -> {
+                    _accountCurrencyCode.value = (value as CurrencyItem).currencyCode
+                    current.copy(currencySymbol = value.currencySymbol)
+                }
+            }
+        }
 
-    /**
-     * Обрабатывает изменения состояния текущего баланса
-     */
-    fun onBalanceEdited(balance: String) {
-        _accountBalance.value = balance
-    }
-
-    /** Обрабатывает изменения состояния текущего названия счета */
-    fun onNameEdited(name: String) {
-        _accountName.value = name
+        if (_screenState.value is Success) {
+            _screenState.value = Success(_balanceState.value)
+        }
     }
 
     /** Обрабатывает открытие CurrencyBottomSheet */
@@ -187,9 +182,9 @@ class BalanceEditScreenViewModel @Inject constructor(
 
     /** Обрабатывает показ ErrorSnackbar */
     private fun showSnackBar(message: Int) {
-        if (!_snackbarVisible.value) {
-            _snackbarVisible.value = true
-            _snackbarMessageId.value = message
+        if (!_snackBarVisible.value) {
+            _snackBarVisible.value = true
+            _snackBarMessageId.value = message
             viewModelScope.launch {
                 delay(4000)
                 dismissSnackBar()
@@ -199,6 +194,18 @@ class BalanceEditScreenViewModel @Inject constructor(
 
     /** Обрабатывает скрытие ErrorSnackbar */
     fun dismissSnackBar() {
-        _snackbarVisible.value = false
+        _snackBarVisible.value = false
     }
+}
+
+data class BalanceState(
+    val name: String = "",
+    val amount: String = "",
+    val currencySymbol: String = ""
+)
+
+enum class BalanceField {
+    NAME,
+    AMOUNT,
+    CURRENCY,
 }
