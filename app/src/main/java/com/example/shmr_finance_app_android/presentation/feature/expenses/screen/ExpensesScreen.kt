@@ -18,8 +18,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.core.di.daggerViewModel
 import com.example.shmr_finance_app_android.presentation.feature.expenses.model.ExpenseUiModel
-import com.example.shmr_finance_app_android.presentation.feature.expenses.viewmodel.ExpensesScreenState
 import com.example.shmr_finance_app_android.presentation.feature.expenses.viewmodel.ExpensesScreenViewModel
+import com.example.shmr_finance_app_android.presentation.feature.expenses.viewmodel.ExpensesUiState
 import com.example.shmr_finance_app_android.presentation.feature.main.model.FloatingActionConfig
 import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarAction
@@ -39,10 +39,11 @@ fun ExpensesScreen(
     onHistoryNavigate: () -> Unit,
     onCreateNavigate: () -> Unit
 ) {
-    val state by viewModel.screenState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) { viewModel.init() }
 
     LaunchedEffect(Unit) {
-        viewModel.initialize()
         updateConfigState(
             ScreenConfig(
                 topBarConfig = TopBarConfig(
@@ -61,26 +62,26 @@ fun ExpensesScreen(
         )
     }
 
-    when (state) {
-        is ExpensesScreenState.Loading -> LoadingState()
-        is ExpensesScreenState.Error -> ErrorState(
-            messageResId = (state as ExpensesScreenState.Error).messageResId,
-            onRetry = (state as ExpensesScreenState.Error).retryAction
+    when (uiState) {
+        is ExpensesUiState.Loading -> LoadingState()
+        is ExpensesUiState.Error -> ErrorState(
+            messageResId = (uiState as ExpensesUiState.Error).messageResId,
+            onRetry = viewModel::init
         )
 
-        is ExpensesScreenState.Empty -> EmptyState(
+        is ExpensesUiState.Empty -> EmptyState(
             messageResId = R.string.today_no_expenses_found
         )
 
-        is ExpensesScreenState.Success -> ExpensesSuccessState(
-            expenses = (state as ExpensesScreenState.Success).expenses,
-            totalAmount = (state as ExpensesScreenState.Success).totalAmount
+        is ExpensesUiState.Content -> ExpensesContent(
+            expenses = (uiState as ExpensesUiState.Content).expenses,
+            totalAmount = (uiState as ExpensesUiState.Content).totalAmount
         )
     }
 }
 
 @Composable
-private fun ExpensesSuccessState(
+private fun ExpensesContent(
     expenses: List<ExpenseUiModel>,
     totalAmount: String
 ) {
