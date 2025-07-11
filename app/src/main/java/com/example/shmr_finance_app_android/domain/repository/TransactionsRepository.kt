@@ -20,4 +20,17 @@ interface TransactionsRepository {
         transactionDate: String,
         comment: String?
     ): Result<TransactionDomain>
+
+    suspend fun getTransactionById(transactionId: Int): Result<TransactionResponseDomain>
+
+    suspend fun updateTransactionById(
+        transactionId: Int,
+        accountId: Int,
+        categoryId: Int,
+        amount: String,
+        transactionDate: String,
+        comment: String?
+    ): Result<TransactionResponseDomain>
+
+    suspend fun deleteTransactionById(transactionId: Int): Result<Unit>
 }

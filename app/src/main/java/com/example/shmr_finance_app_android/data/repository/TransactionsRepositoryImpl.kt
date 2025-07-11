@@ -1,7 +1,5 @@
 package com.example.shmr_finance_app_android.data.repository
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.example.shmr_finance_app_android.data.datasource.TransactionsRemoteDataSource
 import com.example.shmr_finance_app_android.data.remote.api.safeApiCall
 import com.example.shmr_finance_app_android.data.repository.mapper.TransactionsDomainMapper
@@ -31,19 +29,19 @@ internal class TransactionsRepositoryImpl @Inject constructor(
      * @return [Result.success] с [TransactionResponseDomain] при успехе,
      * [Result.failure] с [AppError] при ошибке
      */
-    @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun getTransactionsByPeriod(
         accountId: Int,
         startDate: String?,
         endDate: String?
     ): Result<List<TransactionResponseDomain>> {
-        return safeApiCall {
-            remoteDataSource.getTransactionsByPeriod(accountId, startDate, endDate)
-                .map(mapper::mapTransactionResponse)
-        }
+        return safeApiCall(
+            call = {
+                remoteDataSource.getTransactionsByPeriod(accountId, startDate, endDate)
+                    .map(mapper::mapTransactionResponse)
+            }
+        )
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun createTransaction(
         accountId: Int,
         categoryId: Int,
@@ -51,16 +49,61 @@ internal class TransactionsRepositoryImpl @Inject constructor(
         transactionDate: String,
         comment: String?
     ): Result<TransactionDomain> {
-        return safeApiCall {
-            mapper.mapTransaction(
-                remoteDataSource.createTransaction(
-                    accountId,
-                    categoryId,
-                    amount,
-                    transactionDate,
-                    comment
+        return safeApiCall(
+            call = {
+                mapper.mapTransaction(
+                    remoteDataSource.createTransaction(
+                        accountId,
+                        categoryId,
+                        amount,
+                        transactionDate,
+                        comment
+                    )
                 )
-            )
-        }
+            }
+        )
+    }
+
+    override suspend fun getTransactionById(transactionId: Int): Result<TransactionResponseDomain> {
+        return safeApiCall(
+            call = {
+                mapper.mapTransactionResponse(
+                    remoteDataSource.getTransactionById(transactionId)
+                )
+            }
+        )
+    }
+
+    override suspend fun updateTransactionById(
+        transactionId: Int,
+        accountId: Int,
+        categoryId: Int,
+        amount: String,
+        transactionDate: String,
+        comment: String?
+    ): Result<TransactionResponseDomain> {
+        return safeApiCall(
+            call = {
+                mapper.mapTransactionResponse(
+                    remoteDataSource.updateTransactionById(
+                        transactionId = transactionId,
+                        accountId = accountId,
+                        categoryId = categoryId,
+                        amount = amount,
+                        transactionDate = transactionDate,
+                        comment = comment
+                    )
+                )
+            }
+        )
+    }
+
+    override suspend fun deleteTransactionById(transactionId: Int): Result<Unit> {
+        return safeApiCall(
+            call = { remoteDataSource.deleteTransactionById(transactionId) },
+            handleSuccess = {
+                Result.success(Unit)
+            }
+        )
     }
 }

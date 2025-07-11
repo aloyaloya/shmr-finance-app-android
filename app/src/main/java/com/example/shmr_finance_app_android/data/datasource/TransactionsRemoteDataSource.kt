@@ -4,6 +4,7 @@ import com.example.shmr_finance_app_android.data.model.TransactionDTO
 import com.example.shmr_finance_app_android.data.model.TransactionResponseDTO
 import com.example.shmr_finance_app_android.data.remote.api.FinanceApiService
 import com.example.shmr_finance_app_android.data.remote.mapper.TransactionsRemoteMapper
+import retrofit2.Response
 import javax.inject.Inject
 
 /**
@@ -17,6 +18,8 @@ interface TransactionsRemoteDataSource {
         endDate: String?
     ): List<TransactionResponseDTO>
 
+    suspend fun getTransactionById(transactionId: Int): TransactionResponseDTO
+
     suspend fun createTransaction(
         accountId: Int,
         categoryId: Int,
@@ -24,6 +27,17 @@ interface TransactionsRemoteDataSource {
         transactionDate: String,
         comment: String?
     ): TransactionDTO
+
+    suspend fun updateTransactionById(
+        transactionId: Int,
+        accountId: Int,
+        categoryId: Int,
+        amount: String,
+        transactionDate: String,
+        comment: String?
+    ): TransactionResponseDTO
+
+    suspend fun deleteTransactionById(transactionId: Int): Response<Void>
 }
 
 /**
@@ -66,6 +80,10 @@ internal class TransactionsRemoteDataSourceImpl @Inject constructor(
         ).map(mapper::mapTransactionResponse)
     }
 
+    override suspend fun getTransactionById(transactionId: Int): TransactionResponseDTO {
+        return mapper.mapTransactionResponse(api.getTransactionById(transactionId))
+    }
+
     override suspend fun createTransaction(
         accountId: Int,
         categoryId: Int,
@@ -84,5 +102,31 @@ internal class TransactionsRemoteDataSourceImpl @Inject constructor(
                 )
             )
         )
+    }
+
+    override suspend fun updateTransactionById(
+        transactionId: Int,
+        accountId: Int,
+        categoryId: Int,
+        amount: String,
+        transactionDate: String,
+        comment: String?
+    ): TransactionResponseDTO {
+        return mapper.mapTransactionResponse(
+            api.updateTransactionById(
+                id = transactionId,
+                request = mapper.mapTransactionToRequest(
+                    accountId,
+                    categoryId,
+                    amount,
+                    transactionDate,
+                    comment
+                )
+            )
+        )
+    }
+
+    override suspend fun deleteTransactionById(transactionId: Int): Response<Void> {
+        return api.deleteTransactionById(transactionId)
     }
 }

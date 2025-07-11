@@ -1,7 +1,5 @@
 package com.example.shmr_finance_app_android.data.repository.mapper
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.example.shmr_finance_app_android.data.model.AccountBriefDTO
 import com.example.shmr_finance_app_android.data.model.TransactionDTO
 import com.example.shmr_finance_app_android.data.model.TransactionResponseDTO
@@ -22,7 +20,6 @@ import javax.inject.Inject
 internal class TransactionsDomainMapper @Inject constructor(
     private val categoryMapper: CategoryDomainMapper
 ) {
-    @RequiresApi(Build.VERSION_CODES.O)
     fun mapTransactionResponse(dto: TransactionResponseDTO): TransactionResponseDomain {
         val transactionAt = Instant.parse(dto.transactionDate).atZone(ZoneId.systemDefault())
 
