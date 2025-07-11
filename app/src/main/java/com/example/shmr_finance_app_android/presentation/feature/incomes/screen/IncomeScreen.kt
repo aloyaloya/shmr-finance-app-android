@@ -37,6 +37,7 @@ fun IncomeScreen(
     viewModel: IncomeScreenViewModel = daggerViewModel(),
     updateConfigState: (ScreenConfig) -> Unit,
     onHistoryNavigate: () -> Unit,
+    onTransactionUpdateNavigate: (Int) -> Unit,
     onCreateNavigate: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -75,7 +76,8 @@ fun IncomeScreen(
 
         is IncomesUiState.Content -> IncomesContent(
             incomes = (uiState as IncomesUiState.Content).incomes,
-            totalAmount = (uiState as IncomesUiState.Content).totalAmount
+            totalAmount = (uiState as IncomesUiState.Content).totalAmount,
+            onTransactionUpdateNavigate = onTransactionUpdateNavigate
         )
     }
 }
@@ -83,7 +85,8 @@ fun IncomeScreen(
 @Composable
 private fun IncomesContent(
     incomes: List<IncomeUiModel>,
-    totalAmount: String
+    totalAmount: String,
+    onTransactionUpdateNavigate: (Int) -> Unit,
 ) {
     Column(Modifier.fillMaxSize()) {
         ListItemCard(
@@ -99,7 +102,7 @@ private fun IncomesContent(
             items(incomes, key = { income -> income.id }) { income ->
                 ListItemCard(
                     modifier = Modifier
-                        .clickable { } // Переход пока не понятно куда
+                        .clickable { onTransactionUpdateNavigate(income.id) }
                         .height(70.dp),
                     item = income.toListItem(),
                     trailIcon = R.drawable.ic_arrow_right

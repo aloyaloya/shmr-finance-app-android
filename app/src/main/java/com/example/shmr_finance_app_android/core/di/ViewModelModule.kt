@@ -11,6 +11,7 @@ import com.example.shmr_finance_app_android.presentation.feature.incomes.viewmod
 import com.example.shmr_finance_app_android.presentation.feature.main.viewmodel.MainScreenViewModel
 import com.example.shmr_finance_app_android.presentation.feature.settings.viewmodel.SettingsScreenViewModel
 import com.example.shmr_finance_app_android.presentation.feature.transaction_creation.viewmodel.TransactionCreationViewModel
+import com.example.shmr_finance_app_android.presentation.feature.transaction_update.viewmodel.TransactionUpdateViewModel
 import dagger.Binds
 import dagger.MapKey
 import dagger.Module
@@ -64,6 +65,11 @@ interface ViewModelModule {
     @IntoMap
     @ViewModelKey(TransactionCreationViewModel::class)
     fun bindTransactionCreationViewModel(vm: TransactionCreationViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(TransactionUpdateViewModel::class)
+    fun bindTransactionUpdateViewModel(vm: TransactionUpdateViewModel): ViewModel
 
     @Binds
     fun bindViewModelFactory(factory: ViewModelProviderFactory): ViewModelProvider.Factory

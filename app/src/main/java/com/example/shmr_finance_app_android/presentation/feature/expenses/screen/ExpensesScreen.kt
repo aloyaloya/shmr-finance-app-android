@@ -37,6 +37,7 @@ fun ExpensesScreen(
     viewModel: ExpensesScreenViewModel = daggerViewModel(),
     updateConfigState: (ScreenConfig) -> Unit,
     onHistoryNavigate: () -> Unit,
+    onTransactionUpdateNavigate: (Int) -> Unit,
     onCreateNavigate: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -75,7 +76,8 @@ fun ExpensesScreen(
 
         is ExpensesUiState.Content -> ExpensesContent(
             expenses = (uiState as ExpensesUiState.Content).expenses,
-            totalAmount = (uiState as ExpensesUiState.Content).totalAmount
+            totalAmount = (uiState as ExpensesUiState.Content).totalAmount,
+            onTransactionUpdateNavigate = onTransactionUpdateNavigate
         )
     }
 }
@@ -83,7 +85,8 @@ fun ExpensesScreen(
 @Composable
 private fun ExpensesContent(
     expenses: List<ExpenseUiModel>,
-    totalAmount: String
+    totalAmount: String,
+    onTransactionUpdateNavigate: (Int) -> Unit
 ) {
     Column(Modifier.fillMaxSize()) {
         ListItemCard(
@@ -99,7 +102,7 @@ private fun ExpensesContent(
             items(expenses, key = { expense -> expense.id }) { expense ->
                 ListItemCard(
                     modifier = Modifier
-                        .clickable { } // Переход на экран Мои расходы
+                        .clickable { onTransactionUpdateNavigate(expense.id) }
                         .height(70.dp),
                     item = expense.toListItem(),
                     trailIcon = R.drawable.ic_arrow_right

@@ -32,5 +32,19 @@ sealed class Route(val path: String) {
             fun balanceId(): String = "balanceId"
             fun route(balanceId: Int) = "balance_edit/$balanceId"
         }
+
+        data object IncomeTransactionUpdate : SubScreens(
+            "transaction_update_screen/income/{id}"
+        ) {
+            fun transactionId(): String = "id"
+            fun route(transactionId: Int) = "transaction_update_screen/income/$transactionId"
+        }
+
+        data object ExpenseTransactionUpdate : SubScreens(
+            "transaction_update_screen/expense/{id}"
+        ) {
+            fun transactionId(): String = "id"
+            fun route(transactionId: Int) = "transaction_update_screen/expense/$transactionId"
+        }
     }
 }
