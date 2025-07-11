@@ -8,15 +8,11 @@ import dagger.Reusable
 import javax.inject.Inject
 
 /**
- * UseCase для получения категорий доходов.
+ * UseCase для получения всех категорий.
  * Поведение:
  * 1. Проверяет интернет-соединение через [NetworkChecker]
  * 2. Если сети нет - сразу возвращает [Result.failure] с [AppError.Network]
  * 3. Запрашивает категории через [CategoriesRepository.getAllCategories]
- *
- *  * Честно говоря не совсем понятно какие статьи показывать, из запроса /categories
- *  * или же из StatItem аккаунта, который мы получили.
- *  * Зачем-то этот запрос есть, поэтому брал статьи из него
  */
 @Reusable
 class GetCategoriesUseCase @Inject constructor(

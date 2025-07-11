@@ -10,7 +10,6 @@ import javax.inject.Inject
  * 1. Делегирует получение транзакций [GetTransactionsByPeriodUseCase]
  * 2. Фильтрует только доходы (где `category.isIncome == true`)
  * 3. Поддерживает опциональные даты периода
- *
  * @see GetTransactionsByPeriodUseCase - базовый UseCase для получения транзакций
  */
 @Reusable

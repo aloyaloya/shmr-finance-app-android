@@ -5,6 +5,12 @@ import androidx.lifecycle.ViewModelProvider
 import javax.inject.Inject
 import javax.inject.Provider
 
+/**
+ * Фабрика ViewModel для интеграции с Dagger:
+ * - Ищет нужную ViewModel в предоставленной карте [creators]
+ * - Поддерживает и прямое соответствие классу, и совместимость через [isAssignableFrom]
+ * - Используется при создании ViewModel в Dagger-модуле [ViewModelModule]
+ */
 class ViewModelProviderFactory @Inject constructor(
     private val creators: Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>
 ) : ViewModelProvider.Factory {

@@ -89,6 +89,7 @@ class ExpensesScreenViewModel @Inject constructor(
             .onFailure { error -> showError(error) }
     }
 
+    /** Обработчик для показа ошибки */
     private fun showError(t: Throwable) {
         val res = (t as? AppError)?.messageResId ?: R.string.unknown_error
         _uiState.value = Error(messageResId = res)

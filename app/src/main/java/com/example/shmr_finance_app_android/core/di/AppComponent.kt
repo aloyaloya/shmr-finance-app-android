@@ -6,6 +6,12 @@ import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
 
+/**
+ * Главный Dagger-компонент приложения, предоставляющий зависимости с областью действия [Singleton]:
+ * - Объединяет все основные модули
+ * - Предоставляет фабрику для создания [ActivityComponent]
+ * - Используется для внедрения зависимостей в [App]
+ */
 @Singleton
 @Component(
     modules = [
@@ -17,9 +23,14 @@ import javax.inject.Singleton
     ]
 )
 interface AppComponent {
+
+    /** Точка внедрения зависимостей в класс приложения [App] */
     fun inject(app: App)
+
+    /** Предоставляет фабрику для создания [ActivityComponent] */
     fun activityComponent(): ActivityComponent.Factory
 
+    /** Билдер для создания [AppComponent] с передачей необходимых зависимостей */
     @Component.Builder
     interface Builder {
         @BindsInstance

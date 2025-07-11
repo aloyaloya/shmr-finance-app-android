@@ -86,12 +86,22 @@ class TransactionUpdateViewModel @Inject constructor(
 
     private fun contentOrNull() = _uiState.value as? Content
 
+    /**
+     * Обновляет состояние UI, если текущее состояние - [Content].
+     * @param transform лямбда-функция для обновления контента
+     */
     private fun updateContent(transform: (Content) -> Content) {
         _uiState.update { ui ->
             if (ui is Content) transform(ui) else ui
         }
     }
 
+    /**
+     * Инициализация ViewModel.
+     * Загружает данные транзакции по [transactionId] и категории по типу [isIncome].
+     * @param transactionId ID транзакции для загрузки
+     * @param isIncome тип транзакции: доход или расход
+     */
     fun init(transactionId: Int, isIncome: Boolean) = viewModelScope.launch(Dispatchers.IO) {
         _uiState.value = Loading
 
@@ -121,6 +131,11 @@ class TransactionUpdateViewModel @Inject constructor(
         )
     }
 
+    /**
+     * Обрабатывает изменение полей формы создания транзакции.
+     * @param field изменённое поле формы
+     * @param value новое значение поля
+     */
     fun onFieldChanged(field: TransactionUpdateField, value: Any) {
         updateContent { content ->
             val f = content.form
@@ -147,6 +162,11 @@ class TransactionUpdateViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Сохраняет обновлённую транзакцию с [transactionId].
+     * Проверяет валидность формы, обновляет состояние UI и обрабатывает результат.
+     * @param transactionId ID транзакции для обновления
+     */
     fun saveTransaction(transactionId: Int) = viewModelScope.launch(Dispatchers.IO) {
         val content = contentOrNull() ?: return@launch
 
@@ -177,6 +197,11 @@ class TransactionUpdateViewModel @Inject constructor(
             }
     }
 
+    /**
+     * Удаляет транзакцию с указанным [transactionId].
+     * Обновляет состояние UI и обрабатывает результат удаления.
+     * @param transactionId ID транзакции для удаления
+     */
     fun deleteTransaction(transactionId: Int) = viewModelScope.launch(Dispatchers.IO) {
         val content = contentOrNull() ?: return@launch
 
@@ -192,6 +217,7 @@ class TransactionUpdateViewModel @Inject constructor(
             }
     }
 
+    /** Обработчик для показа ошибки */
     private fun showError(t: Throwable) {
         val res = (t as? AppError)?.messageResId ?: R.string.unknown_error
         _uiState.value = Error(messageResId = res)

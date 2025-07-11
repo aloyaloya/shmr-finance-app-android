@@ -81,12 +81,21 @@ class BalanceUpdateScreenViewModel @Inject constructor(
 
     private fun contentOrNull() = _uiState.value as? Content
 
+    /**
+     * Обновляет текущее состояние UI, применяя функцию преобразования к состоянию с типом [Content].
+     * @param transform функция, которая принимает текущее состояние [Content] и возвращает обновлённое
+     */
     private fun updateContent(transform: (Content) -> Content) {
         _uiState.update { ui ->
             if (ui is Content) transform(ui) else ui
         }
     }
 
+    /**
+     * Инициализирует ViewModel, загружая данные баланса по его ID.
+     * Устанавливает состояние загрузки, затем получает данные по [balanceId] и обновляет состояние UI.
+     * @param balanceId строковый ID баланса, который будет преобразован в Int
+     */
     fun init(balanceId: String) = viewModelScope.launch {
         _uiState.value = Loading
 
@@ -108,6 +117,11 @@ class BalanceUpdateScreenViewModel @Inject constructor(
             .onFailure { error -> showError(error) }
     }
 
+    /**
+     * Обрабатывает изменение значения в форме обновления баланса.
+     * @param field поле формы, которое изменилось
+     * @param value новое значение поля
+     */
     fun onFieldChanged(field: BalanceUpdateField, value: Any) {
         updateContent { content ->
             val f = content.form
@@ -125,6 +139,12 @@ class BalanceUpdateScreenViewModel @Inject constructor(
         (it as Content).copy(visibleModal = modal)
     }
 
+    /**
+     * Сохраняет обновлённый баланс, если форма валидна.
+     * Запускает процесс обновления баланса в IO-потоке, обновляет состояние UI,
+     * при успешном результате инициирует навигацию назад, иначе показывает ошибку.
+     * @param balanceId строковый ID баланса, преобразуемый в Int
+     */
     fun saveBalance(balanceId: String) = viewModelScope.launch(Dispatchers.IO) {
         val content = contentOrNull() ?: return@launch
 
@@ -152,13 +172,14 @@ class BalanceUpdateScreenViewModel @Inject constructor(
             }
     }
 
-
+    /** Обработчик для показа snackbar с сообщением об ошибке */
     private fun showSnackbar(@StringRes resId: Int) {
         viewModelScope.launch(Dispatchers.Main.immediate) {
             _events.emit(BalanceUpdateEvent.ShowSnackBar(resId))
         }
     }
 
+    /** Обработчик для показа ошибки */
     private fun showError(t: Throwable) {
         val res = (t as? AppError)?.messageResId ?: R.string.unknown_error
         _uiState.value = Error(messageResId = res)

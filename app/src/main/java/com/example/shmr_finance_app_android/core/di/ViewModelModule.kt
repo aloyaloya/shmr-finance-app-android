@@ -18,6 +18,12 @@ import dagger.Module
 import dagger.multibindings.IntoMap
 import kotlin.reflect.KClass
 
+/**
+ * Модуль Dagger, отвечающий за связывание ViewModel'ей с их ключами:
+ * - Использует аннотацию [@IntoMap] и кастомный ключ [ViewModelKey]
+ * - Позволяет Dagger предоставлять ViewModel по запросу через [ViewModelProvider.Factory]
+ * - Содержит биндинг всех ViewModel, используемых в приложении
+ */
 @Module
 interface ViewModelModule {
 

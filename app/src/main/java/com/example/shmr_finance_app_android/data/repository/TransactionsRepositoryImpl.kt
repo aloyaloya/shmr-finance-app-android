@@ -42,6 +42,16 @@ internal class TransactionsRepositoryImpl @Inject constructor(
         )
     }
 
+    /**
+     * Создаёт новую транзакцию с указанными параметрами и возвращает результат операции.
+     *
+     * @param accountId ID счёта, к которому относится транзакция
+     * @param categoryId ID категории транзакции
+     * @param amount Сумма транзакции в виде строки
+     * @param transactionDate Дата транзакции в формате строки
+     * @param comment Необязательный комментарий к транзакции
+     * @return Результат с доменной моделью [TransactionDomain] созданной транзакции или ошибкой
+     */
     override suspend fun createTransaction(
         accountId: Int,
         categoryId: Int,
@@ -64,6 +74,13 @@ internal class TransactionsRepositoryImpl @Inject constructor(
         )
     }
 
+
+    /**
+     * Получает транзакцию по её ID и возвращает результат операции.
+     *
+     * @param transactionId ID транзакции для получения
+     * @return Результат с доменной моделью [TransactionResponseDomain] ответа или ошибкой
+     */
     override suspend fun getTransactionById(transactionId: Int): Result<TransactionResponseDomain> {
         return safeApiCall(
             call = {
@@ -74,6 +91,19 @@ internal class TransactionsRepositoryImpl @Inject constructor(
         )
     }
 
+
+    /**
+     * Обновляет транзакцию по ID с новыми параметрами и возвращает результат операции.
+     *
+     * @param transactionId ID транзакции для обновления
+     * @param accountId ID счёта, связанного с транзакцией
+     * @param categoryId ID категории транзакции
+     * @param amount Новая сумма транзакции
+     * @param transactionDate Новая дата транзакции
+     * @param comment Новый комментарий (может быть null)
+     * @return Результат с доменной моделью [TransactionResponseDomain] обновлённой транзакции
+     * или ошибкой
+     */
     override suspend fun updateTransactionById(
         transactionId: Int,
         accountId: Int,
@@ -98,6 +128,12 @@ internal class TransactionsRepositoryImpl @Inject constructor(
         )
     }
 
+    /**
+     * Удаляет транзакцию по её ID и возвращает результат операции.
+     *
+     * @param transactionId ID транзакции для удаления
+     * @return Результат успешного выполнения или ошибки
+     */
     override suspend fun deleteTransactionById(transactionId: Int): Result<Unit> {
         return safeApiCall(
             call = { remoteDataSource.deleteTransactionById(transactionId) },

@@ -82,12 +82,21 @@ class TransactionCreationViewModel @Inject constructor(
 
     private fun contentOrNull() = _uiState.value as? Content
 
+    /**
+     * Обновляет состояние UI, применяя функцию преобразования к текущему состоянию типа [Content].
+     * @param transform функция, преобразующая текущее [Content] в новое состояние
+     */
     private fun updateContent(transform: (Content) -> Content) {
         _uiState.update { ui ->
             if (ui is Content) transform(ui) else ui
         }
     }
 
+    /**
+     * Инициализирует ViewModel, загружая аккаунт и категории по типу транзакции (доход/расход).
+     * Устанавливает состояние загрузки, затем запрашивает данные и обновляет UI.
+     * @param isIncome true, если транзакция — доход, false — расход
+     */
     fun init(isIncome: Boolean) = viewModelScope.launch(Dispatchers.IO) {
         _uiState.value = Loading
 
@@ -108,6 +117,11 @@ class TransactionCreationViewModel @Inject constructor(
         )
     }
 
+    /**
+     * Обрабатывает изменение полей формы создания транзакции.
+     * @param field изменённое поле формы
+     * @param value новое значение поля
+     */
     fun onFieldChanged(field: TransactionCreationField, value: Any) {
         updateContent { content ->
             val f = content.form
@@ -128,12 +142,21 @@ class TransactionCreationViewModel @Inject constructor(
         (it as Content).copy(visibleModal = modal)
     }
 
+    /**
+     * Показывает Snackbar с сообщением из ресурсов.
+     * @param resId ресурсный идентификатор строки сообщения
+     */
     private fun showSnackbar(@StringRes resId: Int) {
         viewModelScope.launch(Dispatchers.Main.immediate) {
             _events.emit(TransactionCreationEvent.ShowSnackBar(resId))
         }
     }
 
+    /**
+     * Запускает процесс создания транзакции.
+     * Проверяет валидность формы, если невалидна — показывает ошибку,
+     * иначе вызывает use case для создания транзакции и обрабатывает результат.
+     */
     fun createTransaction() = viewModelScope.launch(Dispatchers.IO) {
         val content = contentOrNull() ?: return@launch
 
@@ -163,6 +186,7 @@ class TransactionCreationViewModel @Inject constructor(
             }
     }
 
+    /** Обработчик для показа ошибки */
     private fun showError(t: Throwable) {
         val res = (t as? AppError)?.messageResId ?: R.string.unknown_error
         _uiState.value = Error(messageResId = res)
