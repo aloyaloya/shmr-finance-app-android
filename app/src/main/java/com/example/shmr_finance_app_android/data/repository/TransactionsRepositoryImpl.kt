@@ -6,6 +6,7 @@ import com.example.shmr_finance_app_android.data.datasource.TransactionsRemoteDa
 import com.example.shmr_finance_app_android.data.remote.api.safeApiCall
 import com.example.shmr_finance_app_android.data.repository.mapper.TransactionsDomainMapper
 import com.example.shmr_finance_app_android.domain.model.TransactionDomain
+import com.example.shmr_finance_app_android.domain.model.TransactionResponseDomain
 import com.example.shmr_finance_app_android.domain.repository.TransactionsRepository
 import javax.inject.Inject
 
@@ -27,7 +28,7 @@ internal class TransactionsRepositoryImpl @Inject constructor(
      * (по умолчанию - начало текущего месяца)
      * @param endDate - дата конца периода необходимых транзакций
      * (по умолчанию - конец текущего месяца)
-     * @return [Result.success] с [TransactionDomain] при успехе,
+     * @return [Result.success] с [TransactionResponseDomain] при успехе,
      * [Result.failure] с [AppError] при ошибке
      */
     @RequiresApi(Build.VERSION_CODES.O)
@@ -35,10 +36,31 @@ internal class TransactionsRepositoryImpl @Inject constructor(
         accountId: Int,
         startDate: String?,
         endDate: String?
-    ): Result<List<TransactionDomain>> {
+    ): Result<List<TransactionResponseDomain>> {
         return safeApiCall {
             remoteDataSource.getTransactionsByPeriod(accountId, startDate, endDate)
-                .map(mapper::mapTransaction)
+                .map(mapper::mapTransactionResponse)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override suspend fun createTransaction(
+        accountId: Int,
+        categoryId: Int,
+        amount: String,
+        transactionDate: String,
+        comment: String?
+    ): Result<TransactionDomain> {
+        return safeApiCall {
+            mapper.mapTransaction(
+                remoteDataSource.createTransaction(
+                    accountId,
+                    categoryId,
+                    amount,
+                    transactionDate,
+                    comment
+                )
+            )
         }
     }
 }
