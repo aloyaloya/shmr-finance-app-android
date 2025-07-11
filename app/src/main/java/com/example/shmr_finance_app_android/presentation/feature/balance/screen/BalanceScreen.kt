@@ -15,8 +15,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.core.di.daggerViewModel
 import com.example.shmr_finance_app_android.presentation.feature.balance.model.BalanceUiModel
-import com.example.shmr_finance_app_android.presentation.feature.balance.viewmodel.BalanceScreenState
 import com.example.shmr_finance_app_android.presentation.feature.balance.viewmodel.BalanceScreenViewModel
+import com.example.shmr_finance_app_android.presentation.feature.balance.viewmodel.BalanceUiState
 import com.example.shmr_finance_app_android.presentation.feature.main.model.FloatingActionConfig
 import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarAction
@@ -35,10 +35,11 @@ fun BalanceScreen(
     updateConfigState: (ScreenConfig) -> Unit,
     onEditNavigate: (Int) -> Unit
 ) {
-    val state by viewModel.screenState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) { viewModel.init() }
 
     LaunchedEffect(Unit) {
-        viewModel.initialize()
         updateConfigState(
             ScreenConfig(
                 topBarConfig = TopBarConfig(
@@ -57,21 +58,21 @@ fun BalanceScreen(
         )
     }
 
-    when (state) {
-        is BalanceScreenState.Loading -> LoadingState()
-        is BalanceScreenState.Error -> ErrorState(
-            messageResId = (state as BalanceScreenState.Error).messageResId,
-            onRetry = (state as BalanceScreenState.Error).retryAction
+    when (uiState) {
+        BalanceUiState.Loading -> LoadingState()
+        is BalanceUiState.Error -> ErrorState(
+            messageResId = (uiState as BalanceUiState.Error).messageResId,
+            onRetry = viewModel::init
         )
 
-        is BalanceScreenState.Success -> BalanceSuccessState(
-            balance = (state as BalanceScreenState.Success).balance
+        is BalanceUiState.Content -> BalanceContentState(
+            balance = (uiState as BalanceUiState.Content).balance
         )
     }
 }
 
 @Composable
-private fun BalanceSuccessState(
+private fun BalanceContentState(
     balance: BalanceUiModel
 ) {
     Column(Modifier.fillMaxSize()) {
