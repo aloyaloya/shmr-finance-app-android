@@ -7,7 +7,9 @@ import com.example.shmr_finance_app_android.data.remote.model.Category
 import com.example.shmr_finance_app_android.data.remote.model.Transaction
 import com.example.shmr_finance_app_android.data.remote.model.TransactionRequest
 import com.example.shmr_finance_app_android.data.remote.model.TransactionResponse
+import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -65,6 +67,34 @@ interface FinanceApiService {
     suspend fun createTransaction(
         @Body request: TransactionRequest
     ): Transaction
+
+    /**
+     * Получает данные транзакции по ID.
+     * @param id ID получаемой транзакции
+     * @return [TransactionResponse]
+     */
+    @GET("transactions/{id}")
+    suspend fun getTransactionById(@Path("id") id: Int): TransactionResponse
+
+    /**
+     * Обновляет данные транзакции по ID.
+     * @param id ID обновляемой транзакции
+     * @param request Тело запроса [TransactionRequest]
+     * @return [Transaction]
+     */
+    @PUT("transactions/{id}")
+    suspend fun updateTransactionById(
+        @Path("id") id: Int,
+        @Body request: TransactionRequest
+    ): TransactionResponse
+
+    /**
+     * Удаляет транзакцию по ID.
+     * @param id ID удаляемой транзакции
+     * @return [Response]
+     */
+    @DELETE("transactions/{id}")
+    suspend fun deleteTransactionById(@Path("id") id: Int): Response<Void>
 
     /**
      * Получает список категорий по типу (доход/расход).
