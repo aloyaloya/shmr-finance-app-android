@@ -1,7 +1,5 @@
 package com.example.shmr_finance_app_android.domain.usecases
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.example.shmr_finance_app_android.core.utils.combineDateTimeToIso
 import com.example.shmr_finance_app_android.data.remote.api.AppError
 import com.example.shmr_finance_app_android.data.remote.api.NetworkChecker
@@ -34,7 +32,6 @@ class CreateTransactionUseCase @Inject constructor(
      * [AppError.Network] - если нет интернета,
      * ошибками из [TransactionsRepository] - при проблемах запроса
      */
-    @RequiresApi(Build.VERSION_CODES.O)
     suspend operator fun invoke(
         accountId: Int,
         categoryId: Int,
