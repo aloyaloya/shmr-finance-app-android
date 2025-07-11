@@ -18,8 +18,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.core.di.daggerViewModel
 import com.example.shmr_finance_app_android.presentation.feature.incomes.model.IncomeUiModel
-import com.example.shmr_finance_app_android.presentation.feature.incomes.viewmodel.IncomeScreenState
 import com.example.shmr_finance_app_android.presentation.feature.incomes.viewmodel.IncomeScreenViewModel
+import com.example.shmr_finance_app_android.presentation.feature.incomes.viewmodel.IncomesUiState
 import com.example.shmr_finance_app_android.presentation.feature.main.model.FloatingActionConfig
 import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarAction
@@ -39,10 +39,11 @@ fun IncomeScreen(
     onHistoryNavigate: () -> Unit,
     onCreateNavigate: () -> Unit
 ) {
-    val state by viewModel.screenState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) { viewModel.init() }
 
     LaunchedEffect(Unit) {
-        viewModel.initialize()
         updateConfigState(
             ScreenConfig(
                 topBarConfig = TopBarConfig(
@@ -61,26 +62,26 @@ fun IncomeScreen(
         )
     }
 
-    when (state) {
-        is IncomeScreenState.Loading -> LoadingState()
-        is IncomeScreenState.Error -> ErrorState(
-            messageResId = (state as IncomeScreenState.Error).messageResId,
-            onRetry = (state as IncomeScreenState.Error).retryAction
+    when (uiState) {
+        is IncomesUiState.Loading -> LoadingState()
+        is IncomesUiState.Error -> ErrorState(
+            messageResId = (uiState as IncomesUiState.Error).messageResId,
+            onRetry = viewModel::init
         )
 
-        is IncomeScreenState.Empty -> EmptyState(
+        is IncomesUiState.Empty -> EmptyState(
             messageResId = R.string.today_no_income_found
         )
 
-        is IncomeScreenState.Success -> IncomeSuccessState(
-            incomes = (state as IncomeScreenState.Success).incomes,
-            totalAmount = (state as IncomeScreenState.Success).totalAmount
+        is IncomesUiState.Content -> IncomesContent(
+            incomes = (uiState as IncomesUiState.Content).incomes,
+            totalAmount = (uiState as IncomesUiState.Content).totalAmount
         )
     }
 }
 
 @Composable
-private fun IncomeSuccessState(
+private fun IncomesContent(
     incomes: List<IncomeUiModel>,
     totalAmount: String
 ) {
