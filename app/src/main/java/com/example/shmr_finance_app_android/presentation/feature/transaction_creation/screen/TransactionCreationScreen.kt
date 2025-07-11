@@ -12,6 +12,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -24,7 +25,7 @@ import com.example.shmr_finance_app_android.presentation.feature.main.model.Scre
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarAction
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarBackAction
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarConfig
-import com.example.shmr_finance_app_android.presentation.feature.transaction_creation.viewmodel.Modal
+import com.example.shmr_finance_app_android.presentation.feature.transaction_creation.viewmodel.TransactionCreationModal
 import com.example.shmr_finance_app_android.presentation.feature.transaction_creation.viewmodel.TransactionCreationUiState
 import com.example.shmr_finance_app_android.presentation.feature.transaction_creation.viewmodel.TransactionCreationViewModel
 import com.example.shmr_finance_app_android.presentation.feature.transaction_creation.viewmodel.TransactionEvent
@@ -102,14 +103,15 @@ fun TransactionCreationScreen(
             is TransactionCreationUiState.Content -> TransactionCreationContent(
                 state = uiState as TransactionCreationUiState.Content,
                 onFieldChanged = viewModel::onFieldChanged,
-                onCategoryClick = { viewModel.openModal(Modal.CategoryPicker) },
-                onDateClick = { viewModel.openModal(Modal.DatePicker) },
-                onTimeClick = { viewModel.openModal(Modal.TimePicker) },
+                onCategoryClick = { viewModel.openModal(TransactionCreationModal.CategoryPicker) },
+                onDateClick = { viewModel.openModal(TransactionCreationModal.DatePicker) },
+                onTimeClick = { viewModel.openModal(TransactionCreationModal.TimePicker) },
                 onModalDismiss = viewModel::closeModal
             )
         }
 
         AnimatedErrorSnackbar(
+            modifier = Modifier.align(Alignment.BottomCenter),
             isVisible = snackbarVisible,
             messageResId = snackbarMsg,
             onDismiss = { snackbarVisible = false }
@@ -187,7 +189,7 @@ private fun TransactionCreationContent(
     }
 
     when (state.visibleModal) {
-        Modal.CategoryPicker -> CategorySelectionSheet(
+        TransactionCreationModal.CategoryPicker -> CategorySelectionSheet(
             items = state.categories,
             onItemSelected = {
                 onFieldChanged(TransactionField.CATEGORY, it)
@@ -196,7 +198,7 @@ private fun TransactionCreationContent(
             onDismiss = onModalDismiss
         )
 
-        Modal.DatePicker -> DatePickerModal(
+        TransactionCreationModal.DatePicker -> DatePickerModal(
             onDateSelected = {
                 onFieldChanged(TransactionField.DATE, it)
                 onModalDismiss()
@@ -204,7 +206,7 @@ private fun TransactionCreationContent(
             onDismiss = onModalDismiss
         )
 
-        Modal.TimePicker -> TimePickerModal(
+        TransactionCreationModal.TimePicker -> TimePickerModal(
             onTimeSelected = { h, m ->
                 onFieldChanged(TransactionField.TIME, Pair(h, m))
                 onModalDismiss()

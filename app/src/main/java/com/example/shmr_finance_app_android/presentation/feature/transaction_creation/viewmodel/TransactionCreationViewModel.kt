@@ -49,8 +49,8 @@ sealed interface TransactionCreationUiState {
     data class Content(
         val form: TransactionForm = TransactionForm(),
         val categories: List<CategoryUiModel> = emptyList(),
-        val visibleModal: Modal? = null,
-        val snackbar: Snackbar? = null
+        val visibleModal: TransactionCreationModal? = null,
+        val snackbar: TransactionCreationSnackbar? = null
     ) : TransactionCreationUiState {
         /** Валиден ли ввод и активна ли кнопка Сохранить. */
         val isSaveEnabled: Boolean get() = form.amount.toIntOrNull() != null
@@ -74,8 +74,7 @@ class TransactionCreationViewModel @Inject constructor(
     private val createTransaction: CreateTransactionUseCase
 ) : ViewModel() {
 
-    private val _uiState =
-        MutableStateFlow<TransactionCreationUiState>(Loading)
+    private val _uiState = MutableStateFlow<TransactionCreationUiState>(Loading)
     val uiState: StateFlow<TransactionCreationUiState> = _uiState.asStateFlow()
 
     private val _events = MutableSharedFlow<TransactionEvent>()
@@ -89,7 +88,7 @@ class TransactionCreationViewModel @Inject constructor(
         }
     }
 
-    fun init(isIncome: Boolean) = viewModelScope.launch {
+    fun init(isIncome: Boolean) = viewModelScope.launch(Dispatchers.IO) {
         _uiState.value = Loading
 
         val accountDef = async { getAccount(Constants.TEST_ACCOUNT_ID) }
@@ -124,8 +123,10 @@ class TransactionCreationViewModel @Inject constructor(
         }
     }
 
-    fun openModal(modal: Modal) = _uiState.update { (it as Content).copy(visibleModal = modal) }
     fun closeModal() = _uiState.update { (it as Content).copy(visibleModal = null) }
+    fun openModal(modal: TransactionCreationModal) = _uiState.update {
+        (it as Content).copy(visibleModal = modal)
+    }
 
     private fun showSnackbar(@StringRes resId: Int) {
         viewModelScope.launch(Dispatchers.Main.immediate) {
@@ -139,7 +140,7 @@ class TransactionCreationViewModel @Inject constructor(
         val form = content.form
 
         if (!content.isSaveEnabled) {
-            showSnackbar(R.string.balance_amount_error_message)
+            showSnackbar(R.string.amount_error_message)
             return@launch
         }
 
@@ -190,15 +191,15 @@ data class TransactionForm(
 )
 
 /** Какое модальное окно сейчас открыто (если открыто). */
-sealed interface Modal {
-    data object DatePicker : Modal
-    data object TimePicker : Modal
-    data object CategoryPicker : Modal
+sealed interface TransactionCreationModal {
+    data object DatePicker : TransactionCreationModal
+    data object TimePicker : TransactionCreationModal
+    data object CategoryPicker : TransactionCreationModal
 }
 
 /** Содержимое snackbar‑сообщения. */
-sealed interface Snackbar {
-    data class Error(@StringRes val messageResId: Int) : Snackbar
+sealed interface TransactionCreationSnackbar {
+    data class Error(@StringRes val messageResId: Int) : TransactionCreationSnackbar
 }
 
 private fun Pair<Int, Int>.toTimeString(): String = "%02d:%02d".format(first, second)
