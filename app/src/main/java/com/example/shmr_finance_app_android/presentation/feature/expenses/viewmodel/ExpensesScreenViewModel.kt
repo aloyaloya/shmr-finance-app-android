@@ -6,7 +6,7 @@ import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.core.utils.Constants
 import com.example.shmr_finance_app_android.core.utils.getCurrentDate
 import com.example.shmr_finance_app_android.data.remote.api.AppError
-import com.example.shmr_finance_app_android.domain.model.TransactionDomain
+import com.example.shmr_finance_app_android.domain.model.TransactionResponseDomain
 import com.example.shmr_finance_app_android.domain.usecases.GetExpensesByPeriodUseCase
 import com.example.shmr_finance_app_android.presentation.feature.balance.model.BalanceUiModel
 import com.example.shmr_finance_app_android.presentation.feature.expenses.mapper.TransactionToExpenseMapper
@@ -82,7 +82,7 @@ class ExpensesScreenViewModel @Inject constructor(
      * - Успех -> [ExpenseUiModel] через маппер
      * - Ошибку -> Сообщение об ошибке
      */
-    private fun handleExpensesResult(result: Result<List<TransactionDomain>>) {
+    private fun handleExpensesResult(result: Result<List<TransactionResponseDomain>>) {
         result
             .onSuccess { data ->
                 handleSuccess(

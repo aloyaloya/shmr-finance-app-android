@@ -36,7 +36,8 @@ import com.example.shmr_finance_app_android.presentation.shared.model.TrailConte
 fun ExpensesScreen(
     viewModel: ExpensesScreenViewModel = daggerViewModel(),
     updateConfigState: (ScreenConfig) -> Unit,
-    onHistoryNavigate: () -> Unit
+    onHistoryNavigate: () -> Unit,
+    onCreateNavigate: () -> Unit
 ) {
     val state by viewModel.screenState.collectAsStateWithLifecycle()
 
@@ -54,7 +55,7 @@ fun ExpensesScreen(
                 ),
                 floatingActionConfig = FloatingActionConfig(
                     descriptionResId = R.string.add_expense_description,
-                    actionUnit = {}
+                    actionUnit = onCreateNavigate
                 )
             )
         )

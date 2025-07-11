@@ -17,6 +17,7 @@ import com.example.shmr_finance_app_android.presentation.feature.history.screen.
 import com.example.shmr_finance_app_android.presentation.feature.incomes.screen.IncomeScreen
 import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
 import com.example.shmr_finance_app_android.presentation.feature.settings.screen.SettingsScreen
+import com.example.shmr_finance_app_android.presentation.feature.transaction_creation.screen.TransactionCreationScreen
 
 /**
  * Отвечает за навигацию между экранами приложения:
@@ -51,6 +52,12 @@ fun AppNavHost(
                         launchSingleTop = true
                         restoreState = true
                     }
+                },
+                onCreateNavigate = {
+                    navController.navigate(Route.SubScreens.ExpenseTransactionCreation.path) {
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 }
             )
         }
@@ -66,6 +73,12 @@ fun AppNavHost(
                 updateConfigState = updateConfigState,
                 onHistoryNavigate = {
                     navController.navigate(Route.SubScreens.IncomesHistory.path) {
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                onCreateNavigate = {
+                    navController.navigate(Route.SubScreens.IncomeTransactionCreation.path) {
                         launchSingleTop = true
                         restoreState = true
                     }
@@ -127,6 +140,34 @@ fun AppNavHost(
          */
         composable(route = Route.SubScreens.IncomesHistory.path) {
             HistoryScreen(
+                isIncome = true,
+                updateConfigState = updateConfigState,
+                onBackNavigate = { navController.popBackStack() }
+            )
+        }
+
+        /**
+         * Отвечает за:
+         * 1. Отображение экрана Создание транзакции расхода
+         * 2. Передачу конфигурации топ-бара
+         * 3. Обработку навигации на предыдущий экран
+         */
+        composable(route = Route.SubScreens.ExpenseTransactionCreation.path) {
+            TransactionCreationScreen(
+                isIncome = false,
+                updateConfigState = updateConfigState,
+                onBackNavigate = { navController.popBackStack() }
+            )
+        }
+
+        /**
+         * Отвечает за:
+         * 1. Отображение экрана Создание транзакции дохода
+         * 2. Передачу конфигурации топ-бара
+         * 3. Обработку навигации на предыдущий экран
+         */
+        composable(route = Route.SubScreens.IncomeTransactionCreation.path) {
+            TransactionCreationScreen(
                 isIncome = true,
                 updateConfigState = updateConfigState,
                 onBackNavigate = { navController.popBackStack() }

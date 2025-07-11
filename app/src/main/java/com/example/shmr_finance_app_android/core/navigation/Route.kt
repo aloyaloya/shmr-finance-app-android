@@ -25,6 +25,9 @@ sealed class Route(val path: String) {
         data object ExpensesHistory : Root(path = "history_screen/expenses")
         data object IncomesHistory : Root(path = "history_screen/incomes")
 
+        data object ExpenseTransactionCreation : Root(path = "transaction_creation_screen/expense")
+        data object IncomeTransactionCreation : Root(path = "transaction_creation_screen/income")
+
         data object BalanceEdit : SubScreens("balance_edit/{balanceId}") {
             fun balanceId(): String = "balanceId"
             fun route(balanceId: Int) = "balance_edit/$balanceId"

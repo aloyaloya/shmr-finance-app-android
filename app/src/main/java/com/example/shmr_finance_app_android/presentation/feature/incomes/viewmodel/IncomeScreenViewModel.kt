@@ -6,7 +6,7 @@ import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.core.utils.Constants
 import com.example.shmr_finance_app_android.core.utils.getCurrentDate
 import com.example.shmr_finance_app_android.data.remote.api.AppError
-import com.example.shmr_finance_app_android.domain.model.TransactionDomain
+import com.example.shmr_finance_app_android.domain.model.TransactionResponseDomain
 import com.example.shmr_finance_app_android.domain.usecases.GetIncomesByPeriodUseCase
 import com.example.shmr_finance_app_android.presentation.feature.incomes.mapper.TransactionToIncomeMapper
 import com.example.shmr_finance_app_android.presentation.feature.incomes.model.IncomeUiModel
@@ -81,7 +81,7 @@ class IncomeScreenViewModel @Inject constructor(
      * - Успех -> [IncomeUiModel] через маппер
      * - Ошибку -> Сообщение об ошибке
      */
-    private fun handleIncomesResult(result: Result<List<TransactionDomain>>) {
+    private fun handleIncomesResult(result: Result<List<TransactionResponseDomain>>) {
         result
             .onSuccess { data ->
                 handleSuccess(

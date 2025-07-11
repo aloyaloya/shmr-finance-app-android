@@ -36,7 +36,8 @@ import com.example.shmr_finance_app_android.presentation.shared.model.TrailConte
 fun IncomeScreen(
     viewModel: IncomeScreenViewModel = daggerViewModel(),
     updateConfigState: (ScreenConfig) -> Unit,
-    onHistoryNavigate: () -> Unit
+    onHistoryNavigate: () -> Unit,
+    onCreateNavigate: () -> Unit
 ) {
     val state by viewModel.screenState.collectAsStateWithLifecycle()
 
@@ -54,7 +55,7 @@ fun IncomeScreen(
                 ),
                 floatingActionConfig = FloatingActionConfig(
                     descriptionResId = R.string.add_income_description,
-                    actionUnit = {}
+                    actionUnit = onCreateNavigate
                 )
             )
         )
