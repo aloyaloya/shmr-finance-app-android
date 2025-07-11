@@ -1,11 +1,14 @@
 package com.example.shmr_finance_app_android.data.remote.api
 
-import com.example.shmr_finance_app_android.data.remote.model.AccountResponse
+import com.example.shmr_finance_app_android.data.remote.model.Account
 import com.example.shmr_finance_app_android.data.remote.model.AccountUpdateRequest
-import com.example.shmr_finance_app_android.data.remote.model.CategoryResponse
+import com.example.shmr_finance_app_android.data.remote.model.Category
+import com.example.shmr_finance_app_android.data.remote.model.Transaction
+import com.example.shmr_finance_app_android.data.remote.model.TransactionRequest
 import com.example.shmr_finance_app_android.data.remote.model.TransactionResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -20,10 +23,10 @@ interface FinanceApiService {
     /**
      * Получает данные аккаунта по ID.
      * @param accountId - ID аккаунта
-     * @return [AccountResponse] - модель ответа API
+     * @return [Account] - модель ответа API
      */
     @GET("accounts/{id}")
-    suspend fun getAccountById(@Path("id") accountId: Int): AccountResponse
+    suspend fun getAccountById(@Path("id") accountId: Int): Account
 
     /**
      * Обновляет данные аккаунта по ID.
@@ -53,19 +56,29 @@ interface FinanceApiService {
     ): List<TransactionResponse>
 
     /**
+     * Создает новую транзакцию.
+     * @param request Тело запроса [TransactionRequest]
+     * @return [Transaction]
+     */
+    @POST("transactions")
+    suspend fun createTransaction(
+        @Body request: TransactionRequest
+    ): Transaction
+
+    /**
      * Получает список категорий по типу (доход/расход).
      * @param isIncome - `true` для категорий доходов, `false` для расходов
-     * @return Список [CategoryResponse] или пустой список, если статей нет
+     * @return Список [Category] или пустой список, если статей нет
      */
     @GET("categories/type/{isIncome}")
     suspend fun getCategoriesByType(
         @Path("isIncome") isIncome: Boolean
-    ): List<CategoryResponse>
+    ): List<Category>
 
     /**
      * Получает список всех категорий.
-     * @return Список [CategoryResponse] или пустой список, если статей нет
+     * @return Список [Category] или пустой список, если статей нет
      */
     @GET("categories")
-    suspend fun getAllCategories(): List<CategoryResponse>
+    suspend fun getAllCategories(): List<Category>
 }
