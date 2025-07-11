@@ -11,13 +11,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shmr_finance_app_android.R
-import com.example.shmr_finance_app_android.core.navigation.Route
+import com.example.shmr_finance_app_android.core.di.daggerViewModel
 import com.example.shmr_finance_app_android.presentation.feature.balance.model.BalanceUiModel
-import com.example.shmr_finance_app_android.presentation.feature.balance.viewmodel.BalanceScreenState
 import com.example.shmr_finance_app_android.presentation.feature.balance.viewmodel.BalanceScreenViewModel
+import com.example.shmr_finance_app_android.presentation.feature.balance.viewmodel.BalanceUiState
 import com.example.shmr_finance_app_android.presentation.feature.main.model.FloatingActionConfig
 import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarAction
@@ -32,46 +31,48 @@ import com.example.shmr_finance_app_android.presentation.shared.model.TrailConte
 
 @Composable
 fun BalanceScreen(
-    viewModel: BalanceScreenViewModel = hiltViewModel(),
-    updateConfigState: (ScreenConfig) -> Unit
+    viewModel: BalanceScreenViewModel = daggerViewModel(),
+    updateConfigState: (ScreenConfig) -> Unit,
+    onEditNavigate: (Int) -> Unit
 ) {
-    val state by viewModel.screenState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) { viewModel.init() }
 
     LaunchedEffect(Unit) {
         updateConfigState(
             ScreenConfig(
-                route = Route.Root.Balance.path,
                 topBarConfig = TopBarConfig(
                     titleResId = R.string.balance_screen_title,
                     action = TopBarAction(
                         iconResId = R.drawable.ic_edit,
                         descriptionResId = R.string.balance_edit_description,
-                        actionRoute = Route.SubScreens.BalanceEdit.route(viewModel.getAccountId())
+                        actionUnit = { onEditNavigate(viewModel.getAccountId()) }
                     )
                 ),
                 floatingActionConfig = FloatingActionConfig(
                     descriptionResId = R.string.add_balance_description,
-                    actionRoute = Route.Root.Balance.path
+                    actionUnit = {}
                 )
             )
         )
     }
 
-    when (state) {
-        is BalanceScreenState.Loading -> LoadingState()
-        is BalanceScreenState.Error -> ErrorState(
-            messageResId = (state as BalanceScreenState.Error).messageResId,
-            onRetry = (state as BalanceScreenState.Error).retryAction
+    when (uiState) {
+        BalanceUiState.Loading -> LoadingState()
+        is BalanceUiState.Error -> ErrorState(
+            messageResId = (uiState as BalanceUiState.Error).messageResId,
+            onRetry = viewModel::init
         )
 
-        is BalanceScreenState.Success -> BalanceSuccessState(
-            balance = (state as BalanceScreenState.Success).balance
+        is BalanceUiState.Content -> BalanceContentState(
+            balance = (uiState as BalanceUiState.Content).balance
         )
     }
 }
 
 @Composable
-private fun BalanceSuccessState(
+private fun BalanceContentState(
     balance: BalanceUiModel
 ) {
     Column(Modifier.fillMaxSize()) {

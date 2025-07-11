@@ -1,12 +1,12 @@
 package com.example.shmr_finance_app_android.data.repository.mapper
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.example.shmr_finance_app_android.data.model.AccountBriefDTO
 import com.example.shmr_finance_app_android.data.model.AccountDTO
+import com.example.shmr_finance_app_android.data.model.AccountResponseDTO
 import com.example.shmr_finance_app_android.data.model.StatItemDTO
 import com.example.shmr_finance_app_android.domain.model.AccountBriefDomain
 import com.example.shmr_finance_app_android.domain.model.AccountDomain
+import com.example.shmr_finance_app_android.domain.model.AccountResponseDomain
 import com.example.shmr_finance_app_android.domain.model.StatItemDomain
 import java.math.RoundingMode
 import java.time.Instant
@@ -16,17 +16,16 @@ import javax.inject.Inject
 
 /**
  * Маппер для:
- * Преобразования [AccountDTO] -> [AccountDomain] при получении данных
+ * Преобразования [AccountResponseDTO] -> [AccountResponseDomain] при получении данных
  * Преобразования [AccountBriefDomain] -> [AccountBriefDTO] при изменении данных
  * Создает модель данных статистики аккаунта [StatItemDomain]
  */
 internal class AccountDomainMapper @Inject constructor() {
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun mapAccount(dto: AccountDTO): AccountDomain {
+    fun mapAccountResponse(dto: AccountResponseDTO): AccountResponseDomain {
         val createdAt = Instant.parse(dto.createdAt).atZone(ZoneId.systemDefault())
         val updatedAt = Instant.parse(dto.updatedAt).atZone(ZoneId.systemDefault())
 
-        return AccountDomain(
+        return AccountResponseDomain(
             id = dto.id,
             name = dto.name,
             balance = dto.balance.toIntFromDecimal(),
@@ -46,6 +45,18 @@ internal class AccountDomainMapper @Inject constructor() {
             categoryName = dto.categoryName,
             emoji = dto.emoji,
             amount = dto.amount
+        )
+    }
+
+    fun mapAccount(account: AccountDTO): AccountDomain {
+        return AccountDomain(
+            id = account.id,
+            userId = account.userId,
+            name = account.name,
+            balance = account.balance,
+            currency = account.currency,
+            createdAt = account.createdAt,
+            updatedAt = account.updatedAt
         )
     }
 

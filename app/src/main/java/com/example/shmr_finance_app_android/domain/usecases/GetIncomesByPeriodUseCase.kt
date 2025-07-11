@@ -1,6 +1,6 @@
 package com.example.shmr_finance_app_android.domain.usecases
 
-import com.example.shmr_finance_app_android.domain.model.TransactionDomain
+import com.example.shmr_finance_app_android.domain.model.TransactionResponseDomain
 import dagger.Reusable
 import javax.inject.Inject
 
@@ -10,7 +10,6 @@ import javax.inject.Inject
  * 1. Делегирует получение транзакций [GetTransactionsByPeriodUseCase]
  * 2. Фильтрует только доходы (где `category.isIncome == true`)
  * 3. Поддерживает опциональные даты периода
- *
  * @see GetTransactionsByPeriodUseCase - базовый UseCase для получения транзакций
  */
 @Reusable
@@ -33,7 +32,7 @@ class GetIncomesByPeriodUseCase @Inject constructor(
         accountId: Int,
         startDate: String? = null,
         endDate: String? = null
-    ): Result<List<TransactionDomain>> {
+    ): Result<List<TransactionResponseDomain>> {
         return getTransactionsByPeriod(accountId, startDate, endDate)
             .map { list ->
                 list.filter { it.category.isIncome }

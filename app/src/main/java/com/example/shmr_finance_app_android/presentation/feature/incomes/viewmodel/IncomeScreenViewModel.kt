@@ -1,19 +1,19 @@
 package com.example.shmr_finance_app_android.presentation.feature.incomes.viewmodel
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.core.utils.Constants
 import com.example.shmr_finance_app_android.core.utils.getCurrentDate
 import com.example.shmr_finance_app_android.data.remote.api.AppError
-import com.example.shmr_finance_app_android.domain.model.TransactionDomain
 import com.example.shmr_finance_app_android.domain.usecases.GetIncomesByPeriodUseCase
 import com.example.shmr_finance_app_android.presentation.feature.incomes.mapper.TransactionToIncomeMapper
 import com.example.shmr_finance_app_android.presentation.feature.incomes.model.IncomeUiModel
-import com.example.shmr_finance_app_android.presentation.feature.incomes.viewmodel.IncomeScreenState.Error
-import com.example.shmr_finance_app_android.presentation.feature.incomes.viewmodel.IncomeScreenState.Loading
-import com.example.shmr_finance_app_android.presentation.feature.incomes.viewmodel.IncomeScreenState.Success
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.example.shmr_finance_app_android.presentation.feature.incomes.viewmodel.IncomesUiState.Content
+import com.example.shmr_finance_app_android.presentation.feature.incomes.viewmodel.IncomesUiState.Empty
+import com.example.shmr_finance_app_android.presentation.feature.incomes.viewmodel.IncomesUiState.Error
+import com.example.shmr_finance_app_android.presentation.feature.incomes.viewmodel.IncomesUiState.Loading
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,99 +22,76 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * Состояния экрана Доходы с явным разделением:
- * - [Loading] Начальное состояние загрузки
- * - [Error] Состояние ошибки с:
- * - Локализованным сообщением ([messageResId])
- * - Коллбэком повторной попытки ([retryAction])
- * - [Success] Состояние успешной загрузки с:
- * - Списком готовых моделей ([IncomeUiModel])
- * - Общей суммой расходов ([totalAmount])
+ * UI‑state экрана доходы.
+ * 1. [Loading] Состояние загрузки
+ * 2. [Content] Состояние взаимодействия с пользователем
+ * 3. [Error] Состояние ошибки загрузки
+ * 4. [Empty] Состояние при получении пустого списка расходов
+ * Содержит только данные, которые необходимы Compose‑слою для отрисовки.
  */
-sealed interface IncomeScreenState {
-    data object Loading : IncomeScreenState
-    data class Error(val messageResId: Int, val retryAction: () -> Unit) : IncomeScreenState
-    data object Empty : IncomeScreenState
-    data class Success(
+sealed interface IncomesUiState {
+
+    /** Экран в процессе начальной загрузки данных. */
+    data object Loading : IncomesUiState
+
+    /**
+     * Контентный стейт, когда все данные загружены
+     * и пользователь может взаимодействовать с формой.
+     */
+    data class Content(
         val incomes: List<IncomeUiModel>,
         val totalAmount: String
-    ) : IncomeScreenState
+    ) : IncomesUiState
+
+    /** Экран при получении пустых данных. */
+    data object Empty : IncomesUiState
+
+    /** Фатальная ошибка получения данных. */
+    data class Error(@StringRes val messageResId: Int) : IncomesUiState
 }
 
 /**
  * ViewModel для экрана Доходы, реализующая:
  * 1. Загрузку данных через [GetIncomesByPeriodUseCase]
  * 2. Преобразование доменной модели в UI-модель через [TransactionToIncomeMapper]
- * 3. Управление состояниями экрана ([IncomeScreenState])
+ * 3. Управление состояниями экрана ([IncomesUiState])
  **/
-@HiltViewModel
 class IncomeScreenViewModel @Inject constructor(
-    private val getTransactionsByPeriodUseCase: GetIncomesByPeriodUseCase,
+    private val getTransactionsByPeriod: GetIncomesByPeriodUseCase,
     private val mapper: TransactionToIncomeMapper
 ) : ViewModel() {
 
-    private val _screenState = MutableStateFlow<IncomeScreenState>(Loading)
-    val screenState: StateFlow<IncomeScreenState> = _screenState.asStateFlow()
-
-    init {
-        loadIncomes()
-    }
+    private val _uiState = MutableStateFlow<IncomesUiState>(Loading)
+    val uiState: StateFlow<IncomesUiState> = _uiState.asStateFlow()
 
     /**
-     * Загружает данные о дохода, управляя состояниями:
+     * Загружает данные о доходах, управляя состояниями:
      * 1. [Loading] - перед запросом
      * 2. [Success] или [Error] - после получения результата
      */
-    private fun loadIncomes() {
-        _screenState.value = Loading
-        viewModelScope.launch(Dispatchers.IO) {
-            handleIncomesResult(
-                getTransactionsByPeriodUseCase(
-                    accountId = Constants.TEST_ACCOUNT_ID,
-                    startDate = getCurrentDate(),
-                    endDate = getCurrentDate()
-                )
-            )
-        }
-    }
+    fun init() = viewModelScope.launch(Dispatchers.IO) {
+        _uiState.value = Loading
 
-    /**
-     * Обрабатывает результат запроса, преобразуя:
-     * - Успех -> [IncomeUiModel] через маппер
-     * - Ошибку -> Сообщение об ошибке
-     */
-    private fun handleIncomesResult(result: Result<List<TransactionDomain>>) {
+        val result = getTransactionsByPeriod(
+            accountId = Constants.TEST_ACCOUNT_ID,
+            startDate = getCurrentDate(),
+            endDate = getCurrentDate()
+        )
+
         result
             .onSuccess { data ->
-                handleSuccess(
-                    data = data.sortedByDescending { it.transactionTime }.map { mapper.map(it) },
+                _uiState.value = Content(
+                    incomes = data.sortedByDescending { it.transactionTime }
+                        .map { mapper.map(it) },
                     totalAmount = mapper.calculateTotalAmount(data)
                 )
             }
-            .onFailure { error -> handleError(error) }
+            .onFailure { error -> showError(error) }
     }
 
-    /** Обновляет состояние при успешной загрузке */
-    private fun handleSuccess(
-        data: List<IncomeUiModel>,
-        totalAmount: String
-    ) {
-        _screenState.value = if (data.isEmpty()) {
-            IncomeScreenState.Empty
-        } else {
-            Success(
-                incomes = data,
-                totalAmount = totalAmount
-            )
-        }
-    }
-
-    /** Обрабатывает ошибку */
-    private fun handleError(error: Throwable) {
-        val messageResId = (error as? AppError)?.messageResId ?: R.string.unknown_error
-        _screenState.value = Error(
-            messageResId = messageResId,
-            retryAction = { loadIncomes() }
-        )
+    /** Обработчик для показа ошибки */
+    private fun showError(t: Throwable) {
+        val res = (t as? AppError)?.messageResId ?: R.string.unknown_error
+        _uiState.value = Error(messageResId = res)
     }
 }

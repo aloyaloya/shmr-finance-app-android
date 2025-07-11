@@ -12,14 +12,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shmr_finance_app_android.R
-import com.example.shmr_finance_app_android.core.navigation.Route
+import com.example.shmr_finance_app_android.core.di.daggerViewModel
 import com.example.shmr_finance_app_android.presentation.feature.categories.component.SearchTextField
-import com.example.shmr_finance_app_android.presentation.feature.categories.model.IncomeCategoryUiModel
-import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesScreenState
+import com.example.shmr_finance_app_android.presentation.feature.categories.model.CategoryUiModel
 import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesScreenViewModel
+import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesUiState
 import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarConfig
 import com.example.shmr_finance_app_android.presentation.shared.components.EmptyState
@@ -29,19 +28,16 @@ import com.example.shmr_finance_app_android.presentation.shared.components.Loadi
 
 @Composable
 fun CategoriesScreen(
-    viewModel: CategoriesScreenViewModel = hiltViewModel(),
+    viewModel: CategoriesScreenViewModel = daggerViewModel(),
     updateConfigState: (ScreenConfig) -> Unit
 ) {
-    val state by viewModel.screenState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val searchRequest by viewModel.searchRequest.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         updateConfigState(
             ScreenConfig(
-                route = Route.Root.Categories.path,
-                topBarConfig = TopBarConfig(
-                    titleResId = R.string.categories_screen_title
-                )
+                topBarConfig = TopBarConfig(titleResId = R.string.categories_screen_title)
             )
         )
     }
@@ -53,23 +49,23 @@ fun CategoriesScreen(
             onActionClick = { viewModel.updateState() }
         )
         HorizontalDivider()
-        when (state) {
-            is CategoriesScreenState.Loading -> LoadingState()
-            is CategoriesScreenState.Error -> ErrorState(
-                messageResId = (state as CategoriesScreenState.Error).messageResId,
-                onRetry = (state as CategoriesScreenState.Error).retryAction
+        when (uiState) {
+            CategoriesUiState.Loading -> LoadingState()
+            is CategoriesUiState.Error -> ErrorState(
+                messageResId = (uiState as CategoriesUiState.Error).messageResId,
+                onRetry = viewModel::init
             )
 
-            is CategoriesScreenState.Empty -> EmptyState(
+            CategoriesUiState.Empty -> EmptyState(
                 messageResId = R.string.no_categories_found
             )
 
-            is CategoriesScreenState.SearchEmpty -> EmptyState(
+            CategoriesUiState.SearchEmpty -> EmptyState(
                 messageResId = R.string.empty_filtered_categories
             )
 
-            is CategoriesScreenState.Success -> CategoriesSuccessState(
-                categories = (state as CategoriesScreenState.Success).categories
+            is CategoriesUiState.Content -> CategoriesSuccessState(
+                categories = (uiState as CategoriesUiState.Content).categories
             )
         }
     }
@@ -77,7 +73,7 @@ fun CategoriesScreen(
 
 @Composable
 private fun CategoriesSuccessState(
-    categories: List<IncomeCategoryUiModel>
+    categories: List<CategoryUiModel>
 ) {
     LazyColumn {
         items(categories, key = { category -> category.id }) { category ->

@@ -1,20 +1,19 @@
 package com.example.shmr_finance_app_android.presentation.feature.expenses.viewmodel
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.core.utils.Constants
 import com.example.shmr_finance_app_android.core.utils.getCurrentDate
 import com.example.shmr_finance_app_android.data.remote.api.AppError
-import com.example.shmr_finance_app_android.domain.model.TransactionDomain
 import com.example.shmr_finance_app_android.domain.usecases.GetExpensesByPeriodUseCase
-import com.example.shmr_finance_app_android.presentation.feature.balance.model.BalanceUiModel
 import com.example.shmr_finance_app_android.presentation.feature.expenses.mapper.TransactionToExpenseMapper
 import com.example.shmr_finance_app_android.presentation.feature.expenses.model.ExpenseUiModel
-import com.example.shmr_finance_app_android.presentation.feature.expenses.viewmodel.ExpensesScreenState.Error
-import com.example.shmr_finance_app_android.presentation.feature.expenses.viewmodel.ExpensesScreenState.Loading
-import com.example.shmr_finance_app_android.presentation.feature.expenses.viewmodel.ExpensesScreenState.Success
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.example.shmr_finance_app_android.presentation.feature.expenses.viewmodel.ExpensesUiState.Content
+import com.example.shmr_finance_app_android.presentation.feature.expenses.viewmodel.ExpensesUiState.Empty
+import com.example.shmr_finance_app_android.presentation.feature.expenses.viewmodel.ExpensesUiState.Error
+import com.example.shmr_finance_app_android.presentation.feature.expenses.viewmodel.ExpensesUiState.Loading
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,99 +22,76 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * Состояния экрана Расходы с явным разделением:
- * - [Loading] Начальное состояние загрузки
- * - [Error] Состояние ошибки с:
- * - Локализованным сообщением ([messageResId])
- * - Коллбэком повторной попытки ([retryAction])
- * - [Success] Состояние успешной загрузки с:
- * - Списком готовых моделей ([BalanceUiModel])
- * - Общей суммой расходов ([totalAmount])
+ * UI‑state экрана расходы.
+ * 1. [Loading] Состояние загрузки
+ * 2. [Content] Состояние взаимодействия с пользователем
+ * 3. [Error] Состояние ошибки загрузки
+ * 4. [Empty] Состояние при получении пустого списка расходов
+ * Содержит только данные, которые необходимы Compose‑слою для отрисовки.
  */
-sealed interface ExpensesScreenState {
-    data object Loading : ExpensesScreenState
-    data class Error(val messageResId: Int, val retryAction: () -> Unit) : ExpensesScreenState
-    data object Empty : ExpensesScreenState
-    data class Success(
+sealed interface ExpensesUiState {
+
+    /** Экран в процессе начальной загрузки данных. */
+    data object Loading : ExpensesUiState
+
+    /**
+     * Контентный стейт, когда все данные загружены
+     * и пользователь может взаимодействовать с формой.
+     */
+    data class Content(
         val expenses: List<ExpenseUiModel>,
         val totalAmount: String
-    ) : ExpensesScreenState
+    ) : ExpensesUiState
+
+    /** Экран при получении пустых данных. */
+    data object Empty : ExpensesUiState
+
+    /** Фатальная ошибка получения данных. */
+    data class Error(@StringRes val messageResId: Int) : ExpensesUiState
 }
 
 /**
  * ViewModel для экрана Расходы, реализующая:
  * 1. Загрузку данных через [GetExpensesByPeriodUseCase]
  * 2. Преобразование доменной модели в UI-модель через [TransactionToExpenseMapper]
- * 3. Управление состояниями экрана ([ExpensesScreenState])
+ * 3. Управление состояниями экрана ([ExpensesUiState])
  **/
-@HiltViewModel
 class ExpensesScreenViewModel @Inject constructor(
     private val getTransactionsByPeriod: GetExpensesByPeriodUseCase,
     private val mapper: TransactionToExpenseMapper
 ) : ViewModel() {
 
-    private val _screenState = MutableStateFlow<ExpensesScreenState>(Loading)
-    val screenState: StateFlow<ExpensesScreenState> = _screenState.asStateFlow()
-
-    init {
-        loadExpenses()
-    }
+    private val _uiState = MutableStateFlow<ExpensesUiState>(Loading)
+    val uiState: StateFlow<ExpensesUiState> = _uiState.asStateFlow()
 
     /**
      * Загружает данные о расходах, управляя состояниями:
      * 1. [Loading] - перед запросом
      * 2. [Success] или [Error] - после получения результата
      */
-    private fun loadExpenses() {
-        _screenState.value = Loading
-        viewModelScope.launch(Dispatchers.IO) {
-            handleExpensesResult(
-                getTransactionsByPeriod(
-                    accountId = Constants.TEST_ACCOUNT_ID,
-                    startDate = getCurrentDate(),
-                    endDate = getCurrentDate()
-                )
-            )
-        }
-    }
+    fun init() = viewModelScope.launch(Dispatchers.IO) {
+        _uiState.value = Loading
 
-    /**
-     * Обрабатывает результат запроса, преобразуя:
-     * - Успех -> [ExpenseUiModel] через маппер
-     * - Ошибку -> Сообщение об ошибке
-     */
-    private fun handleExpensesResult(result: Result<List<TransactionDomain>>) {
+        val result = getTransactionsByPeriod(
+            accountId = Constants.TEST_ACCOUNT_ID,
+            startDate = getCurrentDate(),
+            endDate = getCurrentDate()
+        )
+
         result
             .onSuccess { data ->
-                handleSuccess(
-                    data = data.sortedByDescending { it.transactionTime }.map { mapper.map(it) },
+                _uiState.value = Content(
+                    expenses = data.sortedByDescending { it.transactionTime }
+                        .map { mapper.map(it) },
                     totalAmount = mapper.calculateTotalAmount(data)
                 )
             }
-            .onFailure { error -> handleError(error) }
+            .onFailure { error -> showError(error) }
     }
 
-    /** Обновляет состояние при успешной загрузке */
-    private fun handleSuccess(
-        data: List<ExpenseUiModel>,
-        totalAmount: String
-    ) {
-        _screenState.value = if (data.isEmpty()) {
-            ExpensesScreenState.Empty
-        } else {
-            Success(
-                expenses = data,
-                totalAmount = totalAmount
-            )
-        }
-    }
-
-    /** Обрабатывает ошибку */
-    private fun handleError(error: Throwable) {
-        val messageResId = (error as? AppError)?.messageResId ?: R.string.unknown_error
-        _screenState.value = Error(
-            messageResId = messageResId,
-            retryAction = { loadExpenses() }
-        )
+    /** Обработчик для показа ошибки */
+    private fun showError(t: Throwable) {
+        val res = (t as? AppError)?.messageResId ?: R.string.unknown_error
+        _uiState.value = Error(messageResId = res)
     }
 }

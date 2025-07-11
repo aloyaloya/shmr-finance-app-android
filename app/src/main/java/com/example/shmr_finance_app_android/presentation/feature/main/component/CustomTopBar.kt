@@ -16,20 +16,16 @@ import com.example.shmr_finance_app_android.presentation.feature.main.model.TopB
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomTopBar(
-    config: TopBarConfig,
-    onBack: () -> Unit,
-    onActionRoute: (String) -> Unit
-) {
+fun CustomTopBar(config: TopBarConfig) {
     CenterAlignedTopAppBar(
         title = {
             Text(text = stringResource(config.titleResId))
         },
         navigationIcon = {
-            if (config.showBackButton) {
+            config.backAction?.let { action ->
                 BackAction(
                     backActionConfig = config.backAction,
-                    onBack = onBack
+                    onBack = { action.actionUnit.invoke() }
                 )
             }
         },
@@ -38,8 +34,7 @@ fun CustomTopBar(
                 IconButton(
                     onClick = {
                         if (action.isActive.invoke()) {
-                            action.actionUnit?.invoke()
-                            onActionRoute(action.actionRoute)
+                            action.actionUnit.invoke()
                         }
                     }
                 ) {

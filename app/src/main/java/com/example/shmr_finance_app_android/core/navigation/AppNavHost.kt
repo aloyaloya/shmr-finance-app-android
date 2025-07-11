@@ -8,13 +8,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.shmr_finance_app_android.presentation.feature.balance.screen.BalanceScreen
-import com.example.shmr_finance_app_android.presentation.feature.balance_edit.screen.BalanceEditScreen
+import com.example.shmr_finance_app_android.presentation.feature.balance_update.screen.BalanceUpdateScreen
 import com.example.shmr_finance_app_android.presentation.feature.categories.screen.CategoriesScreen
 import com.example.shmr_finance_app_android.presentation.feature.expenses.screen.ExpensesScreen
 import com.example.shmr_finance_app_android.presentation.feature.history.screen.HistoryScreen
 import com.example.shmr_finance_app_android.presentation.feature.incomes.screen.IncomeScreen
 import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
 import com.example.shmr_finance_app_android.presentation.feature.settings.screen.SettingsScreen
+import com.example.shmr_finance_app_android.presentation.feature.transaction_creation.screen.TransactionCreationScreen
+import com.example.shmr_finance_app_android.presentation.feature.transaction_update.screen.TransactionUpdateScreen
 
 /**
  * Отвечает за навигацию между экранами приложения:
@@ -33,25 +35,85 @@ fun AppNavHost(
         navController = navController,
         startDestination = Route.Root.Expenses.path
     ) {
+
         /**
-         * Отвечает за отображение экрана Расходы и передачу конфигурации топ-бара
+         * Отвечает за:
+         * 1. Отображение экрана Расходы
+         * 2. Передачу конфигурации топ-бара
+         * 3. Обработку навигации на экран Истории расходов
+         * 4. Обработку навигации на экран Редактирование расхода
          */
         composable(route = Route.Root.Expenses.path) {
-            ExpensesScreen(updateConfigState = updateConfigState)
+            ExpensesScreen(
+                updateConfigState = updateConfigState,
+                onHistoryNavigate = {
+                    navController.navigate(Route.SubScreens.ExpensesHistory.path) {
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                onCreateNavigate = {
+                    navController.navigate(Route.SubScreens.ExpenseTransactionCreation.path) {
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                onTransactionUpdateNavigate = {
+                    navController.navigate(Route.SubScreens.ExpenseTransactionUpdate.route(it)) {
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            )
         }
 
         /**
-         * Отвечает за отображение экрана Доходы и передачу конфигурации топ-бара
+         * Отвечает за:
+         * 1. Отображение экрана Доходы
+         * 2. Передачу конфигурации топ-бара
+         * 3. Обработку навигации на экран Истории доходов
+         * 4. Обработку навигации на экран Редактирование дохода
          */
         composable(route = Route.Root.Income.path) {
-            IncomeScreen(updateConfigState = updateConfigState)
+            IncomeScreen(
+                updateConfigState = updateConfigState,
+                onHistoryNavigate = {
+                    navController.navigate(Route.SubScreens.IncomesHistory.path) {
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                onCreateNavigate = {
+                    navController.navigate(Route.SubScreens.IncomeTransactionCreation.path) {
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                onTransactionUpdateNavigate = {
+                    navController.navigate(Route.SubScreens.IncomeTransactionUpdate.route(it)) {
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            )
         }
 
         /**
-         * Отвечает за отображение экрана Счет и передачу конфигурации топ-бара
+         * Отвечает за:
+         * 1. Отображение экрана Cчет
+         * 2. Передачу конфигурации топ-бара
+         * 3. Обработку навигации на экран Редактирования счета
          */
         composable(route = Route.Root.Balance.path) {
-            BalanceScreen(updateConfigState = updateConfigState)
+            BalanceScreen(
+                updateConfigState = updateConfigState,
+                onEditNavigate = {
+                    navController.navigate(Route.SubScreens.BalanceEdit.route(it)) {
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            )
         }
 
         /**
@@ -70,22 +132,105 @@ fun AppNavHost(
 
         /**
          * Отвечает за:
-         * - Отображение экрана История
-         * - Обработку аргумента типа операции (доходы/расходы) [isIncome]
-         * - Передачу конфигурации топ-бара
+         * 1. Отображение экрана История расходов
+         * 2. Передачу конфигурации топ-бара
+         * 3. Обработку навигации на предыдущий экран
+         */
+        composable(route = Route.SubScreens.ExpensesHistory.path) {
+            HistoryScreen(
+                isIncome = false,
+                updateConfigState = updateConfigState,
+                onBackNavigate = { navController.popBackStack() }
+            )
+        }
+
+        /**
+         * Отвечает за:
+         * 1. Отображение экрана История доходов
+         * 2. Передачу конфигурации топ-бара
+         * 3. Обработку навигации на предыдущий экран
+         */
+        composable(route = Route.SubScreens.IncomesHistory.path) {
+            HistoryScreen(
+                isIncome = true,
+                updateConfigState = updateConfigState,
+                onBackNavigate = { navController.popBackStack() }
+            )
+        }
+
+        /**
+         * Отвечает за:
+         * 1. Отображение экрана Создание транзакции расхода
+         * 2. Передачу конфигурации топ-бара
+         * 3. Обработку навигации на предыдущий экран
+         */
+        composable(route = Route.SubScreens.ExpenseTransactionCreation.path) {
+            TransactionCreationScreen(
+                isIncome = false,
+                updateConfigState = updateConfigState,
+                onBackNavigate = { navController.popBackStack() }
+            )
+        }
+
+        /**
+         * Отвечает за:
+         * 1. Отображение экрана Создание транзакции дохода
+         * 2. Передачу конфигурации топ-бара
+         * 3. Обработку навигации на предыдущий экран
+         */
+        composable(route = Route.SubScreens.IncomeTransactionCreation.path) {
+            TransactionCreationScreen(
+                isIncome = true,
+                updateConfigState = updateConfigState,
+                onBackNavigate = { navController.popBackStack() }
+            )
+        }
+
+        /**
+         * Отвечает за:
+         * 1. Отображение экрана редактирования транзакции расхода
+         * 2. Обработку аргумента ID счета [transactionId]
+         * 3. Передачу конфигурации топ-бара
+         * 4. Обработку навигации на предыдущий экран
          */
         composable(
-            route = Route.SubScreens.History.path,
-            arguments = listOf(navArgument(Route.SubScreens.History.isIncome()) {
-                type = NavType.BoolType
+            route = Route.SubScreens.ExpenseTransactionUpdate.path,
+            arguments = listOf(navArgument(Route.SubScreens.ExpenseTransactionUpdate.transactionId()) {
+                type = NavType.StringType
             })
         ) { backStackEntry ->
-            val isIncome = backStackEntry.arguments?.getBoolean(
-                Route.SubScreens.History.isIncome()
-            ) ?: false
-            HistoryScreen(
-                isIncome = isIncome,
-                updateConfigState = updateConfigState
+            val transactionId = backStackEntry.arguments?.getString(
+                Route.SubScreens.ExpenseTransactionUpdate.transactionId()
+            ) ?: ""
+            TransactionUpdateScreen(
+                transactionId = transactionId,
+                isIncome = false,
+                updateConfigState = updateConfigState,
+                onBackNavigate = { navController.popBackStack() }
+            )
+        }
+
+        /**
+         * Отвечает за:
+         * 1. Отображение экрана редактирования транзакции дохода
+         * 2. Обработку аргумента ID счета [transactionId]
+         * 3. Передачу конфигурации топ-бара
+         * 4. Обработку навигации на предыдущий экран
+         */
+        composable(
+            route = Route.SubScreens.IncomeTransactionUpdate.path,
+            arguments = listOf(navArgument(Route.SubScreens.IncomeTransactionUpdate.transactionId()) {
+                type = NavType.StringType
+            })
+        ) { backStackEntry ->
+            val transactionId = backStackEntry.arguments?.getString(
+                Route.SubScreens.IncomeTransactionUpdate.transactionId()
+            ) ?: ""
+            TransactionUpdateScreen(
+                transactionId = transactionId,
+                isIncome = true,
+                updateConfigState = updateConfigState,
+                onBackNavigate = { navController.popBackStack() }
             )
         }
 
@@ -104,9 +249,10 @@ fun AppNavHost(
             val balanceId = backStackEntry.arguments?.getString(
                 Route.SubScreens.BalanceEdit.balanceId()
             ) ?: ""
-            BalanceEditScreen(
+            BalanceUpdateScreen(
                 balanceId = balanceId,
-                updateConfigState = updateConfigState
+                updateConfigState = updateConfigState,
+                onBackNavigate = { navController.popBackStack() }
             )
         }
     }

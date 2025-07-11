@@ -1,17 +1,18 @@
 package com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.data.remote.api.AppError
-import com.example.shmr_finance_app_android.domain.model.CategoryDomain
 import com.example.shmr_finance_app_android.domain.usecases.GetCategoriesUseCase
-import com.example.shmr_finance_app_android.presentation.feature.categories.mapper.CategoryToIncomeCategoryMapper
-import com.example.shmr_finance_app_android.presentation.feature.categories.model.IncomeCategoryUiModel
-import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesScreenState.Error
-import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesScreenState.Loading
-import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesScreenState.Success
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.example.shmr_finance_app_android.presentation.feature.categories.mapper.CategoryToCategoryUiMapper
+import com.example.shmr_finance_app_android.presentation.feature.categories.model.CategoryUiModel
+import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesUiState.Content
+import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesUiState.Empty
+import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesUiState.Error
+import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesUiState.Loading
+import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesUiState.SearchEmpty
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,82 +21,71 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * Состояния экрана Статьи с явным разделением:
- * - [Loading] Начальное состояние загрузки
- * - [Error] Состояние ошибки с:
- * - Локализованным сообщением ([messageResId])
- * - Коллбэком повторной попытки ([retryAction])
- * - [Success] - успешное состояние с списком готовых моделей ([IncomeCategoryUiModel])
+ * UI‑state экрана статьи.
+ * 1. [Loading] Состояние загрузки
+ * 2. [Content] Состояние взаимодействия с пользователем
+ * 3. [Error] Состояние ошибки загрузки
+ * 4. [Empty] Состояние при получении пустого списка категорий
+ * 3. [SearchEmpty] Состояние при получении пустого списка категорий при поиске
+ * Содержит только данные, которые необходимы Compose‑слою для отрисовки.
  */
-sealed interface CategoriesScreenState {
-    data object Loading : CategoriesScreenState
-    data class Error(val messageResId: Int, val retryAction: () -> Unit) : CategoriesScreenState
-    data object Empty : CategoriesScreenState
-    data object SearchEmpty : CategoriesScreenState
-    data class Success(val categories: List<IncomeCategoryUiModel>) : CategoriesScreenState
+
+sealed interface CategoriesUiState {
+
+    /** Экран в процессе начальной загрузки данных. */
+    data object Loading : CategoriesUiState
+
+    /**
+     * Контентный стейт, когда все данные загружены
+     * и пользователь может взаимодействовать с формой.
+     */
+    data class Content(val categories: List<CategoryUiModel>) : CategoriesUiState
+
+    /** Экран при получении пустых данных. */
+    data object Empty : CategoriesUiState
+
+    /** Экран при получении пустых данных при поиске. */
+    data object SearchEmpty : CategoriesUiState
+
+    /** Фатальная ошибка получения данных. */
+    data class Error(@StringRes val messageResId: Int) : CategoriesUiState
 }
 
 /**
  * ViewModel для экрана Статьи, реализующая:
- * 1. Загрузку данных через [getIncomeCategories]
- * 2. Преобразование доменной модели в UI-модель через [CategoryToIncomeCategoryMapper]
- * 3. Управление состояниями экрана ([CategoriesScreenState])
+ * 1. Загрузку данных через [getCategories]
+ * 2. Преобразование доменной модели в UI-модель через [CategoryToCategoryUiMapper]
+ * 3. Управление состояниями экрана ([CategoriesUiState])
  **/
-@HiltViewModel
 class CategoriesScreenViewModel @Inject constructor(
     private val getCategories: GetCategoriesUseCase,
-    private val mapper: CategoryToIncomeCategoryMapper
+    private val mapper: CategoryToCategoryUiMapper
 ) : ViewModel() {
 
-    private val _screenState =
-        MutableStateFlow<CategoriesScreenState>(Loading)
-    val screenState: StateFlow<CategoriesScreenState> = _screenState.asStateFlow()
+    private val _uiState = MutableStateFlow<CategoriesUiState>(Loading)
+    val uiState: StateFlow<CategoriesUiState> = _uiState.asStateFlow()
 
-    private var cachedCategories: List<IncomeCategoryUiModel> = emptyList()
+    private var cachedCategories: List<CategoryUiModel> = emptyList()
 
     private val _searchRequest = MutableStateFlow("")
     val searchRequest: StateFlow<String> = _searchRequest
-
-    init {
-        loadCategories()
-    }
 
     /**
      * Загружает данные о статьях, управляя состояниями:
      * 1. [Loading] - перед запросом
      * 2. [Success] или [Error] - после получения результата
      */
-    private fun loadCategories() {
-        _screenState.value = Loading
-        viewModelScope.launch(Dispatchers.IO) {
-            handleCategoriesResult(getCategories())
-        }
-    }
+    fun init() = viewModelScope.launch(Dispatchers.IO) {
+        _uiState.value = Loading
 
-    /**
-     * Обрабатывает результат запроса, преобразуя:
-     * - Успех -> [IncomeCategoryUiModel] через маппер
-     * - Ошибку -> Сообщение об ошибке
-     */
-    private fun handleCategoriesResult(result: Result<List<CategoryDomain>>) {
+        val result = getCategories()
+
         result
-            .onSuccess { data -> handleSuccess(data.map { mapper.map(it) }) }
-            .onFailure { error -> handleError(error) }
-    }
-
-    /** Сохроняет данные при успешной загрузке, делегирует обновления состояния */
-    private fun handleSuccess(data: List<IncomeCategoryUiModel>) {
-        cachedCategories = data
-        updateState()
-    }
-
-    /** Обрабатывает ошибку */
-    private fun handleError(error: Throwable) {
-        val messageResId = (error as? AppError)?.messageResId ?: R.string.unknown_error
-        _screenState.value = Error(
-            messageResId = messageResId,
-            retryAction = { loadCategories() }
-        )
+            .onSuccess { data ->
+                cachedCategories = data.map { mapper.map(it) }
+                updateState()
+            }
+            .onFailure { error -> showError(error) }
     }
 
     /**
@@ -114,10 +104,10 @@ class CategoriesScreenViewModel @Inject constructor(
             }
         }
 
-        _screenState.value = when {
-            filtered.isEmpty() && query.isNotBlank() -> CategoriesScreenState.SearchEmpty
-            filtered.isEmpty() -> CategoriesScreenState.Empty
-            else -> Success(categories = filtered)
+        _uiState.value = when {
+            filtered.isEmpty() && query.isNotBlank() -> SearchEmpty
+            filtered.isEmpty() -> Empty
+            else -> Content(categories = filtered)
         }
     }
 
@@ -125,5 +115,11 @@ class CategoriesScreenViewModel @Inject constructor(
     fun onChangeSearchRequest(request: String) {
         _searchRequest.value = request
         updateState()
+    }
+
+    /** Обработчик для показа ошибки */
+    private fun showError(t: Throwable) {
+        val res = (t as? AppError)?.messageResId ?: R.string.unknown_error
+        _uiState.value = Error(messageResId = res)
     }
 }

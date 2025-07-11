@@ -8,8 +8,6 @@ import com.example.shmr_finance_app_android.domain.repository.CategoriesReposito
 import com.example.shmr_finance_app_android.domain.repository.TransactionsRepository
 import dagger.Binds
 import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 /**
@@ -17,7 +15,6 @@ import javax.inject.Singleton
  * в виде абстракций (интерфейсов) для всего приложения.
  */
 @Module
-@InstallIn(SingletonComponent::class)
 internal interface RepositoryModule {
 
     /**
@@ -26,7 +23,7 @@ internal interface RepositoryModule {
      */
     @Binds
     @Singleton
-    fun bindsAccountRepository(
+    fun bindAccountRepository(
         accountRepository: AccountRepositoryImpl,
     ): AccountRepository
 
@@ -36,7 +33,7 @@ internal interface RepositoryModule {
      */
     @Binds
     @Singleton
-    fun bindsCategoriesRepository(
+    fun bindCategoriesRepository(
         categoriesRepository: CategoriesRepositoryImpl,
     ): CategoriesRepository
 
@@ -46,7 +43,7 @@ internal interface RepositoryModule {
      */
     @Binds
     @Singleton
-    fun bindsTransactionsRepository(
+    fun bindTransactionsRepository(
         transactionsRepository: TransactionsRepositoryImpl,
     ): TransactionsRepository
 }

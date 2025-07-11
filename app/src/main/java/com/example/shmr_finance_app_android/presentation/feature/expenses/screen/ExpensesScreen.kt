@@ -14,13 +14,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shmr_finance_app_android.R
-import com.example.shmr_finance_app_android.core.navigation.Route
+import com.example.shmr_finance_app_android.core.di.daggerViewModel
 import com.example.shmr_finance_app_android.presentation.feature.expenses.model.ExpenseUiModel
-import com.example.shmr_finance_app_android.presentation.feature.expenses.viewmodel.ExpensesScreenState
 import com.example.shmr_finance_app_android.presentation.feature.expenses.viewmodel.ExpensesScreenViewModel
+import com.example.shmr_finance_app_android.presentation.feature.expenses.viewmodel.ExpensesUiState
 import com.example.shmr_finance_app_android.presentation.feature.main.model.FloatingActionConfig
 import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarAction
@@ -35,53 +34,59 @@ import com.example.shmr_finance_app_android.presentation.shared.model.TrailConte
 
 @Composable
 fun ExpensesScreen(
-    viewModel: ExpensesScreenViewModel = hiltViewModel(),
+    viewModel: ExpensesScreenViewModel = daggerViewModel(),
     updateConfigState: (ScreenConfig) -> Unit,
+    onHistoryNavigate: () -> Unit,
+    onTransactionUpdateNavigate: (Int) -> Unit,
+    onCreateNavigate: () -> Unit
 ) {
-    val state by viewModel.screenState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) { viewModel.init() }
 
     LaunchedEffect(Unit) {
         updateConfigState(
             ScreenConfig(
-                route = Route.Root.Expenses.path,
                 topBarConfig = TopBarConfig(
                     titleResId = R.string.expense_screen_title,
                     action = TopBarAction(
                         iconResId = R.drawable.ic_history,
                         descriptionResId = R.string.expenses_history_description,
-                        actionRoute = Route.SubScreens.History.route(income = false)
+                        actionUnit = onHistoryNavigate
                     )
                 ),
                 floatingActionConfig = FloatingActionConfig(
                     descriptionResId = R.string.add_expense_description,
-                    actionRoute = Route.Root.Expenses.path
+                    actionUnit = onCreateNavigate
                 )
             )
         )
     }
 
-    when (state) {
-        is ExpensesScreenState.Loading -> LoadingState()
-        is ExpensesScreenState.Error -> ErrorState(
-            messageResId = (state as ExpensesScreenState.Error).messageResId,
-            onRetry = (state as ExpensesScreenState.Error).retryAction
+    when (uiState) {
+        is ExpensesUiState.Loading -> LoadingState()
+        is ExpensesUiState.Error -> ErrorState(
+            messageResId = (uiState as ExpensesUiState.Error).messageResId,
+            onRetry = viewModel::init
         )
 
-        is ExpensesScreenState.Empty -> EmptyState(
+        is ExpensesUiState.Empty -> EmptyState(
             messageResId = R.string.today_no_expenses_found
         )
 
-        is ExpensesScreenState.Success -> ExpensesSuccessState(
-            expenses = (state as ExpensesScreenState.Success).expenses,
-            totalAmount = (state as ExpensesScreenState.Success).totalAmount
+        is ExpensesUiState.Content -> ExpensesContent(
+            expenses = (uiState as ExpensesUiState.Content).expenses,
+            totalAmount = (uiState as ExpensesUiState.Content).totalAmount,
+            onTransactionUpdateNavigate = onTransactionUpdateNavigate
         )
     }
 }
 
 @Composable
-private fun ExpensesSuccessState(
+private fun ExpensesContent(
     expenses: List<ExpenseUiModel>,
-    totalAmount: String
+    totalAmount: String,
+    onTransactionUpdateNavigate: (Int) -> Unit
 ) {
     Column(Modifier.fillMaxSize()) {
         ListItemCard(
@@ -97,7 +102,7 @@ private fun ExpensesSuccessState(
             items(expenses, key = { expense -> expense.id }) { expense ->
                 ListItemCard(
                     modifier = Modifier
-                        .clickable { } // Переход на экран Мои расходы
+                        .clickable { onTransactionUpdateNavigate(expense.id) }
                         .height(70.dp),
                     item = expense.toListItem(),
                     trailIcon = R.drawable.ic_arrow_right

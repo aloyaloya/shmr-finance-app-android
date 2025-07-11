@@ -6,9 +6,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.shmr_finance_app_android.core.di.daggerViewModel
 import com.example.shmr_finance_app_android.core.navigation.AppNavHost
 import com.example.shmr_finance_app_android.core.navigation.BottomBarItem
 import com.example.shmr_finance_app_android.presentation.feature.main.component.BottomNavigationBar
@@ -18,7 +19,7 @@ import com.example.shmr_finance_app_android.presentation.feature.main.viewmodel.
 
 @Composable
 fun MainScreen() {
-    val viewModel: MainScreenViewModel = hiltViewModel()
+    val viewModel: MainScreenViewModel = daggerViewModel()
     val configState by viewModel.configState.collectAsState()
 
     val navController = rememberNavController()
@@ -27,16 +28,7 @@ fun MainScreen() {
 
     Scaffold(
         topBar = {
-            CustomTopBar(
-                config = configState.topBarConfig,
-                onBack = { navController.popBackStack() },
-                onActionRoute = {
-                    navController.navigate(it) {
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
-            )
+            CustomTopBar(config = configState.topBarConfig)
         },
         bottomBar = {
             BottomNavigationBar(
@@ -45,6 +37,10 @@ fun MainScreen() {
                 onNavigate = {
                     if (currentDestination != it) {
                         navController.navigate(it) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+
                             launchSingleTop = true
                             restoreState = true
                         }
@@ -53,10 +49,10 @@ fun MainScreen() {
             )
         },
         floatingActionButton = {
-            configState.floatingActionConfig?.let {
+            configState.floatingActionConfig?.let { action ->
                 CustomFloatingActionButton(
-                    description = it.descriptionResId,
-                    onClick = {}, // Дальнейшие экраны еще не делали
+                    description = action.descriptionResId,
+                    onClick = { action.actionUnit.invoke() }, // Дальнейшие экраны еще не делали
                 )
             }
         }

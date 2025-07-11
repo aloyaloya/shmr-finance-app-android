@@ -25,10 +25,9 @@ internal class CategoriesRepositoryImpl @Inject constructor(
      * [Result.failure] с [AppError] при ошибке
      */
     override suspend fun getCategoriesByType(isIncome: Boolean): Result<List<CategoryDomain>> {
-        return safeApiCall {
-            remoteDataSource.getCategoriesByType(isIncome)
-                .map(mapper::mapCategory)
-        }
+        return safeApiCall(
+            call = { remoteDataSource.getCategoriesByType(isIncome).map(mapper::mapCategory) }
+        )
     }
 
     /**
@@ -38,9 +37,8 @@ internal class CategoriesRepositoryImpl @Inject constructor(
      * [Result.failure] с [AppError] при ошибке
      */
     override suspend fun getAllCategories(): Result<List<CategoryDomain>> {
-        return safeApiCall {
-            remoteDataSource.getAllCategories()
-                .map(mapper::mapCategory)
-        }
+        return safeApiCall(
+            call = { remoteDataSource.getAllCategories().map(mapper::mapCategory) }
+        )
     }
 }

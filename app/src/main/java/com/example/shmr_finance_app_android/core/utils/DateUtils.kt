@@ -1,11 +1,11 @@
 package com.example.shmr_finance_app_android.core.utils
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -18,6 +18,7 @@ import java.util.Locale
 private const val INPUT_DATE_FORMAT = "yyyy-MM-dd" // Формат для запросов
 private const val OUTPUT_DATE_FORMAT = "d MMMM yyyy" // Формат для отображения
 private const val OUTPUT_DATE_TIME_FORMAT = "d MMMM HH:mm" // Формат для отображения даты и времени
+private const val OUTPUT_TIME_FORMAT = "HH:mm" // Формат для отображения времени
 
 /**
  * Отвечает за получение текущей даты в формате ISO.
@@ -84,15 +85,52 @@ fun formatHumanDateToIso(humanDate: String): String {
 }
 
 /**
+ * Отвечает за конвертацию даты из ISO-формата в человекочитаемый формат.
+ * @param isoDate - дата в формате [INPUT_DATE_FORMAT]
+ * @return Дата в формате [OUTPUT_DATE_FORMAT] или пустая строка при ошибке
+ */
+fun formatIsoDateToHuman(isoDate: String): String {
+    return try {
+        val isoFormatter = SimpleDateFormat(INPUT_DATE_FORMAT, Locale.US)
+        val date = isoFormatter.parse(isoDate)
+        val humanFormatter = SimpleDateFormat(OUTPUT_DATE_FORMAT, Locale("ru"))
+
+        date?.let { humanFormatter.format(it) } ?: ""
+    } catch (e: Exception) {
+        e.printStackTrace()
+        ""
+    }
+}
+
+fun getCurrentTime(): String {
+    return LocalTime.now().format(DateTimeFormatter.ofPattern(OUTPUT_TIME_FORMAT))
+}
+
+/**
  * Отвечает за объединение и форматирование даты и времени.
  * @param time - время для объединения
  * @param date - дата для объединения
  * @return Отформатированная строка в формате [OUTPUT_DATE_TIME_FORMAT] (например, "15 мая 14:30")
  */
-@RequiresApi(Build.VERSION_CODES.O)
 fun formatDateAndTime(time: LocalTime, date: LocalDate): String {
     val formatter = SimpleDateFormat(OUTPUT_DATE_TIME_FORMAT, Locale("ru"))
     val combinedDate = Date.from(date.atTime(time).atZone(ZoneId.systemDefault()).toInstant())
 
     return formatter.format(combinedDate)
 }
+
+fun combineDateTimeToIso(dateStr: String, timeStr: String): String {
+    val date = LocalDate.parse(dateStr, DateTimeFormatter.ISO_DATE)
+    val time = LocalTime.parse(timeStr, DateTimeFormatter.ofPattern(OUTPUT_TIME_FORMAT))
+
+    return date.atTime(time)
+        .atZone(ZoneId.systemDefault())
+        .withZoneSameInstant(ZoneOffset.UTC)
+        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"))
+}
+
+fun LocalDate.toHumanDate(): String =
+    format(DateTimeFormatter.ofPattern(INPUT_DATE_FORMAT, Locale("ru")))
+
+fun LocalTime.toHumanTime(): String =
+    format(DateTimeFormatter.ofPattern(OUTPUT_TIME_FORMAT))

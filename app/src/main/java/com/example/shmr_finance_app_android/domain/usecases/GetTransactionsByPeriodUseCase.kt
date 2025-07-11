@@ -2,7 +2,7 @@ package com.example.shmr_finance_app_android.domain.usecases
 
 import com.example.shmr_finance_app_android.data.remote.api.AppError
 import com.example.shmr_finance_app_android.data.remote.api.NetworkChecker
-import com.example.shmr_finance_app_android.domain.model.TransactionDomain
+import com.example.shmr_finance_app_android.domain.model.TransactionResponseDomain
 import com.example.shmr_finance_app_android.domain.repository.TransactionsRepository
 import dagger.Reusable
 import javax.inject.Inject
@@ -35,7 +35,7 @@ class GetTransactionsByPeriodUseCase @Inject constructor(
         accountId: Int,
         startDate: String? = null,
         endDate: String? = null
-    ): Result<List<TransactionDomain>> {
+    ): Result<List<TransactionResponseDomain>> {
         if (!networkChecker.isNetworkAvailable()) {
             return Result.failure(AppError.Network)
         }

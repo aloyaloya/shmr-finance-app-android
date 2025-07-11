@@ -1,12 +1,11 @@
 package com.example.shmr_finance_app_android.data.repository
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.example.shmr_finance_app_android.data.datasource.AccountRemoteDataSource
 import com.example.shmr_finance_app_android.data.remote.api.safeApiCall
 import com.example.shmr_finance_app_android.data.repository.mapper.AccountDomainMapper
 import com.example.shmr_finance_app_android.domain.model.AccountBriefDomain
 import com.example.shmr_finance_app_android.domain.model.AccountDomain
+import com.example.shmr_finance_app_android.domain.model.AccountResponseDomain
 import com.example.shmr_finance_app_android.domain.repository.AccountRepository
 import javax.inject.Inject
 
@@ -25,25 +24,30 @@ internal class AccountRepositoryImpl @Inject constructor(
     /**
      * Получает данные аккаунта по ID.
      * @param accountId ID аккаунта
-     * @return [Result.success] с [AccountDomain] при успехе,
+     * @return [Result.success] с [AccountResponseDomain] при успехе,
      * [Result.failure] с [AppError] при ошибке
      */
-    @RequiresApi(Build.VERSION_CODES.O)
-    override suspend fun getAccountById(accountId: Int): Result<AccountDomain> {
-        return safeApiCall {
-            mapper.mapAccount(remoteDataSource.getAccountById(accountId))
-        }
+    override suspend fun getAccountById(accountId: Int): Result<AccountResponseDomain> {
+        return safeApiCall(
+            call = { mapper.mapAccountResponse(remoteDataSource.getAccountById(accountId)) }
+        )
     }
 
     /**
      * Обновляет данные аккаунта по ID.
      * @param accountBrief [AccountBriefDomain] данных аккаунта
      */
-    override suspend fun updateAccountById(accountBrief: AccountBriefDomain) {
-        safeApiCall {
-            remoteDataSource.updateAccountById(
-                accountBrief = mapper.mapAccountBrief(accountBrief)
-            )
-        }
+    override suspend fun updateAccountById(
+        accountBrief: AccountBriefDomain
+    ): Result<AccountDomain> {
+        return safeApiCall(
+            call = {
+                mapper.mapAccount(
+                    remoteDataSource.updateAccountById(
+                        accountBrief = mapper.mapAccountBrief(accountBrief)
+                    )
+                )
+            }
+        )
     }
 }

@@ -12,7 +12,7 @@ import com.example.shmr_finance_app_android.core.utils.formatLongToHumanDate
 import com.example.shmr_finance_app_android.core.utils.getCurrentDateIso
 import com.example.shmr_finance_app_android.core.utils.getStartOfCurrentMonth
 import com.example.shmr_finance_app_android.data.remote.api.AppError
-import com.example.shmr_finance_app_android.domain.model.TransactionDomain
+import com.example.shmr_finance_app_android.domain.model.TransactionResponseDomain
 import com.example.shmr_finance_app_android.domain.usecases.GetExpensesByPeriodUseCase
 import com.example.shmr_finance_app_android.domain.usecases.GetIncomesByPeriodUseCase
 import com.example.shmr_finance_app_android.presentation.feature.history.mapper.TransactionToTransactionUiMapper
@@ -20,7 +20,6 @@ import com.example.shmr_finance_app_android.presentation.feature.history.model.T
 import com.example.shmr_finance_app_android.presentation.feature.history.viewmodel.HistoryScreenState.Error
 import com.example.shmr_finance_app_android.presentation.feature.history.viewmodel.HistoryScreenState.Loading
 import com.example.shmr_finance_app_android.presentation.feature.history.viewmodel.HistoryScreenState.Success
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -58,7 +57,6 @@ sealed interface HistoryScreenState {
  * 4. Обработку выбора дат
  **/
 @RequiresApi(Build.VERSION_CODES.O)
-@HiltViewModel
 class HistoryScreenViewModel @Inject constructor(
     private val getExpensesByPeriodUseCase: GetExpensesByPeriodUseCase,
     private val getIncomesByPeriodUseCase: GetIncomesByPeriodUseCase,
@@ -86,7 +84,7 @@ class HistoryScreenViewModel @Inject constructor(
     private val _showDatePickerModal = MutableStateFlow(false)
     val showDatePickerModal: StateFlow<Boolean> = _showDatePickerModal.asStateFlow()
 
-    init {
+    fun initialize() {
         loadHistory()
     }
 
@@ -100,19 +98,21 @@ class HistoryScreenViewModel @Inject constructor(
     private fun loadHistory() {
         _screenState.value = Loading
         viewModelScope.launch(Dispatchers.IO) {
-            if (_historyTransactionsType.value) {
-                getIncomesByPeriodUseCase(
-                    accountId = Constants.TEST_ACCOUNT_ID,
-                    startDate = formatHumanDateToIso(_historyStartDate.value),
-                    endDate = formatHumanDateToIso(_historyEndDate.value)
-                )
-            } else {
-                getExpensesByPeriodUseCase(
-                    accountId = Constants.TEST_ACCOUNT_ID,
-                    startDate = formatHumanDateToIso(_historyStartDate.value),
-                    endDate = formatHumanDateToIso(_historyEndDate.value)
-                )
-            }
+            handleTransactionsResult(
+                if (_historyTransactionsType.value) {
+                    getIncomesByPeriodUseCase(
+                        accountId = Constants.TEST_ACCOUNT_ID,
+                        startDate = formatHumanDateToIso(_historyStartDate.value),
+                        endDate = formatHumanDateToIso(_historyEndDate.value)
+                    )
+                } else {
+                    getExpensesByPeriodUseCase(
+                        accountId = Constants.TEST_ACCOUNT_ID,
+                        startDate = formatHumanDateToIso(_historyStartDate.value),
+                        endDate = formatHumanDateToIso(_historyEndDate.value)
+                    )
+                }
+            )
         }
     }
 
@@ -121,7 +121,7 @@ class HistoryScreenViewModel @Inject constructor(
      * - Успех -> [TransactionUiModel] через маппер
      * - Ошибку -> Сообщение об ошибке
      */
-    private fun handleTransactionsResult(result: Result<List<TransactionDomain>>) {
+    private fun handleTransactionsResult(result: Result<List<TransactionResponseDomain>>) {
         result
             .onSuccess { data ->
                 handleSuccess(

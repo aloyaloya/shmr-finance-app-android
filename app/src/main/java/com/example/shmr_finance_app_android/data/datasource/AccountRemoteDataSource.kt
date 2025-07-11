@@ -2,6 +2,7 @@ package com.example.shmr_finance_app_android.data.datasource
 
 import com.example.shmr_finance_app_android.data.model.AccountBriefDTO
 import com.example.shmr_finance_app_android.data.model.AccountDTO
+import com.example.shmr_finance_app_android.data.model.AccountResponseDTO
 import com.example.shmr_finance_app_android.data.remote.api.FinanceApiService
 import com.example.shmr_finance_app_android.data.remote.mapper.AccountRemoteMapper
 import javax.inject.Inject
@@ -11,8 +12,8 @@ import javax.inject.Inject
  * Определяет контракт для работы с данными аккаунта без привязки к конкретной реализации.
  */
 interface AccountRemoteDataSource {
-    suspend fun getAccountById(accountId: Int): AccountDTO
-    suspend fun updateAccountById(accountBrief: AccountBriefDTO)
+    suspend fun getAccountById(accountId: Int): AccountResponseDTO
+    suspend fun updateAccountById(accountBrief: AccountBriefDTO): AccountDTO
 }
 
 /**
@@ -36,10 +37,10 @@ internal class AccountRemoteDataSourceImpl @Inject constructor(
      * 3. Возвращает готовый DTO
      *
      * @param accountId - ID аккаунта
-     * @return [AccountDTO] - преобразованные DTO данные аккаунта
+     * @return [AccountResponseDTO] - преобразованные DTO данные аккаунта
      */
-    override suspend fun getAccountById(accountId: Int): AccountDTO {
-        return mapper.mapAccount(api.getAccountById(accountId))
+    override suspend fun getAccountById(accountId: Int): AccountResponseDTO {
+        return mapper.mapAccountResponse(api.getAccountById(accountId))
     }
 
     /**
@@ -49,10 +50,12 @@ internal class AccountRemoteDataSourceImpl @Inject constructor(
      *
      * @param [accountBrief] DTO данные аккаунта
      */
-    override suspend fun updateAccountById(accountBrief: AccountBriefDTO) {
-        api.updateAccountById(
-            accountId = accountBrief.id,
-            request = mapper.mapAccountBrief(accountBrief)
+    override suspend fun updateAccountById(accountBrief: AccountBriefDTO): AccountDTO {
+        return mapper.mapAccount(
+            api.updateAccountById(
+                accountId = accountBrief.id,
+                request = mapper.mapAccountBrief(accountBrief)
+            )
         )
     }
 }

@@ -16,11 +16,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shmr_finance_app_android.R
-import com.example.shmr_finance_app_android.core.navigation.Route
-import com.example.shmr_finance_app_android.presentation.feature.history.component.DatePickerModal
+import com.example.shmr_finance_app_android.core.di.daggerViewModel
 import com.example.shmr_finance_app_android.presentation.feature.history.component.DateSelectionHeader
 import com.example.shmr_finance_app_android.presentation.feature.history.model.TransactionUiModel
 import com.example.shmr_finance_app_android.presentation.feature.history.viewmodel.DateType
@@ -28,7 +26,9 @@ import com.example.shmr_finance_app_android.presentation.feature.history.viewmod
 import com.example.shmr_finance_app_android.presentation.feature.history.viewmodel.HistoryScreenViewModel
 import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarAction
+import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarBackAction
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarConfig
+import com.example.shmr_finance_app_android.presentation.shared.components.DatePickerModal
 import com.example.shmr_finance_app_android.presentation.shared.components.EmptyState
 import com.example.shmr_finance_app_android.presentation.shared.components.ErrorState
 import com.example.shmr_finance_app_android.presentation.shared.components.ListItemCard
@@ -40,12 +40,11 @@ import com.example.shmr_finance_app_android.presentation.shared.model.TrailConte
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HistoryScreen(
-    viewModel: HistoryScreenViewModel = hiltViewModel(),
+    viewModel: HistoryScreenViewModel = daggerViewModel(),
     isIncome: Boolean,
-    updateConfigState: (ScreenConfig) -> Unit
+    updateConfigState: (ScreenConfig) -> Unit,
+    onBackNavigate: () -> Unit
 ) {
-    viewModel.setHistoryTransactionsType(isIncome)
-
     val state by viewModel.screenState.collectAsStateWithLifecycle()
     val startDate by viewModel.historyStartDate.collectAsStateWithLifecycle()
     val endDate by viewModel.historyEndDate.collectAsStateWithLifecycle()
@@ -58,16 +57,19 @@ fun HistoryScreen(
     }
 
     LaunchedEffect(Unit) {
+        viewModel.setHistoryTransactionsType(isIncome)
+        viewModel.initialize()
         updateConfigState(
             ScreenConfig(
-                route = Route.SubScreens.History.path,
                 topBarConfig = TopBarConfig(
                     titleResId = R.string.expenses_history_screen_title,
-                    showBackButton = true,
+                    backAction = TopBarBackAction(
+                        actionUnit = onBackNavigate
+                    ),
                     action = TopBarAction(
                         iconResId = R.drawable.ic_calendar,
                         descriptionResId = R.string.expenses_analysis_description,
-                        actionRoute = Route.SubScreens.History.route(income = isIncome)
+                        actionUnit = onBackNavigate
                     )
                 )
             )
