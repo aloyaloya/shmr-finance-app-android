@@ -2,7 +2,7 @@ package com.example.shmr_finance_app_android.domain.usecases
 
 import com.example.shmr_finance_app_android.data.remote.api.AppError
 import com.example.shmr_finance_app_android.data.remote.api.NetworkChecker
-import com.example.shmr_finance_app_android.domain.model.AccountDomain
+import com.example.shmr_finance_app_android.domain.model.AccountResponseDomain
 import com.example.shmr_finance_app_android.domain.repository.AccountRepository
 import dagger.Reusable
 import javax.inject.Inject
@@ -22,12 +22,12 @@ class GetAccountUseCase @Inject constructor(
     /**
      * Запускает UseCase через operator invoke().
      * @param accountId ID аккаунта
-     * @return [Result.success] с [AccountDomain] при успехе,
+     * @return [Result.success] с [AccountResponseDomain] при успехе,
      * [Result.failure] с:
      * [AppError.Network] - если нет интернета,
      * ошибками из [AccountRepository] - при проблемах запроса
      */
-    suspend operator fun invoke(accountId: Int): Result<AccountDomain> {
+    suspend operator fun invoke(accountId: Int): Result<AccountResponseDomain> {
         if (!networkChecker.isNetworkAvailable()) {
             return Result.failure(AppError.Network)
         }
