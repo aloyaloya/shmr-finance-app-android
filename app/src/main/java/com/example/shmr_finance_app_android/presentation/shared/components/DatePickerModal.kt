@@ -1,4 +1,4 @@
-package com.example.shmr_finance_app_android.presentation.feature.history.component
+package com.example.shmr_finance_app_android.presentation.shared.components
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ButtonDefaults
