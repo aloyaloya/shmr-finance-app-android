@@ -16,7 +16,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.core.di.daggerViewModel
 import com.example.shmr_finance_app_android.presentation.feature.categories.component.SearchTextField
-import com.example.shmr_finance_app_android.presentation.feature.categories.model.IncomeCategoryUiModel
+import com.example.shmr_finance_app_android.presentation.feature.categories.model.CategoryUiModel
 import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesScreenState
 import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesScreenViewModel
 import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
@@ -73,7 +73,7 @@ fun CategoriesScreen(
 
 @Composable
 private fun CategoriesSuccessState(
-    categories: List<IncomeCategoryUiModel>
+    categories: List<CategoryUiModel>
 ) {
     LazyColumn {
         items(categories, key = { category -> category.id }) { category ->

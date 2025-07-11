@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.core.di.daggerViewModel
-import com.example.shmr_finance_app_android.presentation.feature.history.component.DatePickerModal
 import com.example.shmr_finance_app_android.presentation.feature.history.component.DateSelectionHeader
 import com.example.shmr_finance_app_android.presentation.feature.history.model.TransactionUiModel
 import com.example.shmr_finance_app_android.presentation.feature.history.viewmodel.DateType
@@ -29,6 +28,7 @@ import com.example.shmr_finance_app_android.presentation.feature.main.model.Scre
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarAction
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarBackAction
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarConfig
+import com.example.shmr_finance_app_android.presentation.shared.components.DatePickerModal
 import com.example.shmr_finance_app_android.presentation.shared.components.EmptyState
 import com.example.shmr_finance_app_android.presentation.shared.components.ErrorState
 import com.example.shmr_finance_app_android.presentation.shared.components.ListItemCard

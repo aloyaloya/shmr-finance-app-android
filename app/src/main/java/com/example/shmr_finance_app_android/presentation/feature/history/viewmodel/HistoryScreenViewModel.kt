@@ -12,7 +12,7 @@ import com.example.shmr_finance_app_android.core.utils.formatLongToHumanDate
 import com.example.shmr_finance_app_android.core.utils.getCurrentDateIso
 import com.example.shmr_finance_app_android.core.utils.getStartOfCurrentMonth
 import com.example.shmr_finance_app_android.data.remote.api.AppError
-import com.example.shmr_finance_app_android.domain.model.TransactionDomain
+import com.example.shmr_finance_app_android.domain.model.TransactionResponseDomain
 import com.example.shmr_finance_app_android.domain.usecases.GetExpensesByPeriodUseCase
 import com.example.shmr_finance_app_android.domain.usecases.GetIncomesByPeriodUseCase
 import com.example.shmr_finance_app_android.presentation.feature.history.mapper.TransactionToTransactionUiMapper
@@ -121,7 +121,7 @@ class HistoryScreenViewModel @Inject constructor(
      * - Успех -> [TransactionUiModel] через маппер
      * - Ошибку -> Сообщение об ошибке
      */
-    private fun handleTransactionsResult(result: Result<List<TransactionDomain>>) {
+    private fun handleTransactionsResult(result: Result<List<TransactionResponseDomain>>) {
         result
             .onSuccess { data ->
                 handleSuccess(

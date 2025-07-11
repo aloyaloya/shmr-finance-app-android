@@ -4,7 +4,7 @@ import com.example.shmr_finance_app_android.presentation.shared.model.LeadConten
 import com.example.shmr_finance_app_android.presentation.shared.model.ListItem
 import com.example.shmr_finance_app_android.presentation.shared.model.MainContent
 
-data class IncomeCategoryUiModel(
+data class CategoryUiModel(
     val id: Int,
     val name: String,
     val emoji: String
