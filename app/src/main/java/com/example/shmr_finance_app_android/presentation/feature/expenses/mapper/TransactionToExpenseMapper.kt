@@ -1,15 +1,15 @@
 package com.example.shmr_finance_app_android.presentation.feature.expenses.mapper
 
 import com.example.shmr_finance_app_android.core.utils.formatWithSpaces
-import com.example.shmr_finance_app_android.domain.model.TransactionDomain
+import com.example.shmr_finance_app_android.domain.model.TransactionResponseDomain
 import com.example.shmr_finance_app_android.presentation.feature.expenses.model.ExpenseUiModel
 import javax.inject.Inject
 
 /**
- * Маппер для преобразования [TransactionDomain] -> [ExpenseUiModel]
+ * Маппер для преобразования [TransactionResponseDomain] -> [ExpenseUiModel]
  */
 class TransactionToExpenseMapper @Inject constructor() {
-    fun map(domain: TransactionDomain): ExpenseUiModel {
+    fun map(domain: TransactionResponseDomain): ExpenseUiModel {
         return ExpenseUiModel(
             id = domain.id,
             title = domain.category.name,
@@ -20,7 +20,7 @@ class TransactionToExpenseMapper @Inject constructor() {
         )
     }
 
-    fun calculateTotalAmount(transactions: List<TransactionDomain>): String {
+    fun calculateTotalAmount(transactions: List<TransactionResponseDomain>): String {
         val total = transactions.sumOf { it.amount }
         val currency = transactions.firstOrNull()?.account?.getCurrencySymbol().orEmpty()
         return "${total.toString().formatWithSpaces()} $currency"

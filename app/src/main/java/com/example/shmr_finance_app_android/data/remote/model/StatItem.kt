@@ -1,6 +1,6 @@
 package com.example.shmr_finance_app_android.data.remote.model
 
-data class StatItemResponse(
+data class StatItem(
     val categoryId: Int,
     val categoryName: String,
     val emoji: String,

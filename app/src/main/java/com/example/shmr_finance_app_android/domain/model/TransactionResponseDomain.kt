@@ -3,7 +3,7 @@ package com.example.shmr_finance_app_android.domain.model
 import java.time.LocalDate
 import java.time.LocalTime
 
-data class TransactionDomain(
+data class TransactionResponseDomain(
     val id: Int,
     val account: AccountBriefDomain,
     val category: CategoryDomain,

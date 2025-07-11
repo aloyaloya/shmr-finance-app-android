@@ -1,6 +1,6 @@
 package com.example.shmr_finance_app_android.data.model
 
-data class TransactionDTO(
+data class TransactionResponseDTO(
     val id: Int,
     val account: AccountBriefDTO,
     val category: CategoryDTO,
