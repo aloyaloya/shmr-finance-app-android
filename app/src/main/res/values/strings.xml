@@ -71,4 +71,6 @@
     <string name="categorory_placeholder">Ваша статья</string>
     <string name="error_message">Что-то пошло не так. Попробуйте еще раз</string>
     <string name="amount_error_message">Введите корректные размер транзакции</string>
+    <string name="delete_expense_transaction">Удалить расход</string>
+    <string name="delete_income_transaction">Удалить доход</string>
 </resources>

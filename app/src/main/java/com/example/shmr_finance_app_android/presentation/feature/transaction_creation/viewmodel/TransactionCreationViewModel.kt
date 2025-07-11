@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * UI‑state экрана создания/редактирования транзакции.
+ * UI‑state экрана создания транзакции.
  * 1. [Loading] Состояние загрузки
  * 2. [Content] Состояние взаимодействия с пользователем
  * 3. [Error] Состояние ошибки загрузки
@@ -47,7 +47,7 @@ sealed interface TransactionCreationUiState {
      * и пользователь может взаимодействовать с формой.
      */
     data class Content(
-        val form: TransactionForm = TransactionForm(),
+        val form: TransactionCreationForm = TransactionCreationForm(),
         val categories: List<CategoryUiModel> = emptyList(),
         val visibleModal: TransactionCreationModal? = null,
         val snackbar: TransactionCreationSnackbar? = null
@@ -61,9 +61,9 @@ sealed interface TransactionCreationUiState {
 }
 
 /** Эвенты Snackbar + Navigate */
-sealed interface TransactionEvent {
-    data class ShowSnackBar(@StringRes val messageResId: Int) : TransactionEvent
-    data object NavigateBack : TransactionEvent
+sealed interface TransactionCreationEvent {
+    data class ShowSnackBar(@StringRes val messageResId: Int) : TransactionCreationEvent
+    data object NavigateBack : TransactionCreationEvent
 }
 
 class TransactionCreationViewModel @Inject constructor(
@@ -77,8 +77,8 @@ class TransactionCreationViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<TransactionCreationUiState>(Loading)
     val uiState: StateFlow<TransactionCreationUiState> = _uiState.asStateFlow()
 
-    private val _events = MutableSharedFlow<TransactionEvent>()
-    val events: SharedFlow<TransactionEvent> = _events
+    private val _events = MutableSharedFlow<TransactionCreationEvent>()
+    val events: SharedFlow<TransactionCreationEvent> = _events
 
     private fun contentOrNull() = _uiState.value as? Content
 
@@ -98,7 +98,7 @@ class TransactionCreationViewModel @Inject constructor(
         val categories = categoriesDef.await().getOrElse { return@launch showError(it) }
 
         _uiState.value = Content(
-            form = TransactionForm(
+            form = TransactionCreationForm(
                 balance = accountMapper.map(account).name,
                 currencySymbol = accountMapper.map(account).currencySymbol,
                 selectedCategory = categoryMapper.map(categories.first()),
@@ -108,16 +108,16 @@ class TransactionCreationViewModel @Inject constructor(
         )
     }
 
-    fun onFieldChanged(field: TransactionField, value: Any) {
+    fun onFieldChanged(field: TransactionCreationField, value: Any) {
         updateContent { content ->
             val f = content.form
             val newForm = when (field) {
-                TransactionField.BALANCE -> f.copy(balance = value as String)
-                TransactionField.CATEGORY -> f.copy(selectedCategory = value as CategoryUiModel)
-                TransactionField.AMOUNT -> f.copy(amount = value as String)
-                TransactionField.COMMENT -> f.copy(comment = value as String)
-                TransactionField.DATE -> f.copy(date = formatLongToHumanDate(value as Long))
-                TransactionField.TIME -> f.copy(time = (value as Pair<Int, Int>).toTimeString())
+                TransactionCreationField.BALANCE -> f.copy(balance = value as String)
+                TransactionCreationField.CATEGORY -> f.copy(selectedCategory = value as CategoryUiModel)
+                TransactionCreationField.AMOUNT -> f.copy(amount = value as String)
+                TransactionCreationField.COMMENT -> f.copy(comment = value as String)
+                TransactionCreationField.DATE -> f.copy(date = formatLongToHumanDate(value as Long))
+                TransactionCreationField.TIME -> f.copy(time = (value as Pair<Int, Int>).toTimeString())
             }
             content.copy(form = newForm)
         }
@@ -130,7 +130,7 @@ class TransactionCreationViewModel @Inject constructor(
 
     private fun showSnackbar(@StringRes resId: Int) {
         viewModelScope.launch(Dispatchers.Main.immediate) {
-            _events.emit(TransactionEvent.ShowSnackBar(resId))
+            _events.emit(TransactionCreationEvent.ShowSnackBar(resId))
         }
     }
 
@@ -156,7 +156,7 @@ class TransactionCreationViewModel @Inject constructor(
         )
 
         result
-            .onSuccess { _events.emit(TransactionEvent.NavigateBack) }
+            .onSuccess { _events.emit(TransactionCreationEvent.NavigateBack) }
             .onFailure {
                 _uiState.value = content
                 showSnackbar(R.string.error_message)
@@ -169,7 +169,7 @@ class TransactionCreationViewModel @Inject constructor(
     }
 }
 
-enum class TransactionField {
+enum class TransactionCreationField {
     BALANCE,
     CATEGORY,
     AMOUNT,
@@ -179,7 +179,7 @@ enum class TransactionField {
 }
 
 /** Текущие значения полей формы. */
-data class TransactionForm(
+data class TransactionCreationForm(
     val balance: String = "",
     val currencySymbol: String = "$",
     val selectedCategory: CategoryUiModel? = null,
