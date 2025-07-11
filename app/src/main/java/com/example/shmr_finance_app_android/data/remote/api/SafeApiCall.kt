@@ -11,13 +11,21 @@ import java.io.IOException
  * @return [Result.success] с данными, если запрос успешен,
  * [Result.failure] с [AppError], если произошла ошибка.
  */
-suspend fun <T> safeApiCall(call: suspend () -> T): Result<T> {
+suspend fun <T> safeApiCall(
+    call: suspend () -> T,
+    handleSuccess: (T) -> Result<T> = { Result.success(it) }
+): Result<T> {
     return try {
         Result.success(call())
     } catch (e: IOException) {
         Result.failure(AppError.Network)
     } catch (e: HttpException) {
-        Result.failure(AppError.ApiError())
+        if (e.code() == 204) {
+            @Suppress("UNCHECKED_CAST")
+            Result.success(Unit as T)
+        } else {
+            Result.failure(AppError.ApiError())
+        }
     } catch (e: Exception) {
         Result.failure(AppError.Unknown())
     }

@@ -1,7 +1,5 @@
 package com.example.shmr_finance_app_android.data.repository
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.example.shmr_finance_app_android.data.datasource.AccountRemoteDataSource
 import com.example.shmr_finance_app_android.data.remote.api.safeApiCall
 import com.example.shmr_finance_app_android.data.repository.mapper.AccountDomainMapper
@@ -29,11 +27,10 @@ internal class AccountRepositoryImpl @Inject constructor(
      * @return [Result.success] с [AccountResponseDomain] при успехе,
      * [Result.failure] с [AppError] при ошибке
      */
-    @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun getAccountById(accountId: Int): Result<AccountResponseDomain> {
-        return safeApiCall {
-            mapper.mapAccountResponse(remoteDataSource.getAccountById(accountId))
-        }
+        return safeApiCall(
+            call = { mapper.mapAccountResponse(remoteDataSource.getAccountById(accountId)) }
+        )
     }
 
     /**
@@ -43,12 +40,14 @@ internal class AccountRepositoryImpl @Inject constructor(
     override suspend fun updateAccountById(
         accountBrief: AccountBriefDomain
     ): Result<AccountDomain> {
-        return safeApiCall {
-            mapper.mapAccount(
-                remoteDataSource.updateAccountById(
-                    accountBrief = mapper.mapAccountBrief(accountBrief)
+        return safeApiCall(
+            call = {
+                mapper.mapAccount(
+                    remoteDataSource.updateAccountById(
+                        accountBrief = mapper.mapAccountBrief(accountBrief)
+                    )
                 )
-            )
-        }
+            }
+        )
     }
 }
