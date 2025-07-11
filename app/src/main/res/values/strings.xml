@@ -56,8 +56,7 @@
     <string name="edit_save_description">Сохранить изменения</string>
     <string name="edit_cancel_description">Отменить изменения</string>
     <string name="balance_name">Название счета</string>
-    <string name="balance_name_error_message">Введите корректное название счета</string>
-    <string name="balance_amount_error_message">Введите корректный баланс</string>
+    <string name="balance_data_error_message">Введите корректные данные</string>
     <string name="close">Закрыть</string>
     <string name="empty_filtered_categories">Не найдено подходящих категорий</string>
     <string name="delete_balance">Удалить счет</string>
@@ -71,4 +70,5 @@
     <string name="comment_placeholder">Ваш комментарий</string>
     <string name="categorory_placeholder">Ваша статья</string>
     <string name="error_message">Что-то пошло не так. Попробуйте еще раз</string>
+    <string name="amount_error_message">Введите корректные размер транзакции</string>
 </resources>

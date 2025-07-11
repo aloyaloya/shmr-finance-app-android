@@ -1,4 +1,4 @@
-package com.example.shmr_finance_app_android.presentation.feature.balance_edit.model
+package com.example.shmr_finance_app_android.presentation.feature.balance_update.model
 
 data class BalanceDetailedUiModel(
     val id: Int,

@@ -3,7 +3,7 @@ package com.example.shmr_finance_app_android.core.di
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.shmr_finance_app_android.presentation.feature.balance.viewmodel.BalanceScreenViewModel
-import com.example.shmr_finance_app_android.presentation.feature.balance_edit.viewmodel.BalanceEditScreenViewModel
+import com.example.shmr_finance_app_android.presentation.feature.balance_update.viewmodel.BalanceUpdateScreenViewModel
 import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesScreenViewModel
 import com.example.shmr_finance_app_android.presentation.feature.expenses.viewmodel.ExpensesScreenViewModel
 import com.example.shmr_finance_app_android.presentation.feature.history.viewmodel.HistoryScreenViewModel
@@ -27,8 +27,8 @@ interface ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(BalanceEditScreenViewModel::class)
-    fun bindBalanceEditViewModel(vm: BalanceEditScreenViewModel): ViewModel
+    @ViewModelKey(BalanceUpdateScreenViewModel::class)
+    fun bindBalanceUpdateViewModel(vm: BalanceUpdateScreenViewModel): ViewModel
 
     @Binds
     @IntoMap

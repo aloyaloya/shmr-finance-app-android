@@ -1,6 +1,7 @@
 package com.example.shmr_finance_app_android.data.remote.api
 
 import com.example.shmr_finance_app_android.data.remote.model.Account
+import com.example.shmr_finance_app_android.data.remote.model.AccountResponse
 import com.example.shmr_finance_app_android.data.remote.model.AccountUpdateRequest
 import com.example.shmr_finance_app_android.data.remote.model.Category
 import com.example.shmr_finance_app_android.data.remote.model.Transaction
@@ -23,10 +24,10 @@ interface FinanceApiService {
     /**
      * Получает данные аккаунта по ID.
      * @param accountId - ID аккаунта
-     * @return [Account] - модель ответа API
+     * @return [AccountResponse] - модель ответа API
      */
     @GET("accounts/{id}")
-    suspend fun getAccountById(@Path("id") accountId: Int): Account
+    suspend fun getAccountById(@Path("id") accountId: Int): AccountResponse
 
     /**
      * Обновляет данные аккаунта по ID.
@@ -37,7 +38,7 @@ interface FinanceApiService {
     suspend fun updateAccountById(
         @Path("id") accountId: Int,
         @Body request: AccountUpdateRequest
-    )
+    ): Account
 
     /**
      * Получает список транзакций за период.

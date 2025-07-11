@@ -1,7 +1,5 @@
 package com.example.shmr_finance_app_android.core.navigation
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -10,7 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.shmr_finance_app_android.presentation.feature.balance.screen.BalanceScreen
-import com.example.shmr_finance_app_android.presentation.feature.balance_edit.screen.BalanceEditScreen
+import com.example.shmr_finance_app_android.presentation.feature.balance_update.screen.BalanceUpdateScreen
 import com.example.shmr_finance_app_android.presentation.feature.categories.screen.CategoriesScreen
 import com.example.shmr_finance_app_android.presentation.feature.expenses.screen.ExpensesScreen
 import com.example.shmr_finance_app_android.presentation.feature.history.screen.HistoryScreen
@@ -25,7 +23,6 @@ import com.example.shmr_finance_app_android.presentation.feature.transaction_cre
  * - Управляет переходами между корневыми и дочерними экранами
  * - Обрабатывает передачу аргументов между экранами
  */
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavHost(
     modifier: Modifier = Modifier,
@@ -189,7 +186,7 @@ fun AppNavHost(
             val balanceId = backStackEntry.arguments?.getString(
                 Route.SubScreens.BalanceEdit.balanceId()
             ) ?: ""
-            BalanceEditScreen(
+            BalanceUpdateScreen(
                 balanceId = balanceId,
                 updateConfigState = updateConfigState,
                 onBackNavigate = { navController.popBackStack() }

@@ -1,4 +1,4 @@
-package com.example.shmr_finance_app_android.presentation.feature.balance_edit.component
+package com.example.shmr_finance_app_android.presentation.feature.balance_update.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.shmr_finance_app_android.R
-import com.example.shmr_finance_app_android.presentation.feature.balance_edit.model.CurrencyItem
+import com.example.shmr_finance_app_android.presentation.feature.balance_update.model.CurrencyItem
 import com.example.shmr_finance_app_android.presentation.shared.components.ListItemCard
 import com.example.shmr_finance_app_android.presentation.shared.model.LeadContent
 import com.example.shmr_finance_app_android.presentation.shared.model.ListItem

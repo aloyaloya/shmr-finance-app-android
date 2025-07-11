@@ -1,7 +1,7 @@
-package com.example.shmr_finance_app_android.presentation.feature.balance_edit.mapper
+package com.example.shmr_finance_app_android.presentation.feature.balance_update.mapper
 
 import com.example.shmr_finance_app_android.domain.model.AccountResponseDomain
-import com.example.shmr_finance_app_android.presentation.feature.balance_edit.model.BalanceDetailedUiModel
+import com.example.shmr_finance_app_android.presentation.feature.balance_update.model.BalanceDetailedUiModel
 import javax.inject.Inject
 
 /**
