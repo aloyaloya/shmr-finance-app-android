@@ -10,6 +10,7 @@ import com.example.shmr_finance_app_android.presentation.feature.history.viewmod
 import com.example.shmr_finance_app_android.presentation.feature.incomes.viewmodel.IncomeScreenViewModel
 import com.example.shmr_finance_app_android.presentation.feature.main.viewmodel.MainScreenViewModel
 import com.example.shmr_finance_app_android.presentation.feature.settings.viewmodel.SettingsScreenViewModel
+import com.example.shmr_finance_app_android.presentation.feature.transaction_creation.viewmodel.TransactionCreationViewModel
 import dagger.Binds
 import dagger.MapKey
 import dagger.Module
@@ -58,6 +59,11 @@ interface ViewModelModule {
     @IntoMap
     @ViewModelKey(SettingsScreenViewModel::class)
     fun bindSettingsViewModel(vm: SettingsScreenViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(TransactionCreationViewModel::class)
+    fun bindTransactionCreationViewModel(vm: TransactionCreationViewModel): ViewModel
 
     @Binds
     fun bindViewModelFactory(factory: ViewModelProviderFactory): ViewModelProvider.Factory
