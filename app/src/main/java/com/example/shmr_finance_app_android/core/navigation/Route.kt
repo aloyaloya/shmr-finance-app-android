@@ -10,41 +10,48 @@ sealed class Route(val path: String) {
      * которые доступны через BottomNavigation.
      */
     sealed class Root(path: String) : Route(path) {
-        data object Expenses : Root(path = "expenses_screen")
-        data object Income : Root(path = "income_screen")
-        data object Balance : Root(path = "balance_screen")
+        data object ExpenseNavigation : Root(path = "expenses_navigation")
+        data object IncomeNavigation : Root(path = "incomes_navigation")
+        data object BalanceNavigation : Root(path = "balance_navigation")
         data object Categories : Root(path = "categories_screen")
         data object Settings : Root(path = "settings_screen")
     }
 
-    /**
-     * Отвечает за хранение маршрутов дочерних экранов,
-     * которые требуют передачи параметров или не отображаются в BottomNavigation.
-     */
-    sealed class SubScreens(path: String) : Route(path) {
-        data object ExpensesHistory : Root(path = "history_screen/expenses")
-        data object IncomesHistory : Root(path = "history_screen/incomes")
+    sealed class IncomesScreens(path: String) : Route(path) {
+        data object TransactionsToday : IncomesScreens(path = "income_screen")
+        data object TransactionCreation : IncomesScreens(
+            path = "transaction_creation_screen/income"
+        )
 
-        data object ExpenseTransactionCreation : Root(path = "transaction_creation_screen/expense")
-        data object IncomeTransactionCreation : Root(path = "transaction_creation_screen/income")
-
-        data object BalanceEdit : SubScreens("balance_edit/{balanceId}") {
-            fun balanceId(): String = "balanceId"
-            fun route(balanceId: Int) = "balance_edit/$balanceId"
-        }
-
-        data object IncomeTransactionUpdate : SubScreens(
-            "transaction_update_screen/income/{id}"
-        ) {
+        data object TransactionUpdate :
+            IncomesScreens("transaction_update_screen/income/{id}") {
             fun transactionId(): String = "id"
             fun route(transactionId: Int) = "transaction_update_screen/income/$transactionId"
         }
 
-        data object ExpenseTransactionUpdate : SubScreens(
-            "transaction_update_screen/expense/{id}"
-        ) {
+        data object History : IncomesScreens(path = "history_screen/incomes")
+    }
+
+    sealed class ExpensesScreens(path: String) : Route(path) {
+        data object TransactionsToday : ExpensesScreens(path = "expense_screen")
+        data object TransactionCreation : ExpensesScreens(
+            path = "transaction_creation_screen/expense"
+        )
+
+        data object TransactionUpdate :
+            ExpensesScreens("transaction_update_screen/expense/{id}") {
             fun transactionId(): String = "id"
             fun route(transactionId: Int) = "transaction_update_screen/expense/$transactionId"
+        }
+
+        data object History : ExpensesScreens(path = "history_screen/expenses")
+    }
+
+    sealed class BalanceScreens(path: String) : Route(path) {
+        data object Balance : BalanceScreens(path = "balance_screen")
+        data object BalanceUpdate : BalanceScreens("balance_update/{balanceId}") {
+            fun balanceId(): String = "balanceId"
+            fun route(balanceId: Int) = "balance_update/$balanceId"
         }
     }
 }

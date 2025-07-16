@@ -89,7 +89,7 @@ class CategoriesScreenViewModel @Inject constructor(
     }
 
     /**
-     * Обновляет состояние экрана [CategoriesScreenState]
+     * Обновляет состояние экрана [CategoriesUiState]
      * Поведение:
      * 1. Проверяет, введен ли поисковой запрос
      * 2. Выдает полученные/отфильтрованные комнаты

@@ -47,7 +47,7 @@ internal class TransactionsDomainMapper @Inject constructor(
         return TransactionDomain(
             id = dto.id,
             accountId = dto.accountId,
-            categoryId = dto.id,
+            categoryId = dto.categoryId,
             amount = dto.amount,
             transactionDate = dto.transactionDate,
             comment = dto.comment,

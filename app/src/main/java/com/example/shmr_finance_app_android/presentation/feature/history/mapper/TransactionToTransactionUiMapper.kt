@@ -1,20 +1,17 @@
 package com.example.shmr_finance_app_android.presentation.feature.history.mapper
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.example.shmr_finance_app_android.core.utils.formatDateAndTime
 import com.example.shmr_finance_app_android.core.utils.formatWithSpaces
 import com.example.shmr_finance_app_android.domain.model.TransactionResponseDomain
-import com.example.shmr_finance_app_android.presentation.feature.history.model.TransactionUiModel
+import com.example.shmr_finance_app_android.presentation.feature.history.model.TransactionHistoryModel
 import javax.inject.Inject
 
 /**
- * Маппер для преобразования [TransactionResponseDomain] -> [TransactionUiModel]
+ * Маппер для преобразования [TransactionResponseDomain] -> [TransactionHistoryModel]
  */
 class TransactionToTransactionUiMapper @Inject constructor() {
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun map(domain: TransactionResponseDomain): TransactionUiModel {
-        return TransactionUiModel(
+    fun map(domain: TransactionResponseDomain): TransactionHistoryModel {
+        return TransactionHistoryModel(
             id = domain.id,
             title = domain.category.name,
             amount = domain.amount,

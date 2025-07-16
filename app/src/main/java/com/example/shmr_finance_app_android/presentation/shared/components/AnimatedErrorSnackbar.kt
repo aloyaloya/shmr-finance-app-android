@@ -1,10 +1,11 @@
 package com.example.shmr_finance_app_android.presentation.shared.components
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,12 +36,23 @@ fun AnimatedErrorSnackbar(
     AnimatedVisibility(
         modifier = modifier
             .fillMaxSize()
-            .wrapContentSize(Alignment.BottomCenter)
-            .padding(dimensionResource(R.dimen.medium_padding))
+            .wrapContentSize(Alignment.TopCenter)
+            .padding(
+                vertical = dimensionResource(R.dimen.small_padding),
+                horizontal = dimensionResource(R.dimen.small_padding)
+            )
             .height(52.dp),
         visible = isVisible,
-        enter = slideInVertically { it } + fadeIn(),
-        exit = slideOutVertically { it } + fadeOut()
+        enter = fadeIn(animationSpec = tween(100)) +
+                scaleIn(
+                    initialScale = 0.5f,
+                    animationSpec = tween(300)
+                ),
+        exit = fadeOut(animationSpec = tween(100)) +
+                scaleOut(
+                    targetScale = 0.5f,
+                    animationSpec = tween(300)
+                )
     ) {
         Surface(
             shape = MaterialTheme.shapes.small,

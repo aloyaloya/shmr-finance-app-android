@@ -125,7 +125,7 @@ fun combineDateTimeToIso(dateStr: String, timeStr: String): String {
 
     return date.atTime(time)
         .atZone(ZoneId.systemDefault())
-        .withZoneSameInstant(ZoneOffset.UTC)
+        .withZoneSameInstant(ZoneOffset.systemDefault())
         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"))
 }
 

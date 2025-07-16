@@ -23,17 +23,17 @@ data class BottomBarItem(
             BottomBarItem(
                 labelResId = R.string.expense_screen_label,
                 iconResId = R.drawable.ic_expense,
-                route = Route.Root.Expenses
+                route = Route.Root.ExpenseNavigation
             ),
             BottomBarItem(
                 labelResId = R.string.income_screen_label,
                 iconResId = R.drawable.ic_income,
-                route = Route.Root.Income
+                route = Route.Root.IncomeNavigation
             ),
             BottomBarItem(
                 labelResId = R.string.balance_screen_label,
                 iconResId = R.drawable.ic_balance,
-                route = Route.Root.Balance
+                route = Route.Root.BalanceNavigation
             ),
             BottomBarItem(
                 labelResId = R.string.categories_screen_label,

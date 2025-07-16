@@ -1,6 +1,7 @@
 package com.example.shmr_finance_app_android.core.di
 
 import android.content.Context
+import com.example.shmr_finance_app_android.BuildConfig
 import com.example.shmr_finance_app_android.data.remote.api.FinanceApiService
 import com.example.shmr_finance_app_android.data.remote.api.NetworkChecker
 import com.example.shmr_finance_app_android.data.remote.api.NetworkCheckerImpl
@@ -26,7 +27,7 @@ import javax.inject.Singleton
 object NetworkModule {
 
     private const val BASE_URL = "https://shmr-finance.ru/api/v1/"
-    private const val AUTH_TOKEN = "вставьте свой токен"
+    private const val AUTH_TOKEN = BuildConfig.API_TOKEN
 
     @Provides
     @Named("maxRetries")

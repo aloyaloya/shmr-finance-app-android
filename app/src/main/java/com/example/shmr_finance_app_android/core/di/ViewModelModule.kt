@@ -2,16 +2,15 @@ package com.example.shmr_finance_app_android.core.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.shmr_finance_app_android.presentation.feature.balance.viewmodel.BalanceScreenViewModel
-import com.example.shmr_finance_app_android.presentation.feature.balance_update.viewmodel.BalanceUpdateScreenViewModel
+import com.example.shmr_finance_app_android.presentation.feature.balance.viewmodels.BalanceScreenViewModel
+import com.example.shmr_finance_app_android.presentation.feature.balance.viewmodels.BalanceUpdateScreenViewModel
 import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesScreenViewModel
-import com.example.shmr_finance_app_android.presentation.feature.expenses.viewmodel.ExpensesScreenViewModel
 import com.example.shmr_finance_app_android.presentation.feature.history.viewmodel.HistoryScreenViewModel
-import com.example.shmr_finance_app_android.presentation.feature.incomes.viewmodel.IncomeScreenViewModel
 import com.example.shmr_finance_app_android.presentation.feature.main.viewmodel.MainScreenViewModel
 import com.example.shmr_finance_app_android.presentation.feature.settings.viewmodel.SettingsScreenViewModel
-import com.example.shmr_finance_app_android.presentation.feature.transaction_creation.viewmodel.TransactionCreationViewModel
-import com.example.shmr_finance_app_android.presentation.feature.transaction_update.viewmodel.TransactionUpdateViewModel
+import com.example.shmr_finance_app_android.presentation.feature.transaction.viewmodels.TransactionCreationViewModel
+import com.example.shmr_finance_app_android.presentation.feature.transaction.viewmodels.TransactionTodayViewModel
+import com.example.shmr_finance_app_android.presentation.feature.transaction.viewmodels.TransactionUpdateViewModel
 import dagger.Binds
 import dagger.MapKey
 import dagger.Module
@@ -44,18 +43,8 @@ interface ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(ExpensesScreenViewModel::class)
-    fun bindExpensesViewModel(vm: ExpensesScreenViewModel): ViewModel
-
-    @Binds
-    @IntoMap
     @ViewModelKey(HistoryScreenViewModel::class)
     fun bindHistoryViewModel(vm: HistoryScreenViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(IncomeScreenViewModel::class)
-    fun bindIncomesViewModel(vm: IncomeScreenViewModel): ViewModel
 
     @Binds
     @IntoMap
@@ -66,6 +55,11 @@ interface ViewModelModule {
     @IntoMap
     @ViewModelKey(SettingsScreenViewModel::class)
     fun bindSettingsViewModel(vm: SettingsScreenViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(TransactionTodayViewModel::class)
+    fun bindTransactionTodayViewModel(vm: TransactionTodayViewModel): ViewModel
 
     @Binds
     @IntoMap

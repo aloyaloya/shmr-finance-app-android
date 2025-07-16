@@ -23,7 +23,7 @@
     <string name="balance_edit_description">Изменить счет</string>
     <string name="balance">Баланс</string>
     <string name="currency">Валюта</string>
-    <string name="no_categories_found">У вас нет статей расходов</string>
+    <string name="no_categories_found">У вас нет статей</string>
     <string name="categories_search_placeholder">Найти статью</string>
     <string name="categories_search_description">Поиск статьи</string>
     <string name="dark_theme_option">Темная тема</string>
@@ -70,7 +70,7 @@
     <string name="comment_placeholder">Ваш комментарий</string>
     <string name="categorory_placeholder">Ваша статья</string>
     <string name="error_message">Что-то пошло не так. Попробуйте еще раз</string>
-    <string name="amount_error_message">Введите корректные размер транзакции</string>
+    <string name="amount_error_message">Введите корректную сумму транзакции</string>
     <string name="delete_expense_transaction">Удалить расход</string>
     <string name="delete_income_transaction">Удалить доход</string>
 </resources>

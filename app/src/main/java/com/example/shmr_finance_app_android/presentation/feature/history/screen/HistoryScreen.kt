@@ -1,7 +1,5 @@
 package com.example.shmr_finance_app_android.presentation.feature.history.screen
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -20,7 +18,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shmr_finance_app_android.R
 import com.example.shmr_finance_app_android.core.di.daggerViewModel
 import com.example.shmr_finance_app_android.presentation.feature.history.component.DateSelectionHeader
-import com.example.shmr_finance_app_android.presentation.feature.history.model.TransactionUiModel
+import com.example.shmr_finance_app_android.presentation.feature.history.model.TransactionHistoryModel
 import com.example.shmr_finance_app_android.presentation.feature.history.viewmodel.DateType
 import com.example.shmr_finance_app_android.presentation.feature.history.viewmodel.HistoryScreenState
 import com.example.shmr_finance_app_android.presentation.feature.history.viewmodel.HistoryScreenViewModel
@@ -37,13 +35,13 @@ import com.example.shmr_finance_app_android.presentation.shared.model.ListItem
 import com.example.shmr_finance_app_android.presentation.shared.model.MainContent
 import com.example.shmr_finance_app_android.presentation.shared.model.TrailContent
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HistoryScreen(
     viewModel: HistoryScreenViewModel = daggerViewModel(),
     isIncome: Boolean,
     updateConfigState: (ScreenConfig) -> Unit,
-    onBackNavigate: () -> Unit
+    onBackNavigate: () -> Unit,
+    onTransactionUpdateNavigate: (Int) -> Unit
 ) {
     val state by viewModel.screenState.collectAsStateWithLifecycle()
     val startDate by viewModel.historyStartDate.collectAsStateWithLifecycle()
@@ -97,7 +95,8 @@ fun HistoryScreen(
 
             is HistoryScreenState.Success -> HistorySuccessState(
                 transactions = (state as HistoryScreenState.Success).transactions,
-                totalAmount = (state as HistoryScreenState.Success).totalAmount
+                totalAmount = (state as HistoryScreenState.Success).totalAmount,
+                onTransactionUpdateNavigate = onTransactionUpdateNavigate
             )
         }
     }
@@ -112,8 +111,9 @@ fun HistoryScreen(
 
 @Composable
 private fun HistorySuccessState(
-    transactions: List<TransactionUiModel>,
-    totalAmount: String
+    transactions: List<TransactionHistoryModel>,
+    totalAmount: String,
+    onTransactionUpdateNavigate: (Int) -> Unit
 ) {
     Column(Modifier.fillMaxSize()) {
         ListItemCard(
@@ -127,12 +127,12 @@ private fun HistorySuccessState(
             )
         )
         LazyColumn {
-            items(transactions, key = { transaction -> transaction.id }) { expense ->
+            items(transactions, key = { transaction -> transaction.id }) { transaction ->
                 ListItemCard(
                     modifier = Modifier
-                        .clickable { }
+                        .clickable { onTransactionUpdateNavigate(transaction.id) }
                         .height(70.dp),
-                    item = expense.toListItem(),
+                    item = transaction.toListItem(),
                     trailIcon = R.drawable.ic_arrow_right,
                     subtitleStyle = MaterialTheme.typography.labelMedium
                 )

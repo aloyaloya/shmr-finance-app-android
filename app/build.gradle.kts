@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -18,6 +20,24 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val localProperties = Properties().apply {
+            load(rootProject.file("local.properties").inputStream())
+        }
+
+        buildConfigField(
+            "String",
+            "API_TOKEN",
+            "\"${localProperties.getProperty("api.token", "")}\""
+        )
+        buildConfigField(
+            "Integer",
+            "ACCOUNT_ID",
+            localProperties.getProperty("account.id", "1")
+        )
+
+        val apiToken = localProperties.getProperty("api.token")
+            ?: throw GradleException("API TOKEN не найден")
     }
 
     buildTypes {
@@ -37,6 +57,7 @@ android {
         jvmTarget = "11"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
 }
