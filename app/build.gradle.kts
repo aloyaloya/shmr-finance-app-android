@@ -69,6 +69,9 @@ detekt {
 }
 
 dependencies {
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
     implementation(libs.dagger)
     ksp(libs.dagger.compiler)
     implementation(libs.retrofit)
