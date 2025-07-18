@@ -1,7 +1,7 @@
 package com.example.shmr_finance_app_android.domain.usecases
 
-import com.example.shmr_finance_app_android.data.remote.api.AppError
-import com.example.shmr_finance_app_android.data.remote.api.NetworkChecker
+import com.example.shmr_finance_app_android.core.network.AppError
+import com.example.shmr_finance_app_android.core.network.NetworkChecker
 import com.example.shmr_finance_app_android.domain.model.CategoryDomain
 import com.example.shmr_finance_app_android.domain.repository.CategoriesRepository
 import dagger.Reusable
@@ -16,8 +16,7 @@ import javax.inject.Inject
  */
 @Reusable
 class GetCategoriesUseCase @Inject constructor(
-    private val repository: CategoriesRepository,
-    private val networkChecker: NetworkChecker
+    private val repository: CategoriesRepository
 ) {
     /**
      * Получает список всех категорий.
@@ -25,10 +24,6 @@ class GetCategoriesUseCase @Inject constructor(
      * [Result.failure] с [AppError.Network] если нет соединения
      */
     suspend operator fun invoke(): Result<List<CategoryDomain>> {
-        if (!networkChecker.isNetworkAvailable()) {
-            return Result.failure(AppError.Network)
-        }
-
         return repository.getAllCategories()
     }
 }

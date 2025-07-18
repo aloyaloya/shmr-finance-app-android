@@ -1,8 +1,8 @@
-Итоги пятого задания
+Итоги шестого задания
 
 ## Токен
 
-Токен никуда не выносил, нужно поменять его в файле ``/core/di/NetworkModule``
+Чтобы приложение работало, вы должны добавить свой токен в ``local.properties``
 
 <br/>
 <img src="demo/ApiToken.png" width="600">
@@ -10,22 +10,32 @@
 
 ## Аккаунт
 
-ID тестового аккаунта можно поменять в файле ``/core/utils/Constants``
+ID тестового аккаунта так же можно поменять в ``local.properties``, иначе будет браться первый
 
 <br/>
-<img src="demo/TestAccountId.png" width="600">
+<img src="demo/AccountId.png" width="600">
 <br/>
 
-## DI
+## Синхронизация данных
 
-Все, что связано с DI находится в ``/core/di``
+Синхронизация даных осуществляется через воркеры и репозитории, воркеры лежат здесь ``/data/sync``.
 
-## Многомодульность
+Автоматическая же синхронизация (при запуске, при появлении сети, регулярная) осуществляется в
+``App`` и ``/core/network/NetworkMonitor``
 
-Многомодульности нет, не ищите :)
+Дата последней синхронизации отображает на экране Настройки:
 
-## Демонстрация экранов
+<br/>
+<img src="demo/settingsscreen.png" width="200">
+<br/>
 
-<img src="demo/create_transaction_screen.png" width="200">  <img src="demo/update_transaction_screen.png" width="200">
+Так же есть всплывающее уведомление, отображающее состояние синхронизации, но в его работе я пока не
+уверен
+
+## Экран Аналитика
+
+<br/>
+<img src="demo/analyticexpenses.png" width="200"> <img src="demo/analyticincomes.png" width="200">
+<br/>
 
 

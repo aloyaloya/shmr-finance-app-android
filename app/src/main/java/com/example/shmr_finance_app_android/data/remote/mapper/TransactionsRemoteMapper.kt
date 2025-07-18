@@ -46,8 +46,8 @@ internal class TransactionsRemoteMapper @Inject constructor(
     fun mapTransaction(transaction: Transaction): TransactionDTO {
         return TransactionDTO(
             id = transaction.id,
-            accountId = transaction.id,
-            categoryId = transaction.id,
+            accountId = transaction.accountId,
+            categoryId = transaction.categoryId,
             amount = transaction.amount,
             transactionDate = transaction.transactionDate,
             comment = transaction.comment,

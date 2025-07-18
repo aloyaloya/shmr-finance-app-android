@@ -1,6 +1,5 @@
 package com.example.shmr_finance_app_android.presentation.feature.categories.screen
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -34,6 +33,8 @@ fun CategoriesScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val searchRequest by viewModel.searchRequest.collectAsStateWithLifecycle()
 
+    LaunchedEffect(Unit) { viewModel.init() }
+
     LaunchedEffect(Unit) {
         updateConfigState(
             ScreenConfig(
@@ -64,7 +65,7 @@ fun CategoriesScreen(
                 messageResId = R.string.empty_filtered_categories
             )
 
-            is CategoriesUiState.Content -> CategoriesSuccessState(
+            is CategoriesUiState.Content -> CategoriesContent(
                 categories = (uiState as CategoriesUiState.Content).categories
             )
         }
@@ -72,15 +73,13 @@ fun CategoriesScreen(
 }
 
 @Composable
-private fun CategoriesSuccessState(
+private fun CategoriesContent(
     categories: List<CategoryUiModel>
 ) {
     LazyColumn {
         items(categories, key = { category -> category.id }) { category ->
             ListItemCard(
-                modifier = Modifier
-                    .clickable { } // Переход на экран Мои расходы
-                    .height(70.dp),
+                modifier = Modifier.height(70.dp),
                 item = category.toListItem()
             )
         }

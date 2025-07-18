@@ -4,7 +4,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shmr_finance_app_android.R
-import com.example.shmr_finance_app_android.data.remote.api.AppError
+import com.example.shmr_finance_app_android.core.network.AppError
 import com.example.shmr_finance_app_android.domain.usecases.GetCategoriesUseCase
 import com.example.shmr_finance_app_android.presentation.feature.categories.mapper.CategoryToCategoryUiMapper
 import com.example.shmr_finance_app_android.presentation.feature.categories.model.CategoryUiModel
@@ -89,7 +89,7 @@ class CategoriesScreenViewModel @Inject constructor(
     }
 
     /**
-     * Обновляет состояние экрана [CategoriesScreenState]
+     * Обновляет состояние экрана [CategoriesUiState]
      * Поведение:
      * 1. Проверяет, введен ли поисковой запрос
      * 2. Выдает полученные/отфильтрованные комнаты

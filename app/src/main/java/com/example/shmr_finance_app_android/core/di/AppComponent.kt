@@ -17,9 +17,11 @@ import javax.inject.Singleton
     modules = [
         AppModule::class,
         NetworkModule::class,
+        DatabaseModule::class,
         RepositoryModule::class,
         DataSourceModule::class,
-        ViewModelModule::class
+        ViewModelModule::class,
+        WorkersModule::class
     ]
 )
 interface AppComponent {

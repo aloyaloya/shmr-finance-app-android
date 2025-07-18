@@ -1,22 +1,20 @@
 package com.example.shmr_finance_app_android.presentation.feature.history.viewmodel
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shmr_finance_app_android.BuildConfig
 import com.example.shmr_finance_app_android.R
-import com.example.shmr_finance_app_android.core.utils.Constants
+import com.example.shmr_finance_app_android.core.network.AppError
 import com.example.shmr_finance_app_android.core.utils.formatHumanDateToIso
 import com.example.shmr_finance_app_android.core.utils.formatLongToHumanDate
 import com.example.shmr_finance_app_android.core.utils.getCurrentDateIso
 import com.example.shmr_finance_app_android.core.utils.getStartOfCurrentMonth
-import com.example.shmr_finance_app_android.data.remote.api.AppError
 import com.example.shmr_finance_app_android.domain.model.TransactionResponseDomain
 import com.example.shmr_finance_app_android.domain.usecases.GetExpensesByPeriodUseCase
 import com.example.shmr_finance_app_android.domain.usecases.GetIncomesByPeriodUseCase
 import com.example.shmr_finance_app_android.presentation.feature.history.mapper.TransactionToTransactionUiMapper
-import com.example.shmr_finance_app_android.presentation.feature.history.model.TransactionUiModel
+import com.example.shmr_finance_app_android.presentation.feature.history.model.TransactionHistoryModel
 import com.example.shmr_finance_app_android.presentation.feature.history.viewmodel.HistoryScreenState.Error
 import com.example.shmr_finance_app_android.presentation.feature.history.viewmodel.HistoryScreenState.Loading
 import com.example.shmr_finance_app_android.presentation.feature.history.viewmodel.HistoryScreenState.Success
@@ -34,7 +32,7 @@ import javax.inject.Inject
  * - Локализованным сообщением ([messageResId])
  * - Коллбэком повторной попытки ([retryAction])
  * - [Success] Состояние успешной загрузки с:
- * - Списком готовых моделей ([TransactionUiModel])
+ * - Списком готовых моделей ([TransactionHistoryModel])
  * - Общей суммой расходов/доходов ([totalAmount])
  */
 sealed interface HistoryScreenState {
@@ -42,7 +40,7 @@ sealed interface HistoryScreenState {
     data class Error(val messageResId: Int, val retryAction: () -> Unit) : HistoryScreenState
     data object Empty : HistoryScreenState
     data class Success(
-        val transactions: List<TransactionUiModel>,
+        val transactions: List<TransactionHistoryModel>,
         val totalAmount: String
     ) : HistoryScreenState
 }
@@ -56,7 +54,6 @@ sealed interface HistoryScreenState {
  * 3. Управление состояниями экрана ([HistoryScreenState])
  * 4. Обработку выбора дат
  **/
-@RequiresApi(Build.VERSION_CODES.O)
 class HistoryScreenViewModel @Inject constructor(
     private val getExpensesByPeriodUseCase: GetExpensesByPeriodUseCase,
     private val getIncomesByPeriodUseCase: GetIncomesByPeriodUseCase,
@@ -84,6 +81,8 @@ class HistoryScreenViewModel @Inject constructor(
     private val _showDatePickerModal = MutableStateFlow(false)
     val showDatePickerModal: StateFlow<Boolean> = _showDatePickerModal.asStateFlow()
 
+    private val accountId = MutableStateFlow(BuildConfig.ACCOUNT_ID)
+
     fun initialize() {
         loadHistory()
     }
@@ -94,20 +93,19 @@ class HistoryScreenViewModel @Inject constructor(
      * 2. Выбирает соответствующий UseCase
      * 3. Обрабатывает результат
      */
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun loadHistory() {
         _screenState.value = Loading
         viewModelScope.launch(Dispatchers.IO) {
             handleTransactionsResult(
                 if (_historyTransactionsType.value) {
                     getIncomesByPeriodUseCase(
-                        accountId = Constants.TEST_ACCOUNT_ID,
+                        accountId = accountId.value,
                         startDate = formatHumanDateToIso(_historyStartDate.value),
                         endDate = formatHumanDateToIso(_historyEndDate.value)
                     )
                 } else {
                     getExpensesByPeriodUseCase(
-                        accountId = Constants.TEST_ACCOUNT_ID,
+                        accountId = accountId.value,
                         startDate = formatHumanDateToIso(_historyStartDate.value),
                         endDate = formatHumanDateToIso(_historyEndDate.value)
                     )
@@ -125,7 +123,12 @@ class HistoryScreenViewModel @Inject constructor(
         result
             .onSuccess { data ->
                 handleSuccess(
-                    data = data.sortedByDescending { it.transactionTime }.map { mapper.map(it) },
+                    data = data
+                        .sortedWith(
+                            compareByDescending<TransactionResponseDomain> { it.transactionDate }
+                                .thenByDescending { it.transactionTime }
+                        )
+                        .map { mapper.map(it) },
                     totalAmount = mapper.calculateTotalAmount(data)
                 )
             }
@@ -134,7 +137,7 @@ class HistoryScreenViewModel @Inject constructor(
 
     /** Обновляет состояние при успешной загрузке */
     private fun handleSuccess(
-        data: List<TransactionUiModel>,
+        data: List<TransactionHistoryModel>,
         totalAmount: String
     ) {
         _screenState.value = if (data.isEmpty()) {

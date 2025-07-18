@@ -10,4 +10,5 @@ import com.example.shmr_finance_app_android.domain.model.AccountResponseDomain
 interface AccountRepository {
     suspend fun getAccountById(accountId: Int): Result<AccountResponseDomain>
     suspend fun updateAccountById(accountBrief: AccountBriefDomain): Result<AccountDomain>
+    suspend fun syncAccounts(): Result<Unit>
 }

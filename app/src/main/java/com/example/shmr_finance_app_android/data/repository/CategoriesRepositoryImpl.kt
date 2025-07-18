@@ -1,10 +1,14 @@
 package com.example.shmr_finance_app_android.data.repository
 
-import com.example.shmr_finance_app_android.data.datasource.CategoriesRemoteDataSource
+import com.example.shmr_finance_app_android.core.network.NetworkChecker
+import com.example.shmr_finance_app_android.data.datasources.categories.CategoriesLocalDataSource
+import com.example.shmr_finance_app_android.data.datasources.categories.CategoriesRemoteDataSource
+import com.example.shmr_finance_app_android.data.local.mapper.CategoryEntityMapper
 import com.example.shmr_finance_app_android.data.remote.api.safeApiCall
 import com.example.shmr_finance_app_android.data.repository.mapper.CategoryDomainMapper
 import com.example.shmr_finance_app_android.domain.model.CategoryDomain
 import com.example.shmr_finance_app_android.domain.repository.CategoriesRepository
+import dagger.Reusable
 import javax.inject.Inject
 
 /**
@@ -13,32 +17,35 @@ import javax.inject.Inject
  * - Преобразование DTO -> доменную модель ([CategoryDomainMapper])
  * - Обработку ошибок через [safeApiCall]
  */
+@Reusable
 internal class CategoriesRepositoryImpl @Inject constructor(
+    private val localDataSource: CategoriesLocalDataSource,
     private val remoteDataSource: CategoriesRemoteDataSource,
-    private val mapper: CategoryDomainMapper
+    private val mapper: CategoryDomainMapper,
+    private val entityMapper: CategoryEntityMapper,
+    private val networkChecker: NetworkChecker
 ) : CategoriesRepository {
 
-    /**
-     * Получает данные категорий по типу (доходы, расходы).
-     * @param isIncome - 'true' - доходы, 'false' - расходы
-     * @return [Result.success] с [CategoryDomain] при успехе,
-     * [Result.failure] с [AppError] при ошибке
-     */
-    override suspend fun getCategoriesByType(isIncome: Boolean): Result<List<CategoryDomain>> {
-        return safeApiCall(
-            call = { remoteDataSource.getCategoriesByType(isIncome).map(mapper::mapCategory) }
-        )
+    override suspend fun getAllCategories(): Result<List<CategoryDomain>> = runCatching {
+        localDataSource.getAllCategories().map {
+            val dto = entityMapper.mapCategory(it)
+            mapper.mapCategory(dto)
+        }
     }
 
-    /**
-     * Получает данные всех категорий.
-     *
-     * @return [Result.success] с [CategoryDomain] при успехе,
-     * [Result.failure] с [AppError] при ошибке
-     */
-    override suspend fun getAllCategories(): Result<List<CategoryDomain>> {
-        return safeApiCall(
-            call = { remoteDataSource.getAllCategories().map(mapper::mapCategory) }
-        )
+    override suspend fun getCategoriesByType(isIncome: Boolean): Result<List<CategoryDomain>> =
+        runCatching {
+            localDataSource.getCategoriesByType(isIncome).map {
+                val dto = entityMapper.mapCategory(it)
+                mapper.mapCategory(dto)
+            }
+        }
+
+    override suspend fun syncCategories(): Result<Unit> = runCatching {
+        if (!networkChecker.isNetworkAvailable()) return@runCatching
+
+        val categories = remoteDataSource.getAllCategories()
+        val entities = categories.map(entityMapper::mapCategoryToEntity)
+        localDataSource.cacheCategories(entities)
     }
 }
