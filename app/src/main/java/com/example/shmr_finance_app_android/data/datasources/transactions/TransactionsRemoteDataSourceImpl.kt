@@ -1,44 +1,12 @@
-package com.example.shmr_finance_app_android.data.datasource
+package com.example.shmr_finance_app_android.data.datasources.transactions
 
+import android.util.Log
 import com.example.shmr_finance_app_android.data.model.TransactionDTO
 import com.example.shmr_finance_app_android.data.model.TransactionResponseDTO
 import com.example.shmr_finance_app_android.data.remote.api.FinanceApiService
 import com.example.shmr_finance_app_android.data.remote.mapper.TransactionsRemoteMapper
 import retrofit2.Response
 import javax.inject.Inject
-
-/**
- * Отвечает за работу с данными из remote-источника (API).
- * Определяет контракт для работы с данными транзакций без привязки к конкретной реализации.
- */
-interface TransactionsRemoteDataSource {
-    suspend fun getTransactionsByPeriod(
-        accountId: Int,
-        startDate: String?,
-        endDate: String?
-    ): List<TransactionResponseDTO>
-
-    suspend fun getTransactionById(transactionId: Int): TransactionResponseDTO
-
-    suspend fun createTransaction(
-        accountId: Int,
-        categoryId: Int,
-        amount: String,
-        transactionDate: String,
-        comment: String?
-    ): TransactionDTO
-
-    suspend fun updateTransactionById(
-        transactionId: Int,
-        accountId: Int,
-        categoryId: Int,
-        amount: String,
-        transactionDate: String,
-        comment: String?
-    ): TransactionResponseDTO
-
-    suspend fun deleteTransactionById(transactionId: Int): Response<Void>
-}
 
 /**
  * Реализация [TransactionsRemoteDataSource], отвечающая за:
@@ -75,11 +43,14 @@ internal class TransactionsRemoteDataSourceImpl @Inject constructor(
         startDate: String?,
         endDate: String?
     ): List<TransactionResponseDTO> {
-        return api.getTransactionsByPeriod(
+        val result = api.getTransactionsByPeriod(
             accountId,
             startDate,
             endDate
         ).map(mapper::mapTransactionResponse)
+
+        Log.i("ERROR", result.toString())
+        return result
     }
 
     /** Получает транзакцию по ID и мапит её в [TransactionResponseDTO]. */
