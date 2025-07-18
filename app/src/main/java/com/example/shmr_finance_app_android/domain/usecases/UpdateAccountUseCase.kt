@@ -1,7 +1,5 @@
 package com.example.shmr_finance_app_android.domain.usecases
 
-import com.example.shmr_finance_app_android.data.remote.api.AppError
-import com.example.shmr_finance_app_android.data.remote.api.NetworkChecker
 import com.example.shmr_finance_app_android.domain.model.AccountBriefDomain
 import com.example.shmr_finance_app_android.domain.model.AccountDomain
 import com.example.shmr_finance_app_android.domain.repository.AccountRepository
@@ -15,8 +13,7 @@ import javax.inject.Inject
  */
 @Reusable
 class UpdateAccountUseCase @Inject constructor(
-    private val repository: AccountRepository,
-    private val networkChecker: NetworkChecker
+    private val repository: AccountRepository
 ) {
     /**
      * Запускает UseCase через operator invoke().
@@ -31,10 +28,6 @@ class UpdateAccountUseCase @Inject constructor(
         accountBalance: Int,
         accountCurrency: String
     ): Result<AccountDomain> {
-        if (!networkChecker.isNetworkAvailable()) {
-            return Result.failure(AppError.Network)
-        }
-
         return repository.updateAccountById(
             AccountBriefDomain(
                 id = accountId,

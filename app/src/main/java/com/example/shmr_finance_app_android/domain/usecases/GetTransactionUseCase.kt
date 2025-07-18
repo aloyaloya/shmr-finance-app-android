@@ -1,7 +1,6 @@
 package com.example.shmr_finance_app_android.domain.usecases
 
-import com.example.shmr_finance_app_android.data.remote.api.AppError
-import com.example.shmr_finance_app_android.data.remote.api.NetworkChecker
+import com.example.shmr_finance_app_android.core.network.AppError
 import com.example.shmr_finance_app_android.domain.model.TransactionResponseDomain
 import com.example.shmr_finance_app_android.domain.repository.TransactionsRepository
 import dagger.Reusable
@@ -14,8 +13,7 @@ import javax.inject.Inject
  */
 @Reusable
 class GetTransactionUseCase @Inject constructor(
-    private val repository: TransactionsRepository,
-    private val networkChecker: NetworkChecker
+    private val repository: TransactionsRepository
 ) {
     /**
      * Запускает UseCase через operator invoke().
@@ -26,10 +24,6 @@ class GetTransactionUseCase @Inject constructor(
      * ошибками из [TransactionsRepository] - при проблемах запроса
      */
     suspend operator fun invoke(transactionId: Int): Result<TransactionResponseDomain> {
-        if (!networkChecker.isNetworkAvailable()) {
-            return Result.failure(AppError.Network)
-        }
-
         return repository.getTransactionById(transactionId)
     }
 }
