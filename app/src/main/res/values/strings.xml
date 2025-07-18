@@ -6,6 +6,7 @@
     <string name="categories_screen_title">Мои статьи</string>
     <string name="settings_screen_title">Настройки</string>
     <string name="expenses_history_screen_title">Моя история</string>
+    <string name="analytic_screen_title">Анализ</string>
     <string name="expense_screen_label">Расходы</string>
     <string name="income_screen_label">Доходы</string>
     <string name="balance_screen_label">Счет</string>
@@ -73,4 +74,9 @@
     <string name="amount_error_message">Введите корректную сумму транзакции</string>
     <string name="delete_expense_transaction">Удалить расход</string>
     <string name="delete_income_transaction">Удалить доход</string>
+    <string name="not_found_error">Не удалось загрузить данные</string>
+    <string name="sync_data_started">Пробуем синхронизировать данные</string>
+    <string name="sync_data_success">Данные успешно синхронизировались</string>
+    <string name="sync_data_failed">Синхронизация данных не удалась</string>
+    <string name="last_sync">Последняя синхронизация данных:</string>
 </resources>

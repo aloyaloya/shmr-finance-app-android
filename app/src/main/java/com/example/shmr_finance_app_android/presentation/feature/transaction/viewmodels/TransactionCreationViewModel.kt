@@ -5,11 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shmr_finance_app_android.BuildConfig
 import com.example.shmr_finance_app_android.R
+import com.example.shmr_finance_app_android.core.network.AppError
 import com.example.shmr_finance_app_android.core.utils.formatHumanDateToIso
 import com.example.shmr_finance_app_android.core.utils.formatLongToHumanDate
 import com.example.shmr_finance_app_android.core.utils.getCurrentDateIso
 import com.example.shmr_finance_app_android.core.utils.getCurrentTime
-import com.example.shmr_finance_app_android.data.remote.api.AppError
 import com.example.shmr_finance_app_android.domain.usecases.CreateTransactionUseCase
 import com.example.shmr_finance_app_android.domain.usecases.GetAccountUseCase
 import com.example.shmr_finance_app_android.domain.usecases.GetCategoriesByTypeUseCase

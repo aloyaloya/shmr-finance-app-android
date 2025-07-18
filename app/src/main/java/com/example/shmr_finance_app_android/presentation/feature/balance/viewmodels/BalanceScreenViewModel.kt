@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shmr_finance_app_android.BuildConfig
 import com.example.shmr_finance_app_android.R
-import com.example.shmr_finance_app_android.data.remote.api.AppError
+import com.example.shmr_finance_app_android.core.network.AppError
 import com.example.shmr_finance_app_android.domain.usecases.GetAccountUseCase
 import com.example.shmr_finance_app_android.presentation.feature.balance.mappers.AccountToBalanceMapper
 import com.example.shmr_finance_app_android.presentation.feature.balance.models.BalanceUiModel

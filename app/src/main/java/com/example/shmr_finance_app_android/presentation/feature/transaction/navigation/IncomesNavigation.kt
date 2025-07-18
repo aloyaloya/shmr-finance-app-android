@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.shmr_finance_app_android.core.navigation.Route
+import com.example.shmr_finance_app_android.presentation.feature.analytic.screen.AnalyticScreen
 import com.example.shmr_finance_app_android.presentation.feature.history.screen.HistoryScreen
 import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
 import com.example.shmr_finance_app_android.presentation.feature.transaction.screens.TransactionCreationScreen
@@ -114,7 +115,21 @@ fun IncomesNavigation(
                         launchSingleTop = true
                         restoreState = true
                     }
+                },
+                onAnalyticNavigate = {
+                    navController.navigate(Route.IncomesScreens.Analytic.path) {
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 }
+            )
+        }
+
+        composable(route = Route.IncomesScreens.Analytic.path) {
+            AnalyticScreen(
+                isIncome = true,
+                updateConfigState = updateConfigState,
+                onBackNavigate = { navController.popBackStack() }
             )
         }
     }

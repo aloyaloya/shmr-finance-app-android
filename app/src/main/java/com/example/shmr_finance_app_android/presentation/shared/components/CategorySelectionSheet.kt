@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
@@ -33,17 +34,21 @@ fun CategorySelectionSheet(
     onItemSelected: (CategoryUiModel) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true,
+    )
     val scope = rememberCoroutineScope()
 
     ModalBottomSheet(
-        modifier = modifier,
-        onDismissRequest = { onDismiss() },
+        onDismissRequest = onDismiss,
         sheetState = sheetState,
-        windowInsets = WindowInsets.systemBars.only(WindowInsetsSides.Bottom)
+        modifier = modifier,
+        contentWindowInsets = { WindowInsets.systemBars.only(WindowInsetsSides.Bottom) }
     ) {
         ItemsListContent(
-            modifier = Modifier.weight(1f, fill = false),
+            modifier = Modifier
+                .weight(1f, fill = false)
+                .heightIn(max = 600.dp),
             items = items,
             onItemSelected = {
                 onItemSelected(it)

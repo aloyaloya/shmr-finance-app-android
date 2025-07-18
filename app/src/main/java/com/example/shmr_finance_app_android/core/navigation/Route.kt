@@ -30,6 +30,7 @@ sealed class Route(val path: String) {
         }
 
         data object History : IncomesScreens(path = "history_screen/incomes")
+        data object Analytic : IncomesScreens(path = "analytic_screen/incomes")
     }
 
     sealed class ExpensesScreens(path: String) : Route(path) {
@@ -45,6 +46,7 @@ sealed class Route(val path: String) {
         }
 
         data object History : ExpensesScreens(path = "history_screen/expenses")
+        data object Analytic : ExpensesScreens(path = "analytic_screen/expenses")
     }
 
     sealed class BalanceScreens(path: String) : Route(path) {

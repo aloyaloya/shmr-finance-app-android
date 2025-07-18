@@ -18,21 +18,35 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.shmr_finance_app_android.R
+import kotlinx.coroutines.delay
 
 @Composable
-fun AnimatedErrorSnackbar(
+fun AnimatedSnackbar(
     modifier: Modifier = Modifier,
     isVisible: Boolean,
     messageResId: Int,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    durationMillis: Long = 3000L,
+    backgroundColor: Color = MaterialTheme.colorScheme.errorContainer,
+    textColor: Color = MaterialTheme.colorScheme.onErrorContainer,
+    showDismissButton: Boolean = true
 ) {
+    LaunchedEffect(isVisible) {
+        if (isVisible) {
+            delay(durationMillis)
+            onDismiss()
+        }
+    }
+
     AnimatedVisibility(
         modifier = modifier
             .fillMaxSize()
@@ -56,8 +70,8 @@ fun AnimatedErrorSnackbar(
     ) {
         Surface(
             shape = MaterialTheme.shapes.small,
-            color = MaterialTheme.colorScheme.errorContainer,
-            shadowElevation = 0.dp,
+            color = backgroundColor,
+            shadowElevation = 6.dp,
             tonalElevation = 0.dp
         ) {
             Row(
@@ -70,14 +84,16 @@ fun AnimatedErrorSnackbar(
                     modifier = Modifier.weight(1f),
                     text = stringResource(messageResId),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onErrorContainer
+                    color = textColor
                 )
-                IconButton(onClick = onDismiss) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_cancel),
-                        contentDescription = stringResource(R.string.close),
-                        tint = MaterialTheme.colorScheme.onErrorContainer
-                    )
+                if (showDismissButton) {
+                    IconButton(onClick = onDismiss) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_cancel),
+                            contentDescription = stringResource(R.string.close),
+                            tint = textColor
+                        )
+                    }
                 }
             }
         }

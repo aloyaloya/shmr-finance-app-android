@@ -1,7 +1,11 @@
 package com.example.shmr_finance_app_android.data.remote.api
 
+import android.util.Log
+import com.example.shmr_finance_app_android.core.network.AppError
 import retrofit2.HttpException
 import java.io.IOException
+
+const val OPERATION_SUCCESS = 500
 
 /**
  * Обертка для безопасного выполнения сетевых запросов с обработкой ошибок.
@@ -17,16 +21,17 @@ suspend fun <T> safeApiCall(
 ): Result<T> {
     return try {
         Result.success(call())
-    } catch (e: IOException) {
+    } catch (_: IOException) {
         Result.failure(AppError.Network)
     } catch (e: HttpException) {
-        if (e.code() == 204) {
+        if (e.code() == OPERATION_SUCCESS) {
             @Suppress("UNCHECKED_CAST")
             Result.success(Unit as T)
         } else {
             Result.failure(AppError.ApiError())
         }
     } catch (e: Exception) {
+        Log.e("SafeApiCall", "Unknown error", e)
         Result.failure(AppError.Unknown())
     }
 }

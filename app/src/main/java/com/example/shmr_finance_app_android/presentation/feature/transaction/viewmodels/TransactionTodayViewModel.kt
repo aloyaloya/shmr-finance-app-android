@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shmr_finance_app_android.BuildConfig
 import com.example.shmr_finance_app_android.R
+import com.example.shmr_finance_app_android.core.network.AppError
 import com.example.shmr_finance_app_android.core.utils.getCurrentDate
-import com.example.shmr_finance_app_android.data.remote.api.AppError
 import com.example.shmr_finance_app_android.domain.usecases.GetExpensesByPeriodUseCase
 import com.example.shmr_finance_app_android.domain.usecases.GetIncomesByPeriodUseCase
 import com.example.shmr_finance_app_android.presentation.feature.history.mapper.TransactionToTransactionUiMapper

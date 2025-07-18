@@ -39,7 +39,7 @@ import com.example.shmr_finance_app_android.presentation.feature.main.model.Scre
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarAction
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarBackAction
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarConfig
-import com.example.shmr_finance_app_android.presentation.shared.components.AnimatedErrorSnackbar
+import com.example.shmr_finance_app_android.presentation.shared.components.AnimatedSnackbar
 import com.example.shmr_finance_app_android.presentation.shared.components.EditorTextField
 import com.example.shmr_finance_app_android.presentation.shared.components.ErrorState
 import com.example.shmr_finance_app_android.presentation.shared.components.ListItemCard
@@ -111,7 +111,7 @@ fun BalanceUpdateScreen(
             )
         }
 
-        AnimatedErrorSnackbar(
+        AnimatedSnackbar(
             modifier = Modifier.align(Alignment.BottomCenter),
             isVisible = snackbarVisible,
             messageResId = snackbarMsg,

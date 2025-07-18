@@ -2,6 +2,7 @@ package com.example.shmr_finance_app_android.core.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.shmr_finance_app_android.presentation.feature.analytic.viewmodel.AnalyticViewModel
 import com.example.shmr_finance_app_android.presentation.feature.balance.viewmodels.BalanceScreenViewModel
 import com.example.shmr_finance_app_android.presentation.feature.balance.viewmodels.BalanceUpdateScreenViewModel
 import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesScreenViewModel
@@ -45,6 +46,11 @@ interface ViewModelModule {
     @IntoMap
     @ViewModelKey(HistoryScreenViewModel::class)
     fun bindHistoryViewModel(vm: HistoryScreenViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AnalyticViewModel::class)
+    fun bindAnalyticViewModel(vm: AnalyticViewModel): ViewModel
 
     @Binds
     @IntoMap

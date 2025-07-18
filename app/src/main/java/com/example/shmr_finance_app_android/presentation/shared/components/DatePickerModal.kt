@@ -1,6 +1,7 @@
 package com.example.shmr_finance_app_android.presentation.shared.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -34,43 +35,45 @@ fun DatePickerModal(
             containerColor = MaterialTheme.colorScheme.onTertiaryContainer,
         )
     ) {
-        DatePicker(
-            state = datePickerState,
-            title = null,
-            headline = null,
-            showModeToggle = false,
-            colors = DatePickerDefaults.colors(
-                todayDateBorderColor = MaterialTheme.colorScheme.tertiary,
-                todayContentColor = MaterialTheme.colorScheme.onSurface,
-                selectedDayContainerColor = MaterialTheme.colorScheme.tertiary,
-                selectedDayContentColor = MaterialTheme.colorScheme.onSurface
+        Column {
+            DatePicker(
+                state = datePickerState,
+                title = null,
+                headline = null,
+                showModeToggle = false,
+                colors = DatePickerDefaults.colors(
+                    todayDateBorderColor = MaterialTheme.colorScheme.tertiary,
+                    todayContentColor = MaterialTheme.colorScheme.onSurface,
+                    selectedDayContainerColor = MaterialTheme.colorScheme.tertiary,
+                    selectedDayContentColor = MaterialTheme.colorScheme.onSurface
+                )
             )
-        )
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = dimensionResource(R.dimen.medium_padding)),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            IconButton(onClick = onDismiss) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_cancel),
-                    contentDescription = stringResource(R.string.cancel)
-                )
-            }
-            IconButton(
-                onClick = {
-                    datePickerState.selectedDateMillis?.let {
-                        onDateSelected(it)
-                    }
-                    onDismiss()
-                }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = dimensionResource(R.dimen.medium_padding)),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_save),
-                    contentDescription = stringResource(R.string.edit_save_description)
-                )
+                IconButton(onClick = onDismiss) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_cancel),
+                        contentDescription = stringResource(R.string.cancel)
+                    )
+                }
+                IconButton(
+                    onClick = {
+                        datePickerState.selectedDateMillis?.let {
+                            onDateSelected(it)
+                        }
+                        onDismiss()
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_save),
+                        contentDescription = stringResource(R.string.edit_save_description)
+                    )
+                }
             }
         }
     }

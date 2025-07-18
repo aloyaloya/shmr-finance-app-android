@@ -2,9 +2,9 @@ package com.example.shmr_finance_app_android.core.di
 
 import android.content.Context
 import com.example.shmr_finance_app_android.BuildConfig
+import com.example.shmr_finance_app_android.core.network.NetworkChecker
+import com.example.shmr_finance_app_android.core.network.NetworkCheckerImpl
 import com.example.shmr_finance_app_android.data.remote.api.FinanceApiService
-import com.example.shmr_finance_app_android.data.remote.api.NetworkChecker
-import com.example.shmr_finance_app_android.data.remote.api.NetworkCheckerImpl
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module

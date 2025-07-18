@@ -30,7 +30,7 @@ import com.example.shmr_finance_app_android.presentation.feature.transaction.vie
 import com.example.shmr_finance_app_android.presentation.feature.transaction.viewmodels.TransactionCreationModal
 import com.example.shmr_finance_app_android.presentation.feature.transaction.viewmodels.TransactionCreationUiState
 import com.example.shmr_finance_app_android.presentation.feature.transaction.viewmodels.TransactionCreationViewModel
-import com.example.shmr_finance_app_android.presentation.shared.components.AnimatedErrorSnackbar
+import com.example.shmr_finance_app_android.presentation.shared.components.AnimatedSnackbar
 import com.example.shmr_finance_app_android.presentation.shared.components.CategorySelectionSheet
 import com.example.shmr_finance_app_android.presentation.shared.components.DatePickerModal
 import com.example.shmr_finance_app_android.presentation.shared.components.EditorTextField
@@ -110,8 +110,8 @@ fun TransactionCreationScreen(
             )
         }
 
-        AnimatedErrorSnackbar(
-            modifier = Modifier.align(Alignment.BottomCenter),
+        AnimatedSnackbar(
+            modifier = Modifier.align(Alignment.TopCenter),
             isVisible = snackbarVisible,
             messageResId = snackbarMsg,
             onDismiss = { snackbarVisible = false }

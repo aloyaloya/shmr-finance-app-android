@@ -39,7 +39,7 @@ fun CurrencySelectionSheet(
         modifier = modifier,
         onDismissRequest = { onDismiss() },
         sheetState = sheetState,
-        windowInsets = WindowInsets.systemBars.only(WindowInsetsSides.Bottom)
+        contentWindowInsets = { WindowInsets.systemBars.only(WindowInsetsSides.Bottom) }
     ) {
         ItemsListContent(
             items = items,

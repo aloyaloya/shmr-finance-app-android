@@ -41,6 +41,7 @@ fun HistoryScreen(
     isIncome: Boolean,
     updateConfigState: (ScreenConfig) -> Unit,
     onBackNavigate: () -> Unit,
+    onAnalyticNavigate: () -> Unit,
     onTransactionUpdateNavigate: (Int) -> Unit
 ) {
     val state by viewModel.screenState.collectAsStateWithLifecycle()
@@ -67,7 +68,7 @@ fun HistoryScreen(
                     action = TopBarAction(
                         iconResId = R.drawable.ic_calendar,
                         descriptionResId = R.string.expenses_analysis_description,
-                        actionUnit = onBackNavigate
+                        actionUnit = onAnalyticNavigate
                     )
                 )
             )

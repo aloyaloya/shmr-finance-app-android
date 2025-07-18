@@ -1,7 +1,8 @@
-package com.example.shmr_finance_app_android.data.remote.api
+package com.example.shmr_finance_app_android.core.network
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import dagger.Reusable
 import javax.inject.Inject
 
@@ -22,8 +23,12 @@ class NetworkCheckerImpl @Inject constructor(
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-        val activeNetwork = connectivityManager.activeNetworkInfo
+        val network = connectivityManager.activeNetwork ?: return false
 
-        return activeNetwork != null && activeNetwork.isConnected
+        val networkCapabilities =
+            connectivityManager.getNetworkCapabilities(network) ?: return false
+
+        return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+                networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
     }
 }
