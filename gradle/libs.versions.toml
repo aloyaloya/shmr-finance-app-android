@@ -17,6 +17,7 @@ retrofit = "2.9.0"
 detekt = "1.23.8"
 dagger = "2.48"
 roomRuntime = "2.7.2"
+securityCryptoKtx = "1.1.0-beta01"
 workRuntimeKtx = "2.10.2"
 composeMaterial = "1.6.0"
 material3 = "1.2.1"
@@ -26,6 +27,7 @@ androidx-compose-material = { group = "androidx.compose.material", name = "mater
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
+androidx-security-crypto-ktx = { module = "androidx.security:security-crypto-ktx", version.ref = "securityCryptoKtx" }
 dagger = { group = "com.google.dagger", name = "dagger", version.ref = "dagger" }
 dagger-compiler = { group = "com.google.dagger", name = "dagger-compiler", version.ref = "dagger" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }

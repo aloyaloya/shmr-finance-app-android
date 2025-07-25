@@ -43,7 +43,7 @@ data class BottomBarItem(
             BottomBarItem(
                 labelResId = R.string.settings_screen_label,
                 iconResId = R.drawable.ic_settings,
-                route = Route.Root.Settings
+                route = Route.Root.SettingsNavigation
             )
         )
     }
