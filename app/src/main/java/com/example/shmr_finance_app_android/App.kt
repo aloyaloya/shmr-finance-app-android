@@ -15,6 +15,7 @@ import com.example.shmr_finance_app_android.core.di.AppWorkerFactory
 import com.example.shmr_finance_app_android.core.di.DaggerAppComponent
 import com.example.shmr_finance_app_android.core.network.NetworkMonitor
 import com.example.shmr_finance_app_android.data.sync.SyncAllWorker
+import com.example.shmr_finance_app_android.domain.repository.SettingsRepository
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -29,6 +30,9 @@ class App : Application(), Configuration.Provider {
             .build()
 
     private lateinit var networkMonitor: NetworkMonitor
+
+    @Inject
+    lateinit var settingsRepository: SettingsRepository
 
     lateinit var appComponent: AppComponent
 
@@ -58,19 +62,21 @@ class App : Application(), Configuration.Provider {
 
         WorkManager.getInstance(this).enqueueUniqueWork(
             "sync_work",
-            ExistingWorkPolicy.REPLACE,
+            ExistingWorkPolicy.KEEP,
             immediateSyncRequest
         )
     }
 
     private fun setupPeriodicSync() {
+        val minutes = settingsRepository.getSyncFrequency()
+
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
 
         val syncRequest = PeriodicWorkRequestBuilder<SyncAllWorker>(
-            2, TimeUnit.HOURS,
-            15, TimeUnit.MINUTES
+            minutes.toLong(),
+            TimeUnit.MINUTES
         ).setConstraints(constraints)
             .build()
 

@@ -38,6 +38,18 @@ android {
 
         val apiToken = localProperties.getProperty("api.token")
             ?: throw GradleException("API TOKEN не найден")
+
+        buildConfigField(
+            "String",
+            "BUILD_TIME",
+            "\"${System.currentTimeMillis()}\""
+        )
+
+        buildConfigField(
+            "String",
+            "VERSION_NAME",
+            "\"${defaultConfig.versionName}\""
+        )
     }
 
     buildTypes {
@@ -69,6 +81,7 @@ detekt {
 }
 
 dependencies {
+    implementation(libs.androidx.security.crypto.ktx)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.work.runtime.ktx)
     ksp(libs.androidx.room.compiler)

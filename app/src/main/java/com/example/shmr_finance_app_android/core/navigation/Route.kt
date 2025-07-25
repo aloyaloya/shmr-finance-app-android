@@ -14,7 +14,7 @@ sealed class Route(val path: String) {
         data object IncomeNavigation : Root(path = "incomes_navigation")
         data object BalanceNavigation : Root(path = "balance_navigation")
         data object Categories : Root(path = "categories_screen")
-        data object Settings : Root(path = "settings_screen")
+        data object SettingsNavigation : Root(path = "settings_navigation")
     }
 
     sealed class IncomesScreens(path: String) : Route(path) {
@@ -55,5 +55,10 @@ sealed class Route(val path: String) {
             fun balanceId(): String = "balanceId"
             fun route(balanceId: Int) = "balance_update/$balanceId"
         }
+    }
+
+    sealed class SettingsScreens(path: String) : Route(path) {
+        data object Settings : SettingsScreens(path = "settings_screen")
+        data object PinSettings : SettingsScreens("settings_screen/pin")
     }
 }

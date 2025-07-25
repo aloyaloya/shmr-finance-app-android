@@ -2,6 +2,7 @@ package com.example.shmr_finance_app_android.presentation.feature.main.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.example.shmr_finance_app_android.R
+import com.example.shmr_finance_app_android.core.di.HapticFeedbackManager
 import com.example.shmr_finance_app_android.presentation.feature.main.model.FloatingActionConfig
 import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
 import com.example.shmr_finance_app_android.presentation.feature.main.model.TopBarAction
@@ -15,7 +16,9 @@ import javax.inject.Inject
  * - Управление конфигурацией UI (TopAppBar, FAB) для текущего экрана
  * - Централизованное обновление состояния навигации
  */
-class MainScreenViewModel @Inject constructor() : ViewModel() {
+class MainScreenViewModel @Inject constructor(
+    private val hapticFeedbackManager: HapticFeedbackManager
+) : ViewModel() {
 
     private val _configState = MutableStateFlow(
         ScreenConfig(
@@ -45,5 +48,9 @@ class MainScreenViewModel @Inject constructor() : ViewModel() {
      */
     fun updateConfigForScreen(config: ScreenConfig) {
         _configState.value = config
+    }
+
+    fun onClickVibrate() {
+        hapticFeedbackManager.vibrateClick()
     }
 }

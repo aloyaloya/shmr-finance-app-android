@@ -3,6 +3,7 @@ package com.example.shmr_finance_app_android.core.di
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.shmr_finance_app_android.presentation.feature.analytic.viewmodel.AnalyticViewModel
+import com.example.shmr_finance_app_android.presentation.feature.auth.AuthViewModel
 import com.example.shmr_finance_app_android.presentation.feature.balance.viewmodels.BalanceScreenViewModel
 import com.example.shmr_finance_app_android.presentation.feature.balance.viewmodels.BalanceUpdateScreenViewModel
 import com.example.shmr_finance_app_android.presentation.feature.categories.viewmodel.CategoriesScreenViewModel
@@ -12,6 +13,7 @@ import com.example.shmr_finance_app_android.presentation.feature.settings.viewmo
 import com.example.shmr_finance_app_android.presentation.feature.transaction.viewmodels.TransactionCreationViewModel
 import com.example.shmr_finance_app_android.presentation.feature.transaction.viewmodels.TransactionTodayViewModel
 import com.example.shmr_finance_app_android.presentation.feature.transaction.viewmodels.TransactionUpdateViewModel
+import com.example.shmr_finance_app_android.presentation.shared.theme.ThemeViewModel
 import dagger.Binds
 import dagger.MapKey
 import dagger.Module
@@ -76,6 +78,16 @@ interface ViewModelModule {
     @IntoMap
     @ViewModelKey(TransactionUpdateViewModel::class)
     fun bindTransactionUpdateViewModel(vm: TransactionUpdateViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ThemeViewModel::class)
+    fun bindThemeViewModel(vm: ThemeViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AuthViewModel::class)
+    fun bindAuthViewModel(vm: AuthViewModel): ViewModel
 
     @Binds
     fun bindViewModelFactory(factory: ViewModelProviderFactory): ViewModelProvider.Factory

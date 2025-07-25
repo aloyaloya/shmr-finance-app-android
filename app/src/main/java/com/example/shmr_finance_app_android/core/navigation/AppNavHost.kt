@@ -8,7 +8,7 @@ import androidx.navigation.compose.composable
 import com.example.shmr_finance_app_android.presentation.feature.balance.navigation.BalanceNavigation
 import com.example.shmr_finance_app_android.presentation.feature.categories.screen.CategoriesScreen
 import com.example.shmr_finance_app_android.presentation.feature.main.model.ScreenConfig
-import com.example.shmr_finance_app_android.presentation.feature.settings.screen.SettingsScreen
+import com.example.shmr_finance_app_android.presentation.feature.settings.navigation.SettingsNavigation
 import com.example.shmr_finance_app_android.presentation.feature.transaction.navigation.ExpensesNavigation
 import com.example.shmr_finance_app_android.presentation.feature.transaction.navigation.IncomesNavigation
 
@@ -64,10 +64,12 @@ fun AppNavHost(
         }
 
         /**
-         * Отвечает за отображение экрана Настройки и передачу конфигурации топ-бара
+         * Отвечает за:
+         * 1. Отображение экранов Настроек (вложенный граф)
+         * 2. Передачу конфигурации топ-бара
          */
-        composable(route = Route.Root.Settings.path) {
-            SettingsScreen(updateConfigState = updateConfigState)
+        composable(route = Route.Root.SettingsNavigation.path) {
+            SettingsNavigation(updateConfigState = updateConfigState)
         }
     }
 }

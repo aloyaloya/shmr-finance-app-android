@@ -2,9 +2,13 @@ package com.example.shmr_finance_app_android.core.di
 
 import com.example.shmr_finance_app_android.data.repository.AccountRepositoryImpl
 import com.example.shmr_finance_app_android.data.repository.CategoriesRepositoryImpl
+import com.example.shmr_finance_app_android.data.repository.PinRepositoryImpl
+import com.example.shmr_finance_app_android.data.repository.SettingsRepositoryImpl
 import com.example.shmr_finance_app_android.data.repository.TransactionsRepositoryImpl
 import com.example.shmr_finance_app_android.domain.repository.AccountRepository
 import com.example.shmr_finance_app_android.domain.repository.CategoriesRepository
+import com.example.shmr_finance_app_android.domain.repository.PinRepository
+import com.example.shmr_finance_app_android.domain.repository.SettingsRepository
 import com.example.shmr_finance_app_android.domain.repository.TransactionsRepository
 import dagger.Binds
 import dagger.Module
@@ -46,4 +50,16 @@ internal interface RepositoryModule {
     fun bindTransactionsRepository(
         transactionsRepository: TransactionsRepositoryImpl,
     ): TransactionsRepository
+
+    @Binds
+    @Singleton
+    fun bindSettingsRepository(
+        settingsRepository: SettingsRepositoryImpl,
+    ): SettingsRepository
+
+    @Binds
+    @Singleton
+    fun bindPinRepository(
+        pinRepository: PinRepositoryImpl,
+    ): PinRepository
 }

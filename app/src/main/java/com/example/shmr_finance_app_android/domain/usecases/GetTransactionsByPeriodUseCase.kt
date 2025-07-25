@@ -16,7 +16,8 @@ import javax.inject.Inject
  */
 @Reusable
 class GetTransactionsByPeriodUseCase @Inject constructor(
-    private val repository: TransactionsRepository
+    private val repository: TransactionsRepository,
+    private val networkChecker: NetworkChecker
 ) {
     /**
      * Запускает UseCase через operator invoke().
@@ -35,6 +36,10 @@ class GetTransactionsByPeriodUseCase @Inject constructor(
         startDate: String? = null,
         endDate: String? = null
     ): Result<List<TransactionResponseDomain>> {
+        if (networkChecker.isNetworkAvailable()) {
+            repository.syncTransactions()
+        }
+
         return repository.getTransactionsByPeriod(accountId, startDate, endDate)
             .map { list ->
                 list.sortedByDescending { it.transactionDate }
