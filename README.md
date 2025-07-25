@@ -31,13 +31,20 @@ ID тестового аккаунта так же можно поменять �
 ## Переключение темы
 
 <br/>
-<img src="demo/theme_switch_screen_1.png" width="200"> <img src="demo/theme_switch_screen_2.png.png" width="200">
+<div style="display: flex; gap: 10px;">
+  <img src="demo/theme_switch_screen_1.png" width="200">
+  <img src="demo/theme_switch_screen_2.png" width="200">
+</div>
 <br/>
 
 ## Изменение основного цвета
 
 <br/>
-<img src="demo/color_switch_screen_1.png" width="200"> <img src="demo/color_switch_screen_2.png" width="200"> <img src="demo/color_switch_screen_3.png" width="200">
+<div style="display: flex; gap: 10px;">
+  <img src="demo/color_switch_screen_1.png" width="200">
+  <img src="demo/color_switch_screen_2.png" width="200">
+  <img src="demo/color_switch_screen_3.png" width="200">
+</div>
 <br/>
 
 ## Хаптики
@@ -55,6 +62,9 @@ ID тестового аккаунта так же можно поменять �
 ## Переключение языка
 
 <br/>
-<img src="demo/language_switch_screen_1.png" width="200"> <img src="demo/language_switch_screen_2.png" width="200">
+<div style="display: flex; gap: 10px;">
+  <img src="demo/language_switch_screen_1.png" width="200">
+  <img src="demo/language_switch_screen_2.png" width="200">
+</div>
 <br/>
 
