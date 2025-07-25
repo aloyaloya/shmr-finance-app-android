@@ -28,7 +28,10 @@ fun MainScreen() {
 
     Scaffold(
         topBar = {
-            CustomTopBar(config = configState.topBarConfig)
+            CustomTopBar(
+                config = configState.topBarConfig,
+                onClick = { viewModel.onClickVibrate() }
+            )
         },
         bottomBar = {
             BottomNavigationBar(
@@ -36,6 +39,7 @@ fun MainScreen() {
                 items = BottomBarItem.items,
                 onNavigate = {
                     if (currentDestination != it) {
+                        viewModel.onClickVibrate()
                         navController.navigate(it) {
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true
@@ -58,8 +62,7 @@ fun MainScreen() {
         }
     ) { innerPadding ->
         AppNavHost(
-            modifier = Modifier
-                .padding(innerPadding),
+            modifier = Modifier.padding(innerPadding),
             navController = navController,
             updateConfigState = { config -> viewModel.updateConfigForScreen(config) }
         )
